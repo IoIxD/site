@@ -1,0 +1,258 @@
+/* GENERAL */
+
+@font-face {
+    font-family: 'WebCharcoal';
+    src: url('Charcoal.eot');
+    src: url('Charcoal.eot?#iefix') format('embedded-opentype'),
+        url('Charcoal.woff2') format('woff2'),
+        url('Charcoal.woff') format('woff'),
+        url('Charcoal.ttf') format('truetype'),
+        url('Charcoal.svg#Charcoal') format('svg');;
+}
+
+img, * {
+    image-rendering: optimizeSpeed!important;             
+    image-rendering: -moz-crisp-edges!important;
+    image-rendering: -o-crisp-edges!important;
+    image-rendering: -webkit-optimize-contrast!important;
+    image-rendering: pixelated!important;
+    image-rendering: optimize-contrast!important;
+    -ms-interpolation-mode: nearest-neighbor!important;
+}
+
+ul, li {margin: 0; padding-left: .1em; list-style-type: none;}
+
+body.main {
+    background-image: url("../images/19201080_filter.png");
+    background-color: #9c9cce;
+    color:  black!important;
+    font-size: 75%; 
+    overflow-x: hidden;
+}
+body:not(main) {background: white;font-family: Verdana; font-size: 75%; overflow: hidden visible;}
+body {margin-left:30px;}
+button {
+    background: #ddd!important;
+    border: 1px solid black;
+    border-radius: 3px;
+    box-shadow: inset 1px 1px 0 0 #ddd, inset 2px 2px 0 0 white, inset -1px -1px 0 0 #777, inset -2px -2px 0 0 #aaa;
+    font-family: "WebCharcoal", Charcoal, sans-serif;
+}
+button:active {filter:invert()!important;}
+button:focus {outline: 0px!important;}
+
+.thead td {background: #ccc; padding: 3px; 
+    box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #888,
+    1px 1px 0 0 #333, 0px 0px 0px 1px #666;}
+td p {height: 1.5em;line-height: 1.5em;display: inline;}
+td img {vertical-align: middle;}
+td{background: #eee;}
+td.hcolumn {background: #ddd; cursor: pointer;}
+table {width: 100%; font-size: 92%;}
+
+/* WINDOWS */
+
+.window {
+    background: #cecece!important;
+    position: absolute; 
+    display: block;
+    padding: 3px;
+    border: 1px solid black;
+    min-width: 1px;
+    transform: translate(-50%, -50%);
+    box-shadow: 
+        inset 1px 1px 0 0 white,
+        inset -1px -1px 0 0 #9c9c9c,
+        1px 1px 0 0 black;
+}
+.window:not(.noanim) {animation: winAppear .2s linear;}
+.window:not(.noanim) *:not(.noanim) {animation: winContentsHidden .1s linear;}
+.window .titlebar {
+    display: block;
+    width: 100%; min-height: 18px; max-height:144px;
+    margin: 0; padding: 0;
+    position: relative;
+    font-family: "WebCharcoal", Charcoal, sans-serif;
+}
+.window .titlebar .title {
+    background: #cecece!important;
+    height: 13px;
+    line-height: 13px;
+    position: absolute;
+    left: 50%;
+    top: -2px;
+    transform: translate(-50%, 0);
+    vertical-align: center;
+    padding: 1px 4px;
+
+}
+.window .content {
+    vertical-align: top;
+    display: block;
+    width: 100%; min-height:1px!important; min-width: 1px!important; 
+    height: 97%; /* fallback for when css likes to be stupid and ignore things that i set */
+    position: relative;
+}
+.window:not(.transparent) .content {background: white!important;box-shadow:
+        inset 1px 1px 0 0 #9c9c9c,
+        inset -1px -1px 0 0 white,
+        inset 1px 1px 0 1px black,
+        inset -1px -1px 0 1px black;}
+body.transparent {font-family:  "WebCharcoal", Charcoal, sans-serif!important; background: #cecece!important;}
+.window iframe {border: 0;width: 99.5%;height: 98%;display:block; padding:0;margin:0;position:absolute;top:2px;left:2px; }
+.window .directions:after {content:"it's on the right";}
+
+.window-drag {display: block; width: 17px; height: 17px; background: url("../images/window-drag.png")}
+
+.window .tl_button {display: inline-block; width:  13px; height: 13px; background: url("../images/macos_title_buttons.png") }
+.window .tl_button.close {float:  left; margin: 1px 0; background-position-y: 0px;}
+.window .tl_button.shade {float: right; background-position-y: -13px; margin: 1px 3px;}
+.window .tl_button.maxmin {float: right; margin:  1px 0; background-position-y: -26px;}
+.window .tl_button:active {background-position-x: 13px;}
+
+.window .tl_lines {position: absolute; top: 0; left: 17px; display: block; width: calc(100% - 53px); height: 12px; 
+    background: url("../images/macos_title.png") repeat; padding-right: 2px; }
+.window .tl_lines:before, .window .tl_lines:after, .window .titlebar .title:before, .window .titlebar .title:after  {content: ""; position: relative; width: 1px; height: 12px; top: 0; display: block; background: url("../images/macos_title_lines.png")}
+.window .tl_lines:before, .window .titlebar .title:after {background-position: 0 0;}
+.window .tl_lines:after, .window .titlebar .title:before {background-position: -11px 0;}
+.window .tl_lines:before {left: 0;}
+.window .titlebar .title:before {display: inline-block; top: 1px; left: -4px;}
+.window .tl_lines:after {top: -12px; right: -2px; float: right;}
+.window .titlebar .title:after {display: inline-block;  top: 1px; right: -4px;}
+
+
+@keyframes winAppear {
+    0% {top: var(--mpy); left: var(--mpx); width: 0px; height:0px;border: 3px dotted grey; background: none!important; box-shadow: none; }
+    100% {top:var(--iy); left: var(--ix); width: var(--iw); height: var(--ih); border: 3px dotted grey; background: none!important; box-shadow: none;}
+}
+
+@keyframes winContentsHidden {
+    0%, 99% {visibility: hidden;}
+    100% {visibility: visible;}
+}
+
+/* DESKTOP/FOLDER ITEMS */
+
+.desktop-item {display: inline-block; min-width: 0; margin: 17px 15px; max-width: 59px; max-height: 48px; text-align: center; clear:both; transform: translateX(-50%); }
+.desktop-item .text {vertical-align: bottom; display: block;  max-height:13px; background:url('../images/fontsheet.png'); color:transparent; font-size: 10px; font-family: Verdana;}
+.desktop-item .text.twocolumn {max-height:  26px!important;}
+.destkop-item img {margin: 0 auto; max-width: 12px; pointer-events:  none;}
+.desktop-item:after {content:''; display: block; height: 48px;}
+.desktop-item:active img, td:active img {filter:brightness(50%);}
+.desktop-item:active text {filter:invert()!important;}
+
+.desktop-item .text.main {background-position: -13px 0px;}
+.desktop-item .text.downloads {background-position: -2px -13px;}
+.desktop-item .text.links {background-position: 0px -26px;}
+.desktop-item .text.blog {background-position: -13px -39px;}
+.desktop-item .text.twitter {background-position: -13px -52px;}
+.desktop-item .text.discord {background-position: -12px -65px;}
+.desktop-item .text.youtube {background-position: -10px -78px;}
+.desktop-item .text.pokeh {background-position: 1px -91px;}
+.desktop-item .text.pokes {background-position: 2px -118px;}
+.desktop-item .text.pg64 {background-position: 3px -143px;}
+.desktop-item .text.g64 {background-position: 1px -169px;}
+.desktop-item .text.art {background-position: -14px -195px;}
+/* UPPER BAR */
+
+.right-click-bar {display: block;height:20px;width:102%;top:0;left:0;position:absolute;background:#ddd;box-shadow:
+        inset -1px -1px 0 0 black,
+        inset -1px -1px 0 1px #9c9c9c,
+        inset -1px 1px 0 0 white;}
+.right-click-bar:before {content:"";display:block;width:16px;height:17px;background:url('../images/ioi_icon.png');left:17px;top:2px;position:absolute;}
+
+/* NOTE */
+.note {border-style: solid;border-width: 16px;border-image: url('../images/sticky_border.png') 16 repeat repeat; background: #ff9!important; display: block; position: absolute; color: black!important;}
+
+/* WORDPERFECT WINDOWS */
+.wp-bar-fake {display: block;width: 268px;height: 16px; background: url('../images/wp_bar_fake.png'); margin: 5px auto 2px auto;}
+html.textfile, body.textfile, content.textfile {cursor: text!important;}
+body.textfile {margin: 5px 30px;}
+.window .content.textfile {height: 90%!important;} /* fallback because fgskdlfjgjskflgdjsdflkgdshfgtlkJFDKJSALAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA*/
+/* unused! 
+.wp_button {display: inline-block; width: 13px; height: 14px; background: url('../images/wp_button.png'); background-position-x: 0px; background-position-y: 0px; font-size: 0px!important;}
+.wp_button.b {background-position-y: -14px;}
+.wp_button.i {background-position-y: -28px;}
+.wp_button.u {background-position-y: -42px;}
+.wp_dropdown {
+   background: #ccc; height: 14px; line-height: 14px; display: inline-block;
+   box-shadow: -1px -1px 0 0 #777,
+                0 0 0 1px #fff;}
+.wp_dropdown:after {content:"";background: url('../images/wp_button.png'); background-position: 0px -56px; background-repeat: no-repeat; width: 14px; height: 14px; display: inline-block; position: relative;}
+.wp_dropdown_option {display: inline-block; margin: 1px;height: 12px; line-height: 12px; background: white;}
+.wp_dropdown_option:not(:nth-of-type(1)) {display: none;}
+
+.wp_bar {height: 14px; line-height: 14px; vertical-align:  top; display: inline-block; z-index: 99999; user-select: none;}
+.wp_bar * {font-size: 9.5px; font-family: Verdana!important; vertical-align:  top;}
+*/
+
+
+
+/* window content heights.
+trust me, i TRIED to just have them be percentages, and it was never right for some reason. so I gave up and made them all manual. lol.*/
+
+#main .content {height: 250px!important;} 
+#likes .content {height:  200px!important;}
+#dislikes .content {height:  100px!important;}
+#dislikes iframe, #links iframe, #discordwarn iframe {height:  96%!important;}
+#downloads .content {height:  265px!important;}
+#links .content {height:  105px!important;}
+#discordwarn .content {height:  105px!important;}
+#pokeh .content, #pokeh .iframe {height:  355px!important;}
+
+
+/* SMALLER WINDOWS AND MOBILE */
+
+.mobile_only{display: none;}
+
+@media (max-width:1024px) {
+    body.main {background-image:url("../images/1024768_filter.png");}
+}
+
+@media (min-width: 640px) and (max-width:800px) {
+    body.main {background: #9c9cce;}
+    .window {display: block; position: static; min-width: 640px; margin: 10px auto;}
+    .amigatext {display: none!important;}
+}
+
+@media screen and (orientation:portrait) {
+    body.main {background: #9c9cce; font-family: sans-serif;}
+    .desktop-item {display: inline-block; min-width: 0; margin: 17px 15px; max-width: 59px; max-height: 48px; text-align: center; clear:both; transform: translateX(-50%);}
+
+    .window {display: block; position: static; min-width: 1px; max-width: none!important; width: 98%!important; margin: 10px auto; transform: translate(-7vw,0px);}
+    .window .content, .window .titlebar .title {font-size: 3vw;}
+    .window .titlebar .title:before, .window .titlebar .title:after, .window .tl_lines {display: none;}
+    .window .content {padding: 2vw; 
+    width: 95.5%;
+    box-shadow:
+        inset 1px 1px 0 1px #9c9c9c,
+        inset -1px -1px 0 1px white,
+        inset 1px 1px 0 3px black,
+        inset -1px -1px 0 3px black;
+    }
+    .window .titlebar {background: url("../images/macos_title_mobile.png"); background-size: contain; height: 3.5vw; vertical-align: middle;}
+    .window .titlebar .title {height: 2vw; line-height: 2vw; top: -.5vw; padding: 1.5vw .5vw;}
+
+    .amigatext, #ball {display: none!important;}
+    .mobiletext2 {display: block!important;}
+    .window .directions:after {content:"then scroll down.";}
+
+    .broken {display: none!important;}
+    .mobile_only {display: block!important;}
+
+
+div[id^="generic_text"] .content, div[id^="generic_image"] .content { height:382px; }
+
+
+#main .content {height: 240px!important;} 
+#likes .content {height:  190px!important;}
+#dislikes .content {height:  90px!important;}
+#dislikes iframe, #links iframe, #discordwarn iframe {height:  96%!important;}
+#downloads .content {height:  255px!important;}
+#links .content {height:  95px!important;}
+#discordwarn .content {height:  95px!important;}
+#pokeh .content, #pokeh .iframe {height:  345px!important;}
+
+
+#art .content, #blog .content {height: 650px!important; display: block;}
+#art .iframe, #blog .iframe {width: 99.93%!important;}
