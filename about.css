@@ -133,7 +133,7 @@ body.transparent {font-family:  "WebCharcoal", Charcoal, sans-serif!important; b
 
 /* DESKTOP/FOLDER ITEMS */
 
-.desktop-item {display: inline-block; min-width: 0; margin: 17px 15px; max-width: 59px; max-height: 48px; text-align: center; clear:both; transform: translateX(-50%); }
+.desktop-item {cursor:pointer!important;display: inline-block; min-width: 0; margin: 17px 15px; max-width: 59px; max-height: 48px; text-align: center; clear:both; transform: translateX(-50%); }
 .desktop-item .text {vertical-align: bottom; display: block;  max-height:13px; background:url('../images/fontsheet.png'); color:transparent; font-size: 10px; font-family: Verdana;}
 .desktop-item .text.twocolumn {max-height:  26px!important;}
 .destkop-item img {margin: 0 auto; max-width: 12px; pointer-events:  none;}
@@ -153,6 +153,9 @@ body.transparent {font-family:  "WebCharcoal", Charcoal, sans-serif!important; b
 .desktop-item .text.pg64 {background-position: 3px -143px;}
 .desktop-item .text.g64 {background-position: 1px -169px;}
 .desktop-item .text.art {background-position: -14px -195px;}
+.desktop-item .text.letterboxd {background-position: -2px -208px;}
+.desktop-item .text.mastodon {background-position: -6px -218px;}
+.desktop-item .text.ftype {background-position: -13px -231px;}
 /* UPPER BAR */
 
 .right-click-bar {display: block;height:20px;width:102%;top:0;left:0;position:absolute;background:#ddd;box-shadow:
@@ -162,7 +165,7 @@ body.transparent {font-family:  "WebCharcoal", Charcoal, sans-serif!important; b
 .right-click-bar:before {content:"";display:block;width:16px;height:17px;background:url('../images/ioi_icon.png');left:17px;top:2px;position:absolute;}
 
 /* NOTE */
-.note {border-style: solid;border-width: 16px;border-image: url('../images/sticky_border.png') 16 repeat repeat; background: #ff9!important; display: block; position: absolute; color: black!important;}
+.note {border-style: solid;border-width: 16px;border-image: url('../images/sticky_border.png') 16 repeat repeat; background: #ff9!important; display: block; position: absolute; color: black!important; font-size: 1.5vh!important;}
 
 /* WORDPERFECT WINDOWS */
 .wp-bar-fake {display: block;width: 268px;height: 16px; background: url('../images/wp_bar_fake.png'); margin: 5px auto 2px auto;}
@@ -199,8 +202,8 @@ trust me, i TRIED to just have them be percentages, and it was never right for s
 #links .content {height:  105px!important;}
 #discordwarn .content {height:  105px!important;}
 #pokeh .content, #pokeh .iframe {height:  355px!important;}
-
-
+#ftype .content {height: 230px!important;}
+#ftype .iframe {width: 99%!important; height: 231px!important;}
 /* SMALLER WINDOWS AND MOBILE */
 
 .mobile_only{display: none;}
@@ -238,6 +241,7 @@ trust me, i TRIED to just have them be percentages, and it was never right for s
     .window .directions:after {content:"then scroll down.";}
 
     .broken {display: none!important;}
+    .note.mobile_only {font-size: 3vw!important;}
     .mobile_only {display: block!important;}
 
 

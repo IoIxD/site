@@ -1,9 +1,74 @@
 // global variables
 var mx = 0; var my = 0; mx_o = 0; my_o = 0; wx_o = 0; wy_o = 0; var hoveredWin; var gw; var dragging = 0; var mouseDown = 0; var nopage=0; var titlebar_additions = ""; var options_iframe = "";
 var onPhone = 0; var windows = [];
-var properties = getJSON("https://www.ioi-xd.net/pages/properties.json");
+var properties = getJSON(window.location.protocol+"//"+window.location.host+"/pages/properties.json");
 var pageid_regex = /(?![A-z])(?![0-9])(?!\.)./gm;
+var heldCtrl = 0; var heldShift = 0; var heldAlt = 0; var heldO = 0;
 
+function init() {
+    document.addEventListener("mousedown", function(e) {
+        mouseDown = 1; 
+        elemHover = document.querySelectorAll(`:hover`);
+        if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+          windows = document.getElementsByClassName("window");
+          for( i=0; i< windows.length; i++ ) {
+           windows[i].style.zIndex = 0;
+          }
+          elemHover[2].style.zIndex = 999;
+          mx_o = e.pageX; my_o = e.pageY;
+          ex = elemHover[2].style.left; ey = elemHover[2].style.top;
+          if(ex.includes("%")) {
+            wx_o = +(window.innerWidth) * +("."+ex.replace('%',''));
+          } else {wx_o = ex.replace('px', '')}
+          if(ey.includes("%")) {
+            wy_o = +(window.innerHeight) * +("."+ey.replace('%',''));
+          } else {wy_o = ey.replace('px', '')}
+        }
+
+      })
+    document.addEventListener("mouseup", function() {mouseDown = 0;})
+
+    document.addEventListener('keydown', function(e) {
+      console.log(e.key);
+      switch(e.key) {
+        case "Control":
+          heldCtrl = 1;
+          break;
+        case "Alt":
+          heldAlt = 1;
+          break;
+        case "Shift":
+          heldShift = 1;
+          break;
+        case "O":
+          heldO = 1;
+          break;
+      }
+      if(heldCtrl == 1 && heldAlt == 1 && heldShift == 1 && heldO == 1) {
+        window.location.replace("https://ioi-xd.net/no_script.php");
+      }
+    })
+    document.addEventListener('keyup', function(e) {
+      switch(e.key) {
+        case "Control":
+          heldCtrl = 0;
+          break;
+        case "Alt":
+          heldAlt = 0;
+          break;
+        case "Shift":
+          heldShift = 0;
+          break;
+        case "O":
+          heldO = 0;
+          break;
+      }
+    })
+    page = window.location.pathname.replace('.html','').replace('/','');
+    if (page != undefined) {
+      windowCreate(page);
+    }
+};
 // WINDOW CREATION
 function windowCreate(page, exoptions="") {
   try {
@@ -146,27 +211,6 @@ function OpenTheThree() {
   setTimeout(function(){windowCreate('likes', '200px', '250px', '30%', '450px', 'textfile');}, 500);
   setTimeout(function(){windowCreate('dislikes', '200px', '150px', '75%', '450px', 'textfile');}, 1000);
 }
-document.addEventListener("mousedown", function(e) {
-    mouseDown = 1; 
-    elemHover = document.querySelectorAll(`:hover`);
-    if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
-      windows = document.getElementsByClassName("window");
-      for( i=0; i< windows.length; i++ ) {
-       windows[i].style.zIndex = 0;
-      }
-      elemHover[2].style.zIndex = 999;
-      mx_o = e.pageX; my_o = e.pageY;
-      ex = elemHover[2].style.left; ey = elemHover[2].style.top;
-      if(ex.includes("%")) {
-        wx_o = +(window.innerWidth) * +("."+ex.replace('%',''));
-      } else {wx_o = ex.replace('px', '')}
-      if(ey.includes("%")) {
-        wy_o = +(window.innerHeight) * +("."+ey.replace('%',''));
-      } else {wy_o = ey.replace('px', '')}
-    }
-
-  })
-document.addEventListener("mouseup", function() {mouseDown = 0;})
 
 function getJSON(url) {
     var resp, xmlHttp;
@@ -179,11 +223,6 @@ function getJSON(url) {
     return JSON.parse(resp);
 }
 
-    page = window.location.pathname.replace('.html','').replace('/','');
-if (page != undefined) {
-  windowCreate(page);
-}
-
 // this code was taken from stack overflow don't blame me if it sucks
 function makeid(length) {
     var result = '';
@@ -194,3 +233,4 @@ function makeid(length) {
    }
    return result;
 }
+

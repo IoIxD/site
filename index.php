@@ -1,19 +1,15 @@
-<!DOCTYPE HTML>
 <html>
-    <?php include("common.php");?>
-    <head>
-        <link rel="stylesheet" type="text/css" href="/resources/about.css?1">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>ioi_xd's site</title>
-    </head>
-    <body class='main' bgcolor="#9c9cce">
-    	<span class='right-click-bar'></span>
-    	<span class='desktop-item' <?php echo $clicktype?>="OpenTheThree()"><img src="/files/icons/accessories-text-editor.png"><span class='text main'>Main</span></span><br>
-    	<span class='desktop-item' <?php echo $clicktype?>="windowCreate('downloads');"><img src="/files/icons/drive-harddisk.png"><span class='text downloads'>Downloads</span></span><br>
-    	<span class='desktop-item' <?php echo $clicktype?>="windowCreate('links');"><img src="/files/icons/folder-remote.png"><span class='text links'>social media</span></span><br>
-        <span class='desktop-item' <?php echo $clicktype?>="windowCreate('blog');"><img src="/files/icons/folder-documents.png"><span class='text blog'>blog</span></span><br>
-        <span class='desktop-item' <?php echo $clicktype?>="windowCreate('art');"><img src="/files/icons/folder-pictures.png"><span class='text art'>art</span></span><br>
-    	<span class='note mobile_only' style='width: 30vw; top: 7vw; right:7vw'>On mobile devices, the scrollbar for windows do not show up. In general, though, the site doesn't look great, and for the full experience you should view it on a desktop computer.</span>
-        <script type="text/javascript" src="/resources/script.js"></script>
-    </body>
+	<body>
+		<script>
+		/* this code is somewhat sluggish, but i think it's better then having the site appear on screen for a second before showing
+		the no-javascript error screen (if applicable). that said, text needs to be hidden and then shown with css as a result of this, to make the look less embaressing */
+		var xhr = new XMLHttpRequest();
+		xhr.open('Get', '/has_script.php', true);
+		xhr.onload = function(e) {document.write(xhr.response);}
+		xhr.send();
+		</script>
+		<noscript><?php include('no_script.php');?></noscript>
+		<script>document.getElementsByTagName('noscript').remove();</script>
+		<?php if(strpos($_SERVER['HTTP_USER_AGENT'], 'FrogFind Reader') !== false) {include('no_script.php');}?>
+	</body>
 </html>
