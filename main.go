@@ -10,6 +10,7 @@ import (
 	"time"
 	"bytes"
 	"fmt"
+	"path"
 
 	"github.com/gabriel-vasile/mimetype"
 )
@@ -22,6 +23,7 @@ func main() {
 	tmpl = template.New("")
 	tmpl.Funcs(template.FuncMap{
 		"Include": Include,
+		"Time": Time,
 	})
 	_, err := tmpl.ParseFS(internalPages, "internalpages/*")
 	if err != nil {
@@ -90,14 +92,20 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 		page, err := os.ReadFile("./pages/"+fileToServe+"/.html")
 		if(err != nil) {
 			if(os.IsNotExist(err)) {
-				// If the file doesn't exist, then try and load it 
-				page, err = os.ReadFile("./"+fileToServe)
+				// If the file doesn't exist, then try and load it from anywhere within the directory
+				file, err := os.Open(path.Clean(fileToServe))
 				if(err != nil) {
 					w.WriteHeader(404)
 					fmt.Printf("Sending 404 error for %s, %s\n\n",pagename,err.Error())
 					w.Write([]byte(err.Error()))
 					return
 				}
+				stat, err := file.Stat()
+				if(err != nil) {
+					w.Write([]byte(err.Error()))
+					return
+				}
+				http.ServeContent(w, r, stat.Name(), stat.ModTime(), file)
 			} else {
 				w.WriteHeader(500)
 				fmt.Printf("Sending 500 error for %s, %s\n\n",pagename,err.Error())
@@ -141,4 +149,11 @@ func ContentType(filename string) (string) {
 	}
 	fmt.Println(mtype.String())
 	return mtype.String()
+}
+
+func Time() (string) {
+	today := time.Now().UTC() // the UTC date
+	yesterday := today.Unix() - 820454400 // 820454400 = Jan 1 1996, 12:00AM
+	date := time.Unix(yesterday,0)
+	return date.Format("Mon Jan 02 2006")
 }
