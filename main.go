@@ -52,18 +52,18 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 	var fileToServe string
 	var internal bool
 	pagename := r.URL.EscapedPath()
-	pagename = strings.Replace(pagename,".html","",99)
-	pagename = strings.Replace(pagename,".php","",99)
+	pagename = strings.Replace(pagename,".html","",1)
+	pagename = strings.Replace(pagename,".php","",1) 
 	switch(pagename) {
 		case "/":
 			internal = true
 			fileToServe = "index"
 		case "/dirlist", "/generic_image", "/generic_text", "/has_script", "/no_script":
 			internal = true
-			fileToServe = strings.Replace(pagename,"/","",99)
+			fileToServe = strings.Replace(pagename,"/","",1)
 		default:
 			internal = false
-			fileToServe = strings.Replace(pagename,"/","",99)
+			fileToServe = strings.Replace(pagename,"/","",1)
 	}
 	// Is it an internal page? If so, treat it like a template.
 	if(internal) {
@@ -72,46 +72,32 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Content-Disposition", "attachment; filename="+fileToServe)
 		w.Header().Set("Content-Name", pagename)
+
 		fmt.Printf("Sending internal page %s.html\n",fileToServe)
+
 		i, err := w.Write([]byte(Include(fileToServe)))
 		if(err != nil) {
 			fmt.Println(err)
 			return
 		}
-		fmt.Printf("%d bytes written for %s.html!\n\n",i,fileToServe)
+
+		fmt.Printf("%d bytes written for %s.html!\n",i,fileToServe)
+
 	} else {
-		// Otherwise we should read it as it currently is, without loading it into memory, and serve it.
-		// First, try and load it from an html file in the pages folder
-		page, err := os.ReadFile("./pages"+pagename+".html")
+		// Otherwise we should read it as it currently is, without loading it 
+		// into memory, and serve it.
+		// First, assume it's the name of a page in the html folder
+		page, err := os.ReadFile("./pages/"+fileToServe+"/.html")
 		if(err != nil) {
-			// If that fails, check if it's because it doesn't exist,
 			if(os.IsNotExist(err)) {
-				// and if it is then try and load it as a file in the filesystem.
-				page, err = os.ReadFile("."+pagename)
+				// If the file doesn't exist, then try and load it 
+				page, err = os.ReadFile("./"+fileToServe)
 				if(err != nil) {
-					// If that fails, we've reached the point of a 404
 					w.WriteHeader(404)
-					fmt.Printf("Sending 404 error for %s\n\n",pagename)
+					fmt.Printf("Sending 404 error for %s, %s\n\n",pagename,err.Error())
 					w.Write([]byte(err.Error()))
 					return
 				}
-				// If it succeeds, though, report a success and send it, and make sure the 
-				// header is set correctly
-				w.WriteHeader(200)
-				fmt.Printf("Sending raw file %s\n",pagename)
-				// Get the content type for that file to send.
-				contentType := ContentType("."+pagename)
-				w.Header().Set("Content-Type", contentType)
-				w.Header().Set("Content-Disposition", "attachment; filename="+pagename)
-				w.Header().Set("Content-Name", pagename)
-				fmt.Println(contentType)
-				i, err := w.Write(page)
-				if(err != nil) {
-					fmt.Println(err)
-					return
-				}
-				fmt.Printf("%d bytes written for %s!\n\n",i,pagename)
-				return
 			} else {
 				w.WriteHeader(500)
 				fmt.Printf("Sending 500 error for %s, %s\n\n",pagename,err.Error())
@@ -125,14 +111,18 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.WriteHeader(200)
+		// Get the content type for that file to send.
+		contentType := ContentType("./"+fileToServe)
+		w.Header().Set("Content-Type", contentType)
+		w.Header().Set("Content-Disposition", "attachment; filename="+fileToServe)
 		w.Header().Set("Content-Name", pagename)
-		fmt.Printf("Sending page %s\n",pagename)
+		fmt.Printf("Sending %s\n",fileToServe)
 		i, err := w.Write(page)
 		if(err != nil) {
 			fmt.Println(err)
 			return
 		}
-		fmt.Printf("%d bytes written for %s!\n\n",pagename,i)
+		fmt.Printf("%d bytes written for %s\n\n",i,fileToServe)
 	}
 }
 
