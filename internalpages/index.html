@@ -1,0 +1,36 @@
+<html>
+	<body>
+		<script>
+		/* this code is somewhat sluggish, but i think it's better then having the site appear on screen for a second before showing
+		the no-javascript error screen (if applicable). that said, text needs to be hidden and then shown with css as a result of this, to make the look less embaressing */
+
+		/* default to using async if we can */
+		try {
+			fetch("./has_script.php").then(r => r.text()).then(r => {
+				document.open();
+				document.write(r);
+				document.close();
+			})
+		} catch(ex) {
+			console.warn(ex);
+			try {
+				document.open();
+				var xhr = new XMLHttpRequest();
+				xhr.open('Get', '/has_script.php', true);
+				xhr.onload = function(e) {
+					document.write(xhr.responseText);
+				}
+				document.close();
+			} catch(ex) {
+				document.open();
+				document.write("ERROR: <br>"+ex);
+				document.close();
+			}
+		}
+		</script>
+		<noscript>
+			{{Include "no_script"}}
+		</noscript>
+		<script>document.getElementsByTagName('noscript')[0].remove();</script>
+	</body>
+</html>
