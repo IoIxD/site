@@ -1,0 +1,3 @@
+early morning:	frame  30
+morning: 		frame  57
+day:			frame 250
