@@ -270,17 +270,20 @@ function windowCreate(page, exoptions="") {
 
   // create a window based on what we got, using a different function based on your gender.
   if(canAsync) {
-    windowPopulateAsynchronous(page,width,height,left,top,options,title,titlebar_additions)
+    windowCreateFinalAsynchronous(page,width,height,left,top,options,title,titlebar_additions)
   } else {
-    windowPopulateSynchronous(page,width,height,left,top,options,title,titlebar_additions)
+    windowCreateFinalSynchronous(page,width,height,left,top,options,title,titlebar_additions)
   }
 }
-async function windowPopulateAsynchronous(page,width,height,left,top,options,title,titlebar_additions) {
+
+// the final part of the windowCreate function, asynchronously
+async function windowCreateFinalAsynchronous(page,width,height,left,top,options,title,titlebar_additions) {
   pageContents = await fetch(pageUrl).then(r => r.text())
   document.body.innerHTML += contentStringPopulated(page,pageContents,width,height,left,top,options,title,titlebar_additions);
 }
 
-function windowPopulateSynchronous(page,width,height,left,top,options,title,titlebar_additions) {
+// the final part of the windowCreate function, synchronously
+function windowCreateFinalynchronous(page,width,height,left,top,options,title,titlebar_additions) {
   try {
     var xhr = new XMLHttpRequest();
     xhr.open('Get', pageUrl, true);

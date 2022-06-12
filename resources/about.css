@@ -102,8 +102,9 @@ table {width: 100%; font-size: 92%;}
     vertical-align: top;
     display: block;
     margin: 4px;
-    width: calc(100% + -8px);
-    height: calc(100% + -8px);
+    padding: 8px;
+    width: calc(100% + -24px);
+    height: calc(100% + -24px);
     overflow-x: scroll;
     display: block;
     min-height:1px!important;
@@ -111,7 +112,7 @@ table {width: 100%; font-size: 92%;}
     position: relative;
 }
 .window .content.textfile {
-    height: calc(100% + -44px);
+    height: calc(100% + -60px);
 }
 .window:not(.transparent) .content {background: white!important;box-shadow:
         inset 1px 1px 0 0 #9c9c9c,
