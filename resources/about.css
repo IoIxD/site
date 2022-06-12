@@ -101,9 +101,17 @@ table {width: 100%; font-size: 92%;}
 .window .content {
     vertical-align: top;
     display: block;
-    width: 100%; min-height:1px!important; min-width: 1px!important; 
-    height: 97%; /* fallback for when css likes to be stupid and ignore things that i set */
+    margin: 4px;
+    width: calc(100% + -8px);
+    height: calc(100% + -8px);
+    overflow-x: scroll;
+    display: block;
+    min-height:1px!important;
+    min-width: 1px!important; 
     position: relative;
+}
+.window .content.textfile {
+    height: calc(100% + -44px);
 }
 .window:not(.transparent) .content {background: white!important;box-shadow:
         inset 1px 1px 0 0 #9c9c9c,
@@ -111,10 +119,11 @@ table {width: 100%; font-size: 92%;}
         inset 1px 1px 0 1px black,
         inset -1px -1px 0 1px black;}
 body.transparent {font-family: Charcoal, "WebCharcoal", sans-serif!important; background: #cecece!important;}
-.window iframe {border: 0;width: calc(99% + -1px);height: calc(99% + -2px); display:block; padding:0;margin:0;position:absolute;top:2px;left:2px;}
+
+
 .window .directions:after {content:"it's on the right";}
 
-.window-drag {display: block; width: 17px; height: 17px; background: url("images/window-drag.png")}
+.window-drag {display: block; width: 17px; height: 17px; background: url("images/window-drag.png"); bottom: 0px; right: 0; position: absolute;}
 
 .window .tl_button {display: inline-block; width:  13px; height: 13px; background: url("images/macos_title_buttons.png") }
 .window .tl_button.close {float:  left; margin: 1px 0; background-position-y: 0px;}
@@ -273,21 +282,7 @@ body.transparent {font-family: Charcoal, "WebCharcoal", sans-serif!important; ba
 .wp-bar-fake {display: block;width: 268px;height: 16px; background: url('images/wp_bar_fake.svg'); margin: 5px auto 2px auto;}
 html.textfile, body.textfile, content.textfile {cursor: text!important;}
 body.textfile {margin: 5px 30px;}
-.window .content.textfile {height: 90%!important;}
 
-/* window content heights.
-trust me, i TRIED to just have them be percentages, and it was never right for some reason. so I gave up and made them all manual. lol.*/
-
-#main .content {height: 259px!important} 
-#likes .content {height:  209px!important;}
-#dislikes .content {height:  109px!important;}
-#dislikes iframe, #links iframe, #discordwarn iframe {height:  96%!important;}
-#downloads .content {height:  282px!important;}
-#links .content {height:  112px!important;}
-#discordwarn .content {height:  105px!important;}
-#pokeh .content, #pokeh .iframe {height:  355px!important;}
-#ftype .content {height: 230px!important;}
-#ftype .iframe {width: 99%!important; height: 231px!important;}
 /* SMALLER WINDOWS AND MOBILE */
 
 .mobile_only{display: none;}
@@ -343,7 +338,7 @@ trust me, i TRIED to just have them be percentages, and it was never right for s
 
 div[id^="generic_text"] .content, div[id^="generic_image"] .content { height:382px; }
 
-#art .content, #blog .content {height: 650px!important; display: block;}
+#art .content, #blog .content {height: 550px!important; display: block;}
 #art .iframe, #blog .iframe {width: 99.93%!important;}
 
 /* SOME SHIT I COPIED FROM STACKOVERFLOW LOL */

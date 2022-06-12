@@ -67,6 +67,22 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 			internal = false
 			fileToServe = strings.Replace(pagename,"/","",1)
 	}
+	// inline function for sending the contents 
+	writeFile := func(w http.ResponseWriter, fileToServe, pagename string, page []byte) {
+		w.WriteHeader(200)
+		// Get the content type for that file to send.
+		contentType := ContentType("./"+fileToServe)
+		w.Header().Set("Content-Type", contentType)
+		w.Header().Set("Content-Disposition", "attachment; filename="+fileToServe)
+		w.Header().Set("Content-Name", pagename)
+		_, err := w.Write(page)
+		if(err != nil) {
+			fmt.Println(err)
+			return
+		}
+		return
+	}
+
 	// Is it an internal page? If so, treat it like a template.
 	if(internal) {
 		w.WriteHeader(200)
@@ -84,54 +100,65 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Printf("%d bytes written for %s.html!\n",i,fileToServe)
-
 	} else {
 		// Otherwise we should read it as it currently is, without loading it 
 		// into memory, and serve it.
-		// First, assume it's the name of a page in the html folder
-		page, err := os.ReadFile("./pages/"+fileToServe+"/.html")
+		// First, assume it's the name of a page in the html folder without an extension
+		page, err := os.ReadFile("./pages/"+fileToServe)
 		if(err != nil) {
-			if(os.IsNotExist(err)) {
-				// If the file doesn't exist, then try and load it from anywhere within the directory
-				file, err := os.Open(path.Clean(fileToServe))
-				if(err != nil) {
-					w.WriteHeader(404)
-					fmt.Printf("Sending 404 error for %s, %s\n\n",pagename,err.Error())
-					w.Write([]byte(err.Error()))
-					return
-				}
-				stat, err := file.Stat()
-				if(err != nil) {
-					w.Write([]byte(err.Error()))
-					return
-				}
-				http.ServeContent(w, r, stat.Name(), stat.ModTime(), file)
-			} else {
-				w.WriteHeader(500)
-				fmt.Printf("Sending 500 error for %s, %s\n\n",pagename,err.Error())
-				w.Write([]byte(err.Error()))
+			if(!os.IsNotExist(err)) {
+				SendError(w,500,pagename,err)
 				return
 			}
+
+			// Then assume it has an extension
+			page, err = os.ReadFile("./pages/"+fileToServe+".html")
+
+			if(err != nil) {
+				if(!os.IsNotExist(err)) {
+					SendError(w,500,pagename,err)
+					return
+				}
+			} else {
+				writeFile(w,fileToServe,pagename,page)
+				return
+			}
+
+			// Finally, try and load it from anywhere within the root directory. 
+			// Send a 404 if this doesn't work.
+
+			file, err := os.Open(path.Clean(fileToServe))
+			if(err != nil) {
+				SendError(w,404,pagename,err)
+				return
+			}
+
+			stat, err := file.Stat()
+			if(err != nil) {
+				SendError(w,500,pagename,err)
+				return
+			}
+			http.ServeContent(w, r, stat.Name(), stat.ModTime(), file)
 		} else {
-			w.WriteHeader(500)
-			fmt.Printf("Sending 500 error for %s, %s\n\n",pagename,err.Error())
-			w.Write([]byte(err.Error()))
+			writeFile(w,fileToServe,pagename,page)
 			return
 		}
-		w.WriteHeader(200)
-		// Get the content type for that file to send.
-		contentType := ContentType("./"+fileToServe)
-		w.Header().Set("Content-Type", contentType)
-		w.Header().Set("Content-Disposition", "attachment; filename="+fileToServe)
-		w.Header().Set("Content-Name", pagename)
-		fmt.Printf("Sending %s\n",fileToServe)
-		i, err := w.Write(page)
-		if(err != nil) {
-			fmt.Println(err)
-			return
-		}
-		fmt.Printf("%d bytes written for %s\n\n",i,fileToServe)
 	}
+}
+
+func SendError(w http.ResponseWriter, code int, pagename string, err error) {
+	w.WriteHeader(500)
+	fmt.Printf("Sending %d error for %s, %s\n\n",code,pagename,err.Error())
+	w.Write([]byte(fmt.Sprintf("<h1>Error %d</h1>%s",code,err)))
+	return
+}
+
+func ContentType(filename string) (string) {
+	mtype, err := mimetype.DetectFile(filename)
+	if(err != nil) {
+		return "application/x-octet-stream"
+	}
+	return mtype.String()
 }
 
 func Include(filename string) (string) {
@@ -140,15 +167,6 @@ func Include(filename string) (string) {
 		return err.Error()
 	}
 	return returnString.String()
-}
-
-func ContentType(filename string) (string) {
-	mtype, err := mimetype.DetectFile(filename)
-	if(err != nil) {
-		return "application/x-octet-stream"
-	}
-	fmt.Println(mtype.String())
-	return mtype.String()
 }
 
 func Time() (string) {
