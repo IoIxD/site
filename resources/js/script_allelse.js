@@ -46,7 +46,9 @@ if(navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
 } else {
   onPhone = 0;
 }
+
 // get the properties of windows
+// (todo: why isn't getJSON)
 properties = getJSON(window.location.protocol+"//"+window.location.host+"/properties.json");
 
 document.addEventListener("mousedown", function(e) {
@@ -185,7 +187,7 @@ window.addEventListener('resize', scaleUpdate);
 // essentially we want to make sure the body can only ever scale evenly.
 function scaleUpdate() {
   // set the scale of the body
-  var dpi = (document.querySelector('#dpi').offsetHeight / 96)-1;
+  var dpi = (document.getElementById("dpi").offsetHeight / 96)-1;
   ratio = window.devicePixelRatio;
   desiredRatio = Math.floor(((ratio+dpi)-1)*10)+1; // how many tenths away is the ratio and dpi from 1?
   if(desiredRatio % 2 != 0 && desiredRatio != 1) {desiredRatio++}; // make sure it's even, always.
@@ -198,7 +200,8 @@ function scaleUpdate() {
 
 // window creation
 
-function windowCreate(page, exoptions="") {
+function windowCreate(page, exoptions) {
+  if(exoptions == null) {exoptions = "";}
   // if there's already a window with the page, do nothing.
   if(document.getElementById(page) || page == null) {
     return 0;
@@ -219,7 +222,7 @@ function windowCreate(page, exoptions="") {
 
   // First see if the properties for the windows are in memory.
   // If they aren't, try and load one of the internal pages
-  if(pageProperties == undefined ) {
+  if(pageProperties == undefined) {
     page = window.location.pathname.replace('.html','').replace('/','',1);
     pageRoot = window.location.pathname.replace('.html','').split("/")[1];
     if(page.match(/\.txt$/gm)) {
@@ -233,6 +236,9 @@ function windowCreate(page, exoptions="") {
       options += "dirlist";
     }
     pageProperties = properties[page];
+    if(pageProperties == undefined) {
+      console.error("could not get the properties for page "+page+". properties json is: "+properties);
+    }
   } else {
     pageToMatch = page;
   }
@@ -269,9 +275,9 @@ function windowCreate(page, exoptions="") {
 
   // dirlist option signifies that the window should be a directory listing
   if(options.includes("dirlist")) { 
-    pageUrl = "/dirlist?dir="+${page};
+    pageUrl = "/dirlist?dir="+page;
   } else {
-    pageUrl = "/"+${page}+".html";
+    pageUrl = "/"+page+".html";
   }
 
   // valload option contains files and what not that generic_text or generic_image should read from.
