@@ -56,7 +56,7 @@ document.addEventListener("mousedown", function(e) {
       // our mouse is down
       mouseDown = 1; 
       // what element are we hovering over?
-      elemHover = document.querySelectorAll(`:hover`);
+      elemHover = document.querySelectorAll(":hover");
       // not only does it need to window but it needs to be at leat three layers deep
       if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
         // decrease the z index of every other window
@@ -170,7 +170,7 @@ document.addEventListener("mousemove", function(e) {
   } else {
     // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
     if(mouseDown) {
-      elemHover = document.querySelectorAll(`:hover`);
+      elemHover = document.querySelectorAll(":hover");
       if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
         movingWindow = 1;
         hoveredWin = elemHover[2];
@@ -214,7 +214,7 @@ function windowCreate(page, exoptions="") {
     return;
   }
 
-  var pageProperties = properties[`${page}`];
+  var pageProperties = properties[page];
   var loadOptionsAsValues = false;
 
   // First see if the properties for the windows are in memory.
@@ -232,7 +232,7 @@ function windowCreate(page, exoptions="") {
       pageToMatch = pageRoot;
       options += "dirlist";
     }
-    pageProperties = properties[`${page}`];
+    pageProperties = properties[page];
   } else {
     pageToMatch = page;
   }
@@ -242,7 +242,7 @@ function windowCreate(page, exoptions="") {
   var left = pageProperties.left;
   var top = pageProperties.top;
   var options = pageProperties.options;
-  var title = properties[`${page}`].name;
+  var title = properties[page].name;
 
   windows.length = 0;
   windows_r = document.getElementsByClassName("window");
@@ -269,9 +269,9 @@ function windowCreate(page, exoptions="") {
 
   // dirlist option signifies that the window should be a directory listing
   if(options.includes("dirlist")) { 
-    pageUrl = `/dirlist?dir=${page}/`;
+    pageUrl = "/dirlist?dir="+${page};
   } else {
-    pageUrl = `/${page}.html`;
+    pageUrl = "/"+${page}+".html";
   }
 
   // valload option contains files and what not that generic_text or generic_image should read from.
