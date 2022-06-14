@@ -33,38 +33,21 @@ var onPhone = 0;
 // window properties
 var properties;
 
-// can we use asynchronous code?
-var canAsync = true;
-
 // the ratio according to which to place objects on the screen
 var ratio; var desiredRatio;
 
-window.onload = function() {
-  // update the scale based on the device pixel ratio
-  scaleUpdate();
-  // phone detection
-  if(navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
-    onPhone = 1;
-  } else {
-    onPhone = 0;
-  }
+// functions to run upon starting up.
 
-  // async detection
-  try {
-    eval('async () => {}');
-  } catch(ex) {
-    console.warn(ex);
-    canAsync = false;
-    properties = getJSON(window.location.protocol+"//"+window.location.host+"/properties.json");
-    return;
-  } finally {
-    asyncInit();
-  }
+// update the scale based on the device pixel ratio
+scaleUpdate();
+// phone detection
+if(navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
+  onPhone = 1;
+} else {
+  onPhone = 0;
 }
-
-async function asyncInit() {
-  properties = await getJSONAsynchronous(window.location.protocol+"//"+window.location.host+"/properties.json");
-}
+// get the properties of windows
+properties = getJSON(window.location.protocol+"//"+window.location.host+"/properties.json");
 
 document.addEventListener("mousedown", function(e) {
   // which button?
@@ -301,37 +284,9 @@ function windowCreate(page, exoptions="") {
   pageUrl = location.origin+pageUrl;
   var pageContents = "";
 
-  // create a window based on what we got, using a different function based on your gender.
-  if(canAsync) {
-    windowCreatePart2Asynchronous(page,width,height,left,top,options,title,titlebar_additions)
-  } else {
-    windowCreatePart2Synchronous(page,width,height,left,top,options,title,titlebar_additions)
-  }
+  windowCreatePart2(page,width,height,left,top,options,title,titlebar_additions);
 }
 
-// the final part of the windowCreate function, asynchronously
-async function windowCreatePart2Asynchronous(page,width,height,left,top,options,title,titlebar_additions) {
-  pageContents = await fetch(pageUrl).then(r => r.text())
-  windowCreatePart3(page,pageContents,width,height,left,top,options,title,titlebar_additions);
-}
-
-// the final part of the windowCreate function, synchronously
-function windowCreatePart2Synchronous(page,width,height,left,top,options,title,titlebar_additions) {
-  try {
-    var xhr = new XMLHttpRequest();
-    xhr.open('Get', pageUrl, true);
-    xhr.onerror = function(e) {
-      console.log(e);
-    }
-    xhr.onload = function(e) {
-      pageContents = xhr.responseText;
-    }
-  } catch(ex) {
-    console.error(ex);
-    pageContents = "ERROR: <br>"+ex;
-  }
-  windowCreatePart3(page,pageContents,width,height,left,top,options,title,titlebar_additions);
-}
 
 function windowCreatePart3(page,pageContents,width,height,left,top,options,title,titlebar_additions) {
   // create a div the proper way so that we can reference it
@@ -354,6 +309,7 @@ function windowCreatePart3(page,pageContents,width,height,left,top,options,title
                   "</span>"+
                   titlebar_additions+
                   "<span class='content "+options+"'></span>"+
+                  "<span class='window-drag'></span>"+
                 "</div";
   windowPopulate(div,pageContents);
   document.body.append(div);
@@ -402,24 +358,6 @@ function OpenTheThree() {
   windowCreate('main');
   setTimeout(function(){windowCreate('likes');}, 500);
   setTimeout(function(){windowCreate('dislikes');}, 1000);
-}
-
-// function for getting/returning json object from a url
-function getJSONSynchronous(url) {
-    console.warn("async failed; \n"+ex);
-    var resp;
-    var xmlHttp = new XMLHttpRequest();
-    if(xmlHttp != null) {
-        xmlHttp.open("GET", url, false);
-        xmlHttp.send(null);
-        resp = xmlHttp.responseText;
-    }
-    return JSON.parse(resp);
-}
-
-async function getJSONAsynchronous(url) {
-  return await fetch(url)
-  .then(r => r.json())
 }
 
 // this code was taken from stack overflow don't blame me if it sucks

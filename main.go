@@ -75,6 +75,7 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Content-Disposition", "attachment; filename="+fileToServe)
 		w.Header().Set("Content-Name", pagename)
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(page)))
 		_, err := w.Write(page)
 		if(err != nil) {
 			fmt.Println(err)
@@ -90,7 +91,7 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", contentType)
 		w.Header().Set("Content-Disposition", "attachment; filename="+fileToServe)
 		w.Header().Set("Content-Name", pagename)
-
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len([]byte(Include(fileToServe)))))
 		fmt.Printf("Sending internal page %s.html\n",fileToServe)
 
 		i, err := w.Write([]byte(Include(fileToServe)))

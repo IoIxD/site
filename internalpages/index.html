@@ -1,42 +1,11 @@
 <html>
 	<body>
-		<script>
-		/* this code is somewhat sluggish, but i think it's better then having the site appear on screen for a second before showing
-		the no-javascript error screen (if applicable). that said, text needs to be hidden and then shown with css as a result of this, to make the look less embaressing */
-
-		var intended = location.origin+'/has_script.php';
-
-		/* default to using async if we can */
-		try {
-			fetch(intended).then(r => r.text()).then(r => {
-				document.open();
-				document.write(r);
-				document.close();
-			})
-		} catch(ex) {
-			console.warn(ex);
-			try {
-				document.open();
-				var xhr = new XMLHttpRequest();
-				xhr.open('Get', intended, true);
-				xhr.onerror = function(e) {
-					console.error(e);
-				}
-				xhr.onload = function(e) {
-					document.write(xhr.responseText);
-				}
-				document.close();
-			} catch(ex) {
-				console.error(ex);
-				document.open();
-				document.write("ERROR: <br>"+ex);
-				document.close();
-			}
-		}	
-		</script>
+		<link rel="stylesheet" type="text/css" href="./resources/preload.css">
+		<span id="visuallog"></span>
+		<script src="./resources/js/backport.js"></script>
+		<script src="./resources/js/init.js"></script>
 		<noscript>
 			{{Include "no_script"}}
 		</noscript>
-		<script>document.getElementsByTagName('noscript')[0].remove();</script>
 	</body>
 </html>

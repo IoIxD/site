@@ -124,10 +124,9 @@ table {width: 100%; font-size: 92%;}
         inset -1px -1px 0 1px black;}
 body.transparent {font-family: Charcoal, "WebCharcoal", sans-serif!important; background: #cecece!important;}
 
-
 .window .directions:after {content:"it's on the right";}
 
-.window-drag {display: block; width: 17px; height: 17px; background: url("images/window-drag.png"); bottom: 0px; right: 0; position: absolute;}
+.window-drag {display: block; width: 17px; height: 17px; background: url("images/window-drag.png"); bottom: 3px; right: 5px; position: absolute;}
 
 .window .tl_button {display: inline-block; width:  13px; height: 13px; background: url("images/macos_title_buttons.png") }
 .window .tl_button.close {float:  left; margin: 1px 0; background-position-y: 0px;}
@@ -230,6 +229,10 @@ body.transparent {font-family: Charcoal, "WebCharcoal", sans-serif!important; ba
 }
 ::-webkit-scrollbar-button:vertical:increment:disabled {
     background-image: url("images/down-arrow-disabled.svg");
+}
+::-webkit-scrollbar-corner {
+    background-color: #cecece;
+    background-image: url("images/window-drag.png");
 }
 
 @keyframes winAppear {
@@ -363,27 +366,18 @@ div[id^="generic_text"] .content, div[id^="generic_image"] .content { height:382
 #art .content, #blog .content {height: 550px!important; display: block;}
 #art .iframe, #blog .iframe {width: 99.93%!important;}
 
-.visible-android {
+/* hide/show things on some phones */
+.visible-android, .visible-ios {
   display:none;
 }
-.visible-ios {
-  display:none;
+.device-ios .visible-android, .device-ios .hidden-ios,
+.device-android .hidden-android, .device-android .visible-ios {
+  display:none !important;
 }
 .on-device .visible-android, .on-device .visible-android {
   display:inherit;
 }
-.device-ios .visible-android {
-  display:none !important;
-}
-.device-ios .hidden-ios {
-  display:none !important;
-}
-.device-android .hidden-android {
-  display:none !important;
-}
-.device-android .visible-ios {
-  display:none !important;
-}
+
 
 #dpi {
     height: 1in;
