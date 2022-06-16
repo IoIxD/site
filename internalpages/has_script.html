@@ -10,19 +10,19 @@
     <body class='main' style='transform: scale(1); width: 100%; height: 100%;' bgcolor="#9c9cce">
         <article class='sr-only' style='position: absolute; top: -500px'>If you're hearing this, it means you're using a screen reader, I think. I don't see a good way of translating this site into one that's more accessible, so I made a version of the site that is text only. You can view it by pressing Control, Alt, Shift, and O, at the same time.
         </article>
-            <span aria-hidden='true'>
+        <span aria-hidden='true'>
             	<span class='right-click-bar'>
                     <span class='date'>{{Time}}</span>
                 </span>
             <span class='desktop-item' style='font-size:0px; margin-top: 35px;' onclick="OpenTheThree()">
                 <img width='32' height='32' src="/resources/icons/accessories-text-editor.svg"><br><img width='27' height='12' src="/resources/images/font_main.svg">
-            </span><br><span class='desktop-item window-creator' id='downloads' style='font-size:0px;'>
+            </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('downloads');">
                 <img width='32' height='32' src="/resources/icons/drive-harddisk.svg"><br>
                 <img width='52' height='13' src="/resources/images/font_downloads.svg">
-            </span><br><span class='desktop-item window-creator' id='links' style='font-size:0px;'>
+            </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('links');">
                 <img width='32' height='32' src="/resources/icons/folder-remote.svg"><br>
                 <img width='60' height='12' src="/resources/images/font_social_media.svg">
-            </span><br><span class='desktop-item window-creator' id='art' style='font-size:0px;'>
+            </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('art');">
                 <img width='32' height='32' src="/resources/icons/folder-pictures.svg"><br>
                 <img width='30' height='12' src="/resources/images/font_art.svg">
             </span><br><!--- (re-add this when i have a games folder)

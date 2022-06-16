@@ -225,7 +225,7 @@ function windowCreate(page, exoptions) {
   }
 
   // if we're not phone and the window should animate, set that up.
-  if(!options.includes("noanim") && onPhone != 1) {
+  if(!hasWord(options, "noanim") && onPhone != 1) {
     document.documentElement.style.setProperty('--iw', width);
     document.documentElement.style.setProperty('--ih', height);
     document.documentElement.style.setProperty('--ix', left);
@@ -237,14 +237,14 @@ function windowCreate(page, exoptions) {
   var titlebar_additions = "";
 
   // textfile options adds a WordPerfect inspired text bar to the window
-  if(options.includes("textfile")) {
+  if(hasWord(options, "textfile")) {
     titlebar_additions = "<span class='wp-bar-fake'></span>";
   }
 
   pageUrl = location.origin+"/"+page;
 
   // valload option contains files and what not that generic_text or generic_image should read from.
-  if(exoptions.includes("valload")) {
+  if(hasWord(exoptions, "valload")) {
     exoptions = exoptions.replace("valload ", "");
     pageUrl += "?val="+exoptions;
     page += "_"+idGen(6);
@@ -295,7 +295,7 @@ function windowCreate(page, exoptions) {
                 "</div";
 
   windowPopulate(div,pageContents);
-  document.body.append(div);
+  document.body.appendChild(div);
 }
 
 // update the contents of a window.
@@ -330,15 +330,16 @@ function getJSON(url) {
     var resp;
     var xhr = new XMLHttpRequest();
     if(xhr != null) {
-        xhr.open("GET", url);
+        function load(e) {
+          resp = xhr.responseText;
+        }
         xhr.onerror = function(e) {
           console.error(e);
         }
-        xhr.onload = function(e) {
-          resp = xmlHttp.responseText;
-        }
+        xhr.readystatechange = load;
+        xhr.onload = load;
+        xhr.open("GET", url, false);
         xhr.send(null);
-        console.log(resp);
         return JSON.parse(resp);
     } else {
       console.error("XMLHttpRequest not supported. Cannot continue properly.");
@@ -346,19 +347,35 @@ function getJSON(url) {
     }
 }
 
+// check if a string has a word (simpler then includes because this checks between spaces)
+function hasWord(find, match) {
+  var found = false;
+  var lookThru = find.split(" ");
+  for(var i = 0; i < lookThru.length; i++) {
+    if(lookThru[i] == match) {
+      found = true;
+      return found;
+    }
+  }
+  return found;
+}
+
 // the initialization function :tm: (synchronously)
 function init() {
   try {
+    var bareURL = location.href.split("?")[0];
     var xhr = new XMLHttpRequest(null);
-    xhr.open("GET", location.href+'has_script');
-    xhr.onerror = function(e) {
-      console.error(e);
-    }
-    xhr.onload = function(e) {
+    function load(e) {
       document.open();
       document.write(xhr.responseText);
       document.close();
     }
+    xhr.readystatechange = load;
+    xhr.onload = load;
+    xhr.onerror = function(e) {
+      console.error(e);
+    }
+    xhr.open("GET", bareURL+'has_script', true);
     xhr.send(null);
   } catch(ex) {
     document.open();
@@ -367,7 +384,11 @@ function init() {
   }
   
   // initialize the properties variable
-  properties = getJSON(window.location.protocol+"//"+window.location.host+"/properties.json");
+  properties = getJSON(window.location.protocol+"//"+window.location.host+"/pages/properties.json");
+
+  logUpdate();
+
+  OpenTheThree();
 
   // skip checking for phones because a phone that doesn't support async is probably too old to do javascript
   // (or no longer has service.)

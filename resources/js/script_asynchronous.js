@@ -15,133 +15,137 @@ var ratio; var desiredRatio;                                            // the r
 
 
 // LISTENERS
-
-document.addEventListener("mousedown", function(e) {
-  // which button was pressed?
-  switch(e.which) {
-    case 1:
-      // our mouse is down
-      mouseDown = 1; 
-      // what element are we hovering over?
-      elemHover = document.querySelectorAll(":hover");
-      // not only does it need to window but it needs to be at leat three layers deep
-      if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
-        // decrease the z index of every other window
-        windows = document.getElementsByClassName("window");
-        for( i=0; i< windows.length; i++ ) {
-          curZIndex = windows[i].style.zIndex;
-          if(curZIndex == undefined) {
-            curZIndex = 1;
+function registerEventListeners() {
+  document.addEventListener("mousedown", function(e) {
+    console.log(e);
+    // which button was pressed?
+    switch(e.which) {
+      case 1:
+        // our mouse is down
+        mouseDown = 1; 
+        // what element are we hovering over?
+        elemHover = document.querySelectorAll(":hover");
+        // not only does it need to window but it needs to be at leat three layers deep
+        if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+          // decrease the z index of every other window
+          windows = document.getElementsByClassName("window");
+          for( i=0; i< windows.length; i++ ) {
+            curZIndex = windows[i].style.zIndex;
+            if(curZIndex == undefined) {
+              curZIndex = 1;
+            }
+            if(curZIndex > 0) windows[i].style.zIndex = curZIndex-1;
           }
-          if(curZIndex > 0) windows[i].style.zIndex = curZIndex-1;
-        }
-        // and push ours to the top
-        if(elemHover[2].style.zIndex == undefined) {
-          elemHover[2].style.zIndex = 21;
-        } else {
-          elemHover[2].style.zIndex = windows.length+2;
-        }
-        
-        // save our current mouse position to the "original" mouse position
-        mx_o = e.pageX; my_o = e.pageY;
+          // and push ours to the top
+          if(elemHover[2].style.zIndex == undefined) {
+            elemHover[2].style.zIndex = 21;
+          } else {
+            elemHover[2].style.zIndex = windows.length+2;
+          }
+          
+          // save our current mouse position to the "original" mouse position
+          mx_o = e.pageX; my_o = e.pageY;
 
-        // get the position of the window we're hovering over
-        ex = elemHover[2].style.left; ey = elemHover[2].style.top;
-        // if the x is in a percentage, convert it to pixels.
-        if(ex.includes("%")) {
-          wx_o = +(window.innerWidth) * +("."+ex.replace('%',''));
-        } else {
-          wx_o = ex.replace('px', '');
+          // get the position of the window we're hovering over
+          ex = elemHover[2].style.left; ey = elemHover[2].style.top;
+          // if the x is in a percentage, convert it to pixels.
+          if(ex.includes("%")) {
+            wx_o = +(window.innerWidth) * +("."+ex.replace('%',''));
+          } else {
+            wx_o = ex.replace('px', '');
+          }
+          // same for y
+          if(ey.includes("%")) {
+            wy_o = +(window.innerHeight) * +("."+ey.replace('%',''));
+          } else {
+            wy_o = ey.replace('px', '');
+          }
         }
-        // same for y
-        if(ey.includes("%")) {
-          wy_o = +(window.innerHeight) * +("."+ey.replace('%',''));
-        } else {
-          wy_o = ey.replace('px', '');
+        break;
+      default: 
+        break; // nothing for now.
+    }
+  })
+
+  document.addEventListener("mouseup", function() {
+    mouseDown = 0; // our mouse is no longer down
+    // if we were moving a window, stop moving it and deselect everything.
+    if(movingWindow == 1) {
+      for(var i = 0; i < windows.length; i++) {
+        windows[i].style.pointerEvents = 'initial';
+        windows[i].style.userSelect = 'initial';
+      }
+      window.getSelection().removeAllRanges();
+      movingWindow = 0;
+    }
+  })
+
+  document.addEventListener('keydown', function(e) {
+    switch(e.key) {
+      case "Control":   heldCtrl = 1;   break;
+      case "Alt":       heldAlt = 1;    break;
+      case "Shift":     heldShift = 1;  break;
+      case "O":         heldO = 1;      break;
+    }
+    if(heldCtrl == 1 && heldAlt == 1 && heldShift == 1 && heldO == 1) {
+      window.location.replace("https://ioi-xd.net/no_script");
+    }
+  })
+
+  document.addEventListener('keyup', function(e) {
+    switch(e.key) {
+      case "Control":   heldCtrl = 0;   break;
+      case "Alt":       heldAlt = 0;    break;
+      case "Shift":     heldShift = 0;  break;
+      case "O":         heldO = 0;      break;100 
+    }
+  })
+
+  // window dragging 
+  document.addEventListener("mousemove", function(e) {
+    // are we moving a window?
+    if(movingWindow) {
+      // if the window we're supposed to be moving is maximized then no we aren't.
+      if(hoveredWin.classList.contains("maximized")) {
+        return;
+      }
+      // move whatever window we're hovering over.
+      // first get what the position should be, in pixels.
+      newTop = (+(e.pageY-my_o) + +wy_o);
+      newLeft = (+(e.pageX-mx_o) + +wx_o);
+
+      // adjust it according to the window's width, converting it to a percentage.
+      newTop = (newTop / window.innerWidth)*100;
+      newLeft = (newLeft / window.innerHeight)*100;
+
+      // convert it back to pixels, again using the window's inner width.
+      newTop = window.innerWidth * (newTop)/100;
+      newLeft = window.innerHeight * (newLeft)/100;
+
+      hoveredWin.style.top = newTop+"px";
+      hoveredWin.style.left = newLeft+"px";
+
+      // disallow every window from being selected while we're moving the current one.
+      for(var i = 0; i < windows.length; i++) {
+        if(windows[i] != hoveredWin) {
+          windows[i].style.pointerEvents = 'none';
+          windows[i].style.userSelect = 'none';
         }
       }
-      break;
-    default: 
-      break; // nothing for now.
-  }
-})
-
-document.addEventListener("mouseup", function() {
-  mouseDown = 0; // our mouse is no longer down
-  // if we were moving a window, stop moving it and deselect everything.
-  if(movingWindow == 1) {
-    for(var i = 0; i < windows.length; i++) {
-      windows[i].style.pointerEvents = 'initial';
-      windows[i].style.userSelect = 'initial';
-    }
-    window.getSelection().removeAllRanges();
-    movingWindow = 0;
-  }
-})
-
-document.addEventListener('keydown', function(e) {
-  switch(e.key) {
-    case "Control":   heldCtrl = 1;   break;
-    case "Alt":       heldAlt = 1;    break;
-    case "Shift":     heldShift = 1;  break;
-    case "O":         heldO = 1;      break;
-  }
-  if(heldCtrl == 1 && heldAlt == 1 && heldShift == 1 && heldO == 1) {
-    window.location.replace("https://ioi-xd.net/no_script");
-  }
-})
-
-document.addEventListener('keyup', function(e) {
-  switch(e.key) {
-    case "Control":   heldCtrl = 0;   break;
-    case "Alt":       heldAlt = 0;    break;
-    case "Shift":     heldShift = 0;  break;
-    case "O":         heldO = 0;      break;100 
-  }
-})
-
-// window dragging 
-document.addEventListener("mousemove", function(e) {
-  // are we moving a window?
-  if(movingWindow) {
-    // if the window we're supposed to be moving is maximized then no we aren't.
-    if(hoveredWin.classList.contains("maximized")) {
-      return;
-    }
-    // move whatever window we're hovering over.
-    // first get what the position should be, in pixels.
-    newTop = (+(e.pageY-my_o) + +wy_o);
-    newLeft = (+(e.pageX-mx_o) + +wx_o);
-
-    // adjust it according to the window's width, converting it to a percentage.
-    newTop = (newTop / window.innerWidth)*100;
-    newLeft = (newLeft / window.innerHeight)*100;
-
-    // convert it back to pixels, again using the window's inner width.
-    newTop = window.innerWidth * (newTop)/100;
-    newLeft = window.innerHeight * (newLeft)/100;
-
-    hoveredWin.style.top = newTop+"px";
-    hoveredWin.style.left = newLeft+"px";
-
-    // disallow every window from being selected while we're moving the current one.
-    for(var i = 0; i < windows.length; i++) {
-      if(windows[i] != hoveredWin) {
-        windows[i].style.pointerEvents = 'none';
-        windows[i].style.userSelect = 'none';
+    } else {
+      // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
+      if(mouseDown) {
+        elemHover = document.querySelectorAll(":hover");
+        if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+          movingWindow = 1;
+          hoveredWin = elemHover[2];
+        }
       }
     }
-  } else {
-    // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
-    if(mouseDown) {
-      elemHover = document.querySelectorAll(":hover");
-      if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
-        movingWindow = 1;
-        hoveredWin = elemHover[2];
-      }
-    }
-  }
-})
+  })
+
+}
+
 
 // window creation
 async function windowCreate(page, exoptions) {
@@ -202,7 +206,7 @@ async function windowCreate(page, exoptions) {
   }
 
   // if we're not phone and the window should animate, set that up.
-  if(!options.includes("noanim") && onPhone != 1) {
+  if(!hasWord(options,"noanim") && onPhone != 1) {
     document.documentElement.style.setProperty('--iw', width);
     document.documentElement.style.setProperty('--ih', height);
     document.documentElement.style.setProperty('--ix', left);
@@ -214,14 +218,14 @@ async function windowCreate(page, exoptions) {
   var titlebar_additions = "";
 
   // textfile options adds a WordPerfect inspired text bar to the window
-  if(options.includes("textfile")) {
+  if(hasWord(options,"textfile")) {
     titlebar_additions = "<span class='wp-bar-fake'></span>";
   }
 
   pageUrl = location.origin+"/"+page;
 
   // valload option contains files and what not that generic_text or generic_image should read from.
-  if(exoptions.includes("valload")) {
+  if(hasWord(exoptions,"valload")) {
     exoptions = exoptions.replace("valload ", "");
     pageUrl += "?val="+exoptions;
     page += "_"+idGen(6);
@@ -295,11 +299,25 @@ async function getJSON(url) {
   return JSON.parse(fuck2);
 }
 
+// check if a string has a word (simpler then includes because this checks between spaces)
+function hasWord(find, match) {
+  var found = false;
+  var lookThru = find.split(" ");
+  for(var i = 0; i < lookThru.length; i++) {
+    if(lookThru[i] == match) {
+      found = true;
+      return found;
+    }
+  }
+  return found;
+}
+
 // the initialization function :tm: (asynchronously)
 
 async function init() {
+  var bareURL = location.href.split("?")[0];
   // fill the site with content
-  fetch(location.href+'has_script').then(r => r.text()).then(r => {
+  fetch(bareURL+'has_script').then(r => r.text()).then(r => {
     document.open();
     document.write(r);
     document.close();
@@ -325,4 +343,6 @@ async function init() {
   } else {
     onPhone = 0;
   }
+
+  registerEventListeners();
 }

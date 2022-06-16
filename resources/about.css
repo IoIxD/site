@@ -378,6 +378,7 @@ div[id^="generic_text"] .content, div[id^="generic_image"] .content { height:382
   display:inherit;
 }
 
+/* element for a hack of sorts where we get the screen dpi */
 
 #dpi {
     height: 1in;
@@ -385,4 +386,22 @@ div[id^="generic_text"] .content, div[id^="generic_image"] .content { height:382
     position: absolute;
     top: -100%;
     width: 1in;
+}
+
+/* copy from preload.css */
+
+#visuallog {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: black;
+    color: white;
+    z-index: 65000;
+}
+#visuallog span {
+    padding: 4px;
+    display: block;
+    font-size: 12px;
+    line-height: 12px;
+    background: transparent;
 }

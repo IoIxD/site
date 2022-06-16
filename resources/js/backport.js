@@ -1,47 +1,88 @@
 // CONSOLE.LOG BACKPORT
-// (custom)
+// (hand-done)
 
+var log = [];
 if (typeof console !== "object") {
 	(function () {
+		var errorOutputString = getParameterByName("outputErrors");
+		var errorOutput = false;
+		if(errorOutputString == "1") errorOutput = true;
 		console = {
 			log: function(message) {
-				logToVisual(message, 0);
+				log.push(message);
+				logUpdate();
 			},
 			warn: function(message) {
-				logToVisual(message, 1);
+				log.push("WARN: "+message);
+				logUpdate();
 			},
 			error: function(message) {
-				logToVisual(message, 2);
-				// we could throw a new error too but some browsers, 
-				// like that of the Wii, don't have a dev console. so it's useless.
+				if(!errorOutput) {
+					throw new Error(message);
+				} else {
+					log.push("ERROR: "+message);
+					logUpdate();
+				}
+			}
+		}
+		if(errorOutput) {
+			window.onerror = function(err) {
+				logToVisual(err,2);
 			}
 		}
 	})();
-	function logToVisual(messageString, type) {
-		visualLog = document.getElementById("visuallog");
-		if(visualLog != undefined) {
-			var message = document.createElement("span");
-			visualLog.appendChild(message);
-			switch(type) {
-				case 1:
-					message.style.backgroundColor = "yellow";
-					message.style.color = "black";
-					break;
-				case 2:
-					message.style.backgroundColor = "red";
-					break;
-				default:
-					break;
-			}
-			visualLog.innerHTML += messageString+"   <br>";
-		} else {
-			document.open();
-			document.write("visualLog undefined.");
-			document.close();
-		}
+}
 
+function logUpdate() {
+	visualLog = document.getElementById("visuallog");
+	// if it's not there, make sure it's there.
+	if(visualLog != undefined) {
+		visualLog = document.createElement("span");
+		visualLog.id = "visuallog";
+		document.body.appendChild(visualLog);
+	}
+	visualLog.innerHTML = "";
+	for(var i = 0; i < log.length; i++) {
+		visualLog += "<span>"+log[i]+"</span><br>";
 	}
 }
+
+// getElementsByClassName BACKPORT
+// (hand-done)
+
+if(typeof document.getElementsByClassName !== "object") {
+	var found = [];
+	// create a recursive function for doing this so that we can recursively go through elements to find what we need
+	function recurse(searchFor, element) {
+		var elements = element.getElementsByTagName("*");
+		for(var i = 0; i < elements.length; i++) {
+			var obj = elements[i];
+
+			if(obj.className != null && obj.className != "") {
+				// it could have multiple classes, so split them and check each one individually
+				var classes = obj.className.split(" ");
+				for(var n = 0; n < classes.length; n++) {
+					if(classes[n] == searchFor) {
+						found.push(obj);
+					} 
+				}
+
+			}
+
+			// any children? 
+			if(obj.childNodes.length > 0) {
+				// recurse through the children then. 
+				recurse(searchFor,obj);
+			}
+		}
+	}
+
+	document.getElementsByClassName = function(searchFor) {
+		found.length = 0;
+		recurse(searchFor,document);
+		return found;
+	}
+} 
 
 // JSON BACKPORT
 // (https://raw.githubusercontent.com/douglascrockford/JSON-js/master/json2.js)
@@ -308,7 +349,7 @@ if (typeof JSON !== "object") {
                     typeof replacer !== "object" ||
                     typeof replacer.length !== "number"
                 )) {
-                throw new Error("JSON.stringify");
+                console.error("JSON.stringify");
             }
 
             // Make a fake root object containing our value under the key of "".
@@ -325,7 +366,6 @@ if (typeof JSON !== "object") {
 
     if (typeof JSON.parse !== "function") {
         JSON.parse = function(text, reviver) {
-
             // The parse method takes a text and an optional reviver function, and returns
             // a JavaScript value if the text is a valid JSON text.
 
@@ -411,7 +451,22 @@ if (typeof JSON !== "object") {
 
             // If the text is not JSON parseable, then a SyntaxError is thrown.
 
-            throw new SyntaxError("JSON.parse");
+            console.error("SyntaxError: JSON.parse; "+text);
         };
     }
 }());
+
+
+// QUERY GET
+// (not really a backport but idc, plus most other solutions are ES6+ so it kind of fits)
+
+function getParameterByName(name) {
+	name = name.replace(/[\[\]]/g, '\\$&');
+	var url = window.location.href;
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
