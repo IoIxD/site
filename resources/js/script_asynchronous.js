@@ -188,7 +188,7 @@ async function windowCreate(page) {
   windows.length = 0;
   windows_r = document.getElementsByClassName("window");
   for ( i = 0; i < windows_r.length; i++ ) {
-    windows.push(windows_r[i])
+    windows.push(windows_r[i]);
   }
 
   // if we're not phone and the window should animate, set that up.
@@ -209,7 +209,7 @@ async function windowCreate(page) {
     titlebar_additions = "<span class='wp-bar-fake'></span>";
   }
 
-  pageUrl = location.origin+"/"+page;
+  pageUrl = location.protocol+"//"+location.host+"/"+page+"?embed=true";
 
   // get the contents of the page.
   var pageContents = await fetch(pageUrl).then(r => r.text());
@@ -223,7 +223,9 @@ async function windowCreate(page) {
   div.style.top     =   top;
   div.id      =   page;
   div.classList.add("window");
-  div.classList.add(options);
+  if(options != "") {
+    div.classList.add(options);
+  }
 
   // create a div the improper way because fuck that
   div.innerHTML = "<span class='titlebar'>"+
@@ -295,17 +297,15 @@ function hasWord(find, match) {
 // the initialization function :tm: (asynchronously)
 
 async function init() {
-  var bareURL = location.href.split("?")[0];
+  var bareURL = location.protocol+"//"+location.host;
   // fill the site with content
-  fetch(bareURL+'has_script').then(r => r.text()).then(r => {
-    document.open();
-    document.write(r);
-    document.close();
+  fetch(bareURL+'/has_script').then(r => r.text()).then(r => {
+    document.body.innerHTML += r;
   })
   // initialize the properties variable
   properties = await getJSON(window.location.protocol+"//"+window.location.host+"/properties.json");
 
-  // get the page we're on (currently unused)
+  // get the page we're on
   page = window.location.pathname.replace('.html','').replace('/','',1);
   if (page != "") { // if it's not blank, try and open a window based on it.
     windowCreate(page);

@@ -7,28 +7,43 @@ function windowRemove(page) {
 
 // resize window
 function windowResize(page) {
-  pageelem = document.getElementById(page);
-  if(pageelem.classList.contains("maximized")) {
-    pageelem.classList.remove("maximized");
+  elem = document.getElementById(page);
+  // toggle the maximized class appropriately.
+  // if it's shaded, unshade it
+  if(hasClass(elem,"maximized")) {
+    removeClass(elem,"maximized");
     document.body.style.overflow = "auto";
   } else {
-    pageelem.classList.add("maximized");
+    addClass(elem,"maximized");
     document.body.style.overflow = "hidden";
+    // if it's shaded, unshade it.
+    if(hasClass(elem,"shaded")) {
+      windowShade(page);
+    }
   }
 
 }
 
 // shade window
 function windowShade(page) {
-  pageelem = document.getElementById(page)
-  if(containsClass(pageelem,"shaded")) {
-    removeClass(pageelem,"shaded");
-    pageelem.style.marginTop = "0px";
+  elem = document.getElementById(page);
+  isntMaximized = !hasClass(elem,"maximized");
+  if(hasClass(elem,"shaded")) {
+    removeClass(elem,"shaded");
+    if(isntMaximized) windowUnshift(elem);
   } else {
-    addClass(pageelem,"shaded");
-    var shiftBy = +(pageelem.style.height.replace("px","",2))
-    pageelem.style.marginTop = -1*(shiftBy/2)+9+"px";
+    addClass(elem,"shaded");
+    if(isntMaximized) windowShift(elem);
   }
+}
+
+function windowShift(elem) {
+  var shiftBy = +(elem.style.height.replace(/px/,"",2));
+  elem.style.marginTop = -1*(shiftBy/2)+9+"px";
+}
+
+function windowUnshift(elem) {
+  elem.style.marginTop = "0px";
 }
 
 // wrap the resize listener in here for the same reason we wrap them in script_synchronous.js:

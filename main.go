@@ -84,23 +84,16 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Whether or not a page being served should actually be served, or if we should just serve the index
+	embed := false
+	embedQuery := r.URL.Query().Get("embed")
+	if(embedQuery == "true") {
+		embed = true
+	}
+
 	// Is it an internal page? If so, treat it like a template.
 	if(internal) {
-		w.WriteHeader(200)
-		contentType := ContentType("./internalpages/"+fileToServe+".html")
-		w.Header().Set("Content-Type", contentType)
-		w.Header().Set("Content-Disposition", "attachment; filename="+fileToServe)
-		w.Header().Set("Content-Name", pagename)
-		w.Header().Set("Content-Length", fmt.Sprintf("%d", len([]byte(Include(fileToServe)))))
-		fmt.Printf("Sending internal page %s.html\n",fileToServe)
-
-		i, err := w.Write([]byte(Include(fileToServe)))
-		if(err != nil) {
-			fmt.Println(err)
-			return
-		}
-
-		fmt.Printf("%d bytes written for %s.html!\n",i,fileToServe)
+		serveInternalPage(w, fileToServe)
 	} else {
 		// Otherwise we should read it as it currently is, without loading it 
 		// into memory, and serve it.
@@ -121,7 +114,13 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 			} else {
-				writeFile(w,fileToServe,pagename,page)
+				// If there's no error, serve it, but only if the embed query string is here.
+				if(embed) {
+					writeFile(w,"./pages/"+fileToServe+".html",pagename,page)
+				} else {
+					// if it isn't, we just serve the index page and let the javascript handle opening a window for this page.
+					serveInternalPage(w, "index")
+				}
 				return
 			}
 
@@ -136,16 +135,35 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 
 			stat, err := file.Stat()
 			if(err != nil) {
-				SendError(w,500,pagename,err)
+				SendError(w,404,pagename,err)
 				return
 			}
 			http.ServeContent(w, r, stat.Name(), stat.ModTime(), file)
 		} else {
-			writeFile(w,fileToServe,pagename,page)
-			return
+			writeFile(w,"./pages"+fileToServe,pagename,page)
 		}
 	}
 }
+
+// function to serve an internal page
+
+func serveInternalPage(w http.ResponseWriter, filename string) {
+		w.WriteHeader(200)
+		contentType := ContentType("./internalpages/"+filename+".html")
+		w.Header().Set("Content-Type", contentType)
+		w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+		w.Header().Set("Content-Name", filename)
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len([]byte(Include(filename)))))
+		fmt.Printf("Sending internal page %s.html\n",filename)
+
+		i, err := w.Write([]byte(Include(filename)))
+		if(err != nil) {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Printf("%d bytes written for %s.html!\n",i,filename)
+	} 
 
 func SendError(w http.ResponseWriter, code int, pagename string, err error) {
 	w.WriteHeader(500)

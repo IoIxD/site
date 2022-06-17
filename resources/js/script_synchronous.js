@@ -213,7 +213,7 @@ function windowCreate(page) {
     titlebar_additions = "<span class='wp-bar-fake'></span>";
   }
 
-  pageUrl = location.origin+"/"+page;
+  pageUrl = location.protocol+"//"+location.host+"/"+page+"?embed=true";
 
   // get the contents of the page.
   var pageContents = "";
@@ -226,8 +226,11 @@ function windowCreate(page) {
           xhr.onerror = function(e) {
               console.error(e);
           }
-          xhr.onload = load;
-          xhr.readystatechange = load;
+          try {
+            xhr.onload = load;
+          } catch(ex) {
+            xhr.readystatechange = load;
+          }
           xhr.open('GET', pageUrl, false);
           xhr.send(null);
       } else {
@@ -241,6 +244,7 @@ function windowCreate(page) {
 
   // create a div the proper way so that we can reference it
   var div = document.createElement("div");
+  document.body.appendChild(div);
   div.style.display =   "block";
   div.style.width   =   width;
   div.style.height  =   height;
@@ -262,15 +266,13 @@ function windowCreate(page) {
                   "<span class='content "+options+"'></span>"+
                   "<span class='window-drag'></span>";
 
-  if(legacyAnimate) windowAnimate(div,mx,my,left,top,width,height);
+  //if(legacyAnimate) windowAnimate(div,mx,my,left,top,width,height);
   windowPopulate(div,pageContents);
-  document.body.appendChild(div);
-  return pageContents;
+  return document.body.innerHTML;
 }
 
 // update the contents of a window.
 function windowPopulate(div,pageContents) {
-  alert(getElementsInElementByClassName(div,"content"));
   var content = getElementsInElementByClassName(div,"content")[0];
   if(typeof content === undefined) {
     return;
@@ -408,8 +410,11 @@ function getJSON(url) {
         xhr.onerror = function(e) {
           console.error(e);
         }
-        xhr.readystatechange = load;
-        xhr.onload = load;
+        try {
+          xhr.onload = load;
+        } catch(ex) {
+          xhr.readystatechange = load;
+        }
         xhr.open("GET", url, false);
         xhr.send(null);
         return JSON.parse(resp);
@@ -421,33 +426,40 @@ function getJSON(url) {
 
 // the initialization function :tm: (synchronously)
 function init() {
-  try {
-    var bareURL = location.href.split("?")[0];
-    var xhr = new XMLHttpRequest(null);
-    function load(e) {
-      document.open();
-      document.write(xhr.responseText);
-      document.close();
-    }
-    xhr.readystatechange = load;
-    xhr.onload = load;
-    xhr.onerror = function(e) {
-      console.error(e);
-    }
-    xhr.open("GET", bareURL+'has_script', true);
-    xhr.send(null);
-  } catch(ex) {
-    document.open();
-    document.write("ERROR: <br>"+ex);
-    document.close();
-  }
-  
   // initialize the properties variable
   properties = getJSON(window.location.protocol+"//"+window.location.host+"/pages/properties.json");
 
+
+  try {
+    var bareURL = location.protocol+"//"+location.host;
+    var xhr = new XMLHttpRequest(null);
+    try {
+      xhr.onload = function() {load(xhr.responseText)};
+    } catch(ex) {
+      xhr.readystatechange = function() {load(xhr.responseText)};
+    }
+    xhr.onerror = function(e) {
+      console.error(e);
+    }
+    xhr.open("GET", bareURL+'/has_script', true);
+    xhr.send(null);
+  } catch(ex) {
+    document.body.innerHTML += "ERROR: <br>"+ex;
+  }
+  
+  function load(e) {
+    document.body.innerHTML += xhr.responseText;
+  }
+
   logUpdate();
 
-  OpenTheThree();
+  // get the page we're on
+  page = window.location.pathname.replace('.html','').replace('/','',1);
+  if (page != "") { // if it's not blank, try and open a window based on it.
+    windowCreate(page);
+  } else {
+    OpenTheThree(); // otherwise, open the default three windows
+  }
 
   // skip checking for phones because a phone that doesn't support async is probably too old to do javascript
   // (or no longer has service.)

@@ -111,15 +111,13 @@ function removeClass(obj, value) {
 function hasClass(obj, value) {
     var found = false;
     var classes = obj.className.split(" ");
-    var newArray = classes.filter(
-        function(e) {
-            if(e == value) {
-                found = true;
-                return;
-            }
+    for(var i = 0; i < classes.length; i++) {
+        if(classes[i] == value) {
+            found = true;
+            return found;
         }
-    );
-    return;
+    }
+    return found;
 }
 
 
