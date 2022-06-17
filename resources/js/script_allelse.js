@@ -7,11 +7,12 @@ function windowRemove(page) {
 
 // resize window
 function windowResize(page) {
-  if(document.getElementById(page).classList.contains("maximized")) {
-    document.getElementById(page).classList.remove("maximized");
+  pageelem = document.getElementById(page);
+  if(pageelem.classList.contains("maximized")) {
+    pageelem.classList.remove("maximized");
     document.body.style.overflow = "auto";
   } else {
-    document.getElementById(page).classList.add("maximized");
+    pageelem.classList.add("maximized");
     document.body.style.overflow = "hidden";
   }
 
@@ -19,13 +20,14 @@ function windowResize(page) {
 
 // shade window
 function windowShade(page) {
-  if(document.getElementById(page).classList.contains("shaded")) {
-    document.getElementById(page).classList.remove("shaded");
-    document.getElementById(page).style.marginTop = "0px";
+  pageelem = document.getElementById(page)
+  if(containsClass(pageelem,"shaded")) {
+    removeClass(pageelem,"shaded");
+    pageelem.style.marginTop = "0px";
   } else {
-    document.getElementById(page).classList.add("shaded");
-    var shiftBy = +(document.getElementById(page).style.height.replace("px","",2))
-    document.getElementById(page).style.marginTop = -1*(shiftBy/2)+9+"px";
+    addClass(pageelem,"shaded");
+    var shiftBy = +(pageelem.style.height.replace("px","",2))
+    pageelem.style.marginTop = -1*(shiftBy/2)+9+"px";
   }
 }
 

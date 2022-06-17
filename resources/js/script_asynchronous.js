@@ -236,10 +236,9 @@ async function windowCreate(page) {
                   titlebar_additions+
                   "<span class='content "+options+"'></span>"+
                   "<span class='window-drag'></span>"+
-                "</div";
-
-  windowPopulate(div,pageContents);
+                "</div>";
   document.body.append(div);
+  windowPopulate(div,pageContents);
 }
 
 // update the contents of a window.

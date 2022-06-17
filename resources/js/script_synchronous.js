@@ -216,23 +216,27 @@ function windowCreate(page) {
   pageUrl = location.origin+"/"+page;
 
   // get the contents of the page.
+  var pageContents = "";
   try {
-    var xhr = new XMLHttpRequest();
-    if(xhr != null) {
-      xhr.open('GET', pageUrl, true);
-      xhr.onerror = function(e) {
-        console.log(e);
+      var xhr = new XMLHttpRequest();
+      if (xhr != null) {
+          function load(e) {
+              pageContents = xhr.responseText;
+          }
+          xhr.onerror = function(e) {
+              console.error(e);
+          }
+          xhr.onload = load;
+          xhr.readystatechange = load;
+          xhr.open('GET', pageUrl, false);
+          xhr.send(null);
+      } else {
+          console.error("XMLHttpRequest not supported. Cannot continue properly.");
+          return;
       }
-      xhr.onload = function(e) {
-        pageContents = xhr.responseText;
-      }
-    } else {
-      console.error("XMLHttpRequest not supported. Cannot continue properly.");
-      return;
-    }
-  } catch(ex) {
-    console.error(ex);
-    pageContents = "ERROR: <br>"+ex;
+  } catch (ex) {
+      console.error(ex);
+      pageContents = "ERROR: <br>" + ex;
   }
 
   // create a div the proper way so that we can reference it
@@ -242,10 +246,9 @@ function windowCreate(page) {
   div.style.height  =   height;
   div.style.left    =   left;
   div.style.top     =   top;
-  div.id      =   page;
-  alert(div.classList.add);
-/*  div.classList.add("window");
-  div.classList.add(options);
+  div.id            =   page;
+  addClass(div,"window");
+  addClass(div,options);
 
   // create a div the improper way because fuck that
   div.innerHTML = "<span class='titlebar'>"+
@@ -257,17 +260,18 @@ function windowCreate(page) {
                   "</span>"+
                   titlebar_additions+
                   "<span class='content "+options+"'></span>"+
-                  "<span class='window-drag'></span>"+
-                "</div";
+                  "<span class='window-drag'></span>";
 
-  windowPopulate(div,pageContents);
   if(legacyAnimate) windowAnimate(div,mx,my,left,top,width,height);
-  document.body.appendChild(div);*/
+  windowPopulate(div,pageContents);
+  document.body.appendChild(div);
+  return pageContents;
 }
 
 // update the contents of a window.
 function windowPopulate(div,pageContents) {
-  var content = div.getElementsByClassName("content")[0];
+  alert(getElementsInElementByClassName(div,"content"));
+  var content = getElementsInElementByClassName(div,"content")[0];
   if(typeof content === undefined) {
     return;
   }
@@ -275,7 +279,7 @@ function windowPopulate(div,pageContents) {
 }
 
 function percentageToPixels(percent, basedOn) {
-  percent = +(percent.replace("%","",1));
+  percent = parseInt(percent.replace(/\%/, "", 1));
   return basedOn * (percent / 100);
 }
 
@@ -283,14 +287,14 @@ function cleanUnits(target, basedOn) {
   if(hasLetter(target,"%")) {
     switch(basedOn) {
       case "width":
-        target = percentageToPixels(target.replace("%","",2),window.innerWidth);
+        target = percentageToPixels(target,window.innerWidth);
         break;
       case "height":
-        target = percentageToPixels(target.replace("%","",2),window.innerHeight);
+        target = percentageToPixels(target,window.innerHeight);
         break;
     }
   }
-  if(hasLetter(target,"p")) target = target.replace("px","",2);
+  if(hasLetter(target,"p")) target = target.replace(/px/,"",2);
   return +(target);
 }
 

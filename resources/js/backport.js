@@ -81,48 +81,47 @@ if(typeof document.getElementsByClassName !== "function") {
 		recurse(searchFor,document);
 		return found;
 	}
+
+    getElementsInElementByClassName = function(obj, searchFor) {
+        found.length = 0;
+        recurse(searchFor,obj);
+        return found;
+    }
 } 
 
 // CLASSLIST BACKPORT
+// i tried for like two hours to give the same syntax as the original
+// .classList shit and gave up Whoooops! Sorry!
 
-if(typeof HTMLElement.prototype.classList !== "object") {
-    HTMLElement.prototype.classList = {};
+function addClass(obj, value) {
+    var classes = obj.className.split(" ");
+    classes.push(value);
+    obj.className = classes.join(" ");
+    return;
 }
 
-(function() {
-    "use strict";
+function removeClass(obj, value) {
+    var classes = obj.className.split(" ");
+    var newArray = classes.filter(
+        function(e) {return e !== value});
+    obj.className = newArray.join(" ");
+    return;
+}
 
-    HTMLElement.prototype.classList.get = (function(e) {
-        alert(this);
-        var classes = this.className.split(" ");
-        classes.prototype.add = function(value) {
-            alert(value);
+function hasClass(obj, value) {
+    var found = false;
+    var classes = obj.className.split(" ");
+    var newArray = classes.filter(
+        function(e) {
+            if(e == value) {
+                found = true;
+                return;
+            }
         }
-        return classes;
+    );
+    return;
+}
 
-    })(this);
-
-    HTMLElement.classList.add = function(value) {
-        var classes = this.classList.get();
-        classes.push(value);
-        this.className = classes.join(" ");
-    };
-
-    HTMLElement.prototype.classList.remove = function(value) {
-        var classes = this.classList.get();
-        var newArray = classes.filter(
-            function(e) {return e !== value});
-        this.className = newArray.join(" ");
-    }
-
-    HTMLElement.prototype.classList.contains = function(value) {
-        var classes = this.classList.get();
-        var newArray = classes.filter(
-            function(e) {return e === value});
-        this.className = newArray.join(" ");
-    }
-
-});
 
 // JSON BACKPORT
 // (https://raw.githubusercontent.com/douglascrockford/JSON-js/master/json2.js)
