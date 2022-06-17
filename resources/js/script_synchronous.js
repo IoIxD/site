@@ -429,6 +429,28 @@ function init() {
   // initialize the properties variable
   properties = getJSON(window.location.protocol+"//"+window.location.host+"/pages/properties.json");
 
+  try {
+    var bareURL = location.href.split("?")[0];
+    var xhr = new XMLHttpRequest(null);
+    try {
+      xhr.onload = function() {load(xhr.responseText)};
+    } catch(ex) {
+      xhr.readystatechange = function() {load(xhr.responseText)};
+    }
+    xhr.onerror = function(e) {
+      console.error(e);
+    }
+    xhr.open("GET", bareURL+'has_script', true);
+    xhr.send(null);
+  } catch(ex) {
+    document.body.innerHTML += "ERROR: <br>"+ex;
+  }
+  
+  function load(e) {
+    document.body.innerHTML += xhr.responseText;
+  }
+>>>>>>> eb0f031a0b899f03f70e83e558feaa5a55a83124
+
 
   try {
     var bareURL = location.protocol+"//"+location.host;
