@@ -76,10 +76,10 @@ table {width: 100%; font-size: 92%;}
         inset -1px -1px 0 0 #9c9c9c,
         1px 1px 0 0 black;
 }
-/*
+
 .window:not(.noanim) {animation: winAppear .2s linear;}
 .window:not(.noanim) *:not(.noanim) {animation: winContentsHidden .1s linear;}
-*/
+
 
 .window.maximized {width: calc(100% + -8px)!important;height: 100%!important; top: 0!important; left: 0!important; z-index: 2147483647!important; transform: translate(0%,0%)!important;}
 .window.shaded {height: 18px!important; overflow: hidden!important;}
@@ -237,7 +237,6 @@ body.transparent {font-family: Charcoal, "WebCharcoal", sans-serif!important; ba
     background-image: url("images/window-drag.png");
 }
 
-/*
 @keyframes winAppear {
     0% {top: var(--mpy); left: var(--mpx); width: 0px; height:0px;border: 3px dotted grey; background: none!important; box-shadow: none; }
     100% {top:var(--iy); left: var(--ix); width: var(--iw); height: var(--ih); border: 3px dotted grey; background: none!important; box-shadow: none;}
@@ -247,7 +246,6 @@ body.transparent {font-family: Charcoal, "WebCharcoal", sans-serif!important; ba
     0%, 99% {visibility: hidden;}
     100% {visibility: visible;}
 }
-*/
 
 /* DESKTOP/FOLDER ITEMS */
 
@@ -392,7 +390,7 @@ div[id^="generic_text"] .content, div[id^="generic_image"] .content { height:382
     width: 1in;
 }
 
-/* copy from preload.css */
+/* on-screen console.log backport */
 
 #visuallog {
     position: absolute;

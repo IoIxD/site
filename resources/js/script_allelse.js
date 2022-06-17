@@ -8,11 +8,11 @@ function windowRemove(page) {
 // resize window
 function windowResize(page) {
   pageelem = document.getElementById(page);
-  if(pageelem.classList.contains("maximized")) {
-    pageelem.classList.remove("maximized");
+  if(hasClass(pageelem,"maximized")) {
+    removeClass(pageelem,"maximized");
     document.body.style.overflow = "auto";
   } else {
-    pageelem.classList.add("maximized");
+    addClass(pageelem,"maximized");
     document.body.style.overflow = "hidden";
   }
 
@@ -21,12 +21,12 @@ function windowResize(page) {
 // shade window
 function windowShade(page) {
   pageelem = document.getElementById(page)
-  if(containsClass(pageelem,"shaded")) {
+  if(hasClass(pageelem,"shaded")) {
     removeClass(pageelem,"shaded");
     pageelem.style.marginTop = "0px";
   } else {
     addClass(pageelem,"shaded");
-    var shiftBy = +(pageelem.style.height.replace("px","",2))
+    var shiftBy = +(pageelem.style.height.replace("/px/","",2));
     pageelem.style.marginTop = -1*(shiftBy/2)+9+"px";
   }
 }

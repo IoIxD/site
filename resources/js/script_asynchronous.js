@@ -223,7 +223,9 @@ async function windowCreate(page) {
   div.style.top     =   top;
   div.id      =   page;
   div.classList.add("window");
-  div.classList.add(options);
+  if(options != "") {
+    div.classList.add(options);
+  }
 
   // create a div the improper way because fuck that
   div.innerHTML = "<span class='titlebar'>"+
@@ -298,9 +300,7 @@ async function init() {
   var bareURL = location.href.split("?")[0];
   // fill the site with content
   fetch(bareURL+'has_script').then(r => r.text()).then(r => {
-    document.open();
-    document.write(r);
-    document.close();
+    document.body.innerHTML += r;
   })
   // initialize the properties variable
   properties = await getJSON(window.location.protocol+"//"+window.location.host+"/properties.json");
