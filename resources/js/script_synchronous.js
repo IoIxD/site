@@ -15,10 +15,7 @@ var ratio; var desiredRatio;                                            // the r
 
 
 // LISTENERS
-// if the listeners fail we don't give a fuck because the likely chance is that the browser just doesn't support them,
-// but the browser also stops execution when it sees them, hence why we need to make sure it ignores them.
-
-try {
+function registerEventListeners() {
   document.addEventListener("mousedown", function(e) {
     // which button was pressed?
     switch(e.which) {
@@ -68,11 +65,7 @@ try {
         break; // nothing for now.
     }
   })
-} catch(ex) {
-  var pissOff = "lol";
-}
 
-try {
   document.addEventListener("mouseup", function() {
     mouseDown = 0; // our mouse is no longer down
     // if we were moving a window, stop moving it and deselect everything.
@@ -85,11 +78,7 @@ try {
       movingWindow = 0;
     }
   })
-} catch(ex) {
-  var pissOff = "lol";
-}
 
-try {
   document.addEventListener('keydown', function(e) {
     switch(e.key) {
       case "Control":   heldCtrl = 1;   break;
@@ -101,11 +90,7 @@ try {
       window.location.replace("https://ioi-xd.net/no_script");
     }
   })
-} catch(ex) {
-  var pissOff = "lol";
-}
 
-try {
   document.addEventListener('keyup', function(e) {
     switch(e.key) {
       case "Control":   heldCtrl = 0;   break;
@@ -114,13 +99,8 @@ try {
       case "O":         heldO = 0;      break;100 
     }
   })
-} catch(ex) {
-  var pissOff = "lol";
-}
 
-// window dragging 
-
-try {
+  // window dragging 
   document.addEventListener("mousemove", function(e) {
     // are we moving a window?
     if(movingWindow) {
@@ -162,30 +142,19 @@ try {
       }
     }
   })
-} catch(ex) {
-  var pissOff = "lol";
+
 }
 
 // window creation
-function windowCreate(page, exoptions) {
-  if(exoptions == null) {exoptions = "";}
+function windowCreate(page) {
   // if there's already a window with the page, do nothing.
   if(document.getElementById(page) || page == null) {
     return 0;
   }
 
   var pageToMatch = "";
-  
-  // wait until properties is defined
-  if(properties == undefined) {
-    setTimeout(function(){
-      windowCreate(page, exoptions)
-    },250);
-    return;
-  }
 
   var pageProperties = properties[page];
-  var loadOptionsAsValues = false;
 
   // First see if the properties for the window is in memory.
   // If they aren't, try and load one of the internal pages
@@ -193,17 +162,13 @@ function windowCreate(page, exoptions) {
     page = window.location.pathname.replace('.html','').replace('/','',1);
     pageRoot = window.location.pathname.replace('.html','').split("/")[1];
     if(page.match(/\.txt$/gm)) {
-      exoptions += "valload "+page;
-      pageToMatch = "generic_text";
+      pageToMatch = pageProperties["generic_text"];
     } else if(page.match(/\.png$/gm)) {
-      exoptions += "valload "+page;
-      pageToMatch = "generic_image";
+      pageToMatch = pageProperties["generic_image"];
     } else {
-      pageToMatch = pageRoot;
-      options += "dirlist";
+      pageToMatch = pageProperties[pageRoot];
     }
-    pageProperties = properties[page];
-    if(pageProperties == undefined) {
+    if(pageToMatch == undefined) {
       console.error("could not get the properties for page "+page+". properties json is: "+properties);
       return;
     }
@@ -225,13 +190,20 @@ function windowCreate(page, exoptions) {
   }
 
   // if we're not phone and the window should animate, set that up.
-  if(!hasWord(options, "noanim") && onPhone != 1) {
-    document.documentElement.style.setProperty('--iw', width);
-    document.documentElement.style.setProperty('--ih', height);
-    document.documentElement.style.setProperty('--ix', left);
-    document.documentElement.style.setProperty('--iy', top);
-    document.documentElement.style.setProperty('--mpx', mx+"px");
-    document.documentElement.style.setProperty('--mpy', my+"px");
+  var legacyAnimate = false;
+  // if we're not phone and the window should animate, set that up.
+  if(!hasWord(options,"noanim") && onPhone != 1) {
+    try {
+      document.documentElement.style.setProperty('--iw', width);
+      document.documentElement.style.setProperty('--ih', height);
+      document.documentElement.style.setProperty('--ix', left);
+      document.documentElement.style.setProperty('--iy', top);
+      document.documentElement.style.setProperty('--mpx', mx+"px");
+      document.documentElement.style.setProperty('--mpy', my+"px");
+    } catch(ex) {
+      // if those fail then the browser doesn't support css variables, so turn on legacy animation.
+      legacyAnimate = true;
+    }
   }
 
   var titlebar_additions = "";
@@ -242,13 +214,6 @@ function windowCreate(page, exoptions) {
   }
 
   pageUrl = location.origin+"/"+page;
-
-  // valload option contains files and what not that generic_text or generic_image should read from.
-  if(hasWord(exoptions, "valload")) {
-    exoptions = exoptions.replace("valload ", "");
-    pageUrl += "?val="+exoptions;
-    page += "_"+idGen(6);
-  }
 
   // get the contents of the page.
   try {
@@ -278,7 +243,8 @@ function windowCreate(page, exoptions) {
   div.style.left    =   left;
   div.style.top     =   top;
   div.id      =   page;
-  div.classList.add("window");
+  alert(div.classList.add);
+/*  div.classList.add("window");
   div.classList.add(options);
 
   // create a div the improper way because fuck that
@@ -295,7 +261,8 @@ function windowCreate(page, exoptions) {
                 "</div";
 
   windowPopulate(div,pageContents);
-  document.body.appendChild(div);
+  if(legacyAnimate) windowAnimate(div,mx,my,left,top,width,height);
+  document.body.appendChild(div);*/
 }
 
 // update the contents of a window.
@@ -305,6 +272,107 @@ function windowPopulate(div,pageContents) {
     return;
   }
   content.innerHTML = pageContents;
+}
+
+function percentageToPixels(percent, basedOn) {
+  percent = +(percent.replace("%","",1));
+  return basedOn * (percent / 100);
+}
+
+function cleanUnits(target, basedOn) {
+  if(hasLetter(target,"%")) {
+    switch(basedOn) {
+      case "width":
+        target = percentageToPixels(target.replace("%","",2),window.innerWidth);
+        break;
+      case "height":
+        target = percentageToPixels(target.replace("%","",2),window.innerHeight);
+        break;
+    }
+  }
+  if(hasLetter(target,"p")) target = target.replace("px","",2);
+  return +(target);
+}
+
+
+// check if a string has a word (simpler then includes because this checks between spaces)
+function hasWord(find, match) {
+  var found = false;
+  var lookThru = find.split(" ");
+  for(var i = 0; i < lookThru.length; i++) {
+    if(lookThru[i] == match) {
+      found = true;
+      return found;
+    }
+  }
+  return found;
+}
+
+// check if a string has a letter.
+// we roll our own function both for browser compatibility and to save on speed when we only need to check one letter.
+function hasLetter(find, match) {
+  var found = false;
+  for(var i = 0; i < find.length; i++) {
+    if(find[i] == match) {
+      found = true;
+      return found;
+    }
+  }
+  return found;
+}
+
+// animate a window
+// (we don't use css animations because we want this to work on browsers from 20 years ago, i.e. firefox 2)
+function windowAnimate(div,from_x,from_y,to_x,to_y,to_width,to_height) {
+
+  // clean up the measurements we get
+  from_x = 0;
+  from_y = 0;
+  to_x = cleanUnits(to_x,"width");
+  to_y = cleanUnits(to_y,"height");
+  to_width = cleanUnits(to_width,"width");
+  to_height = cleanUnits(to_height,"height");
+
+  // we want to make sure this animation only has 250 frames.
+  var frameCount = 240;
+  var xProgress = (to_x-from_x)/frameCount;
+  var yProgress = (to_y-from_y)/frameCount;
+  var wProgress = (to_width)/frameCount;
+  var hProgress = (to_height)/frameCount;
+
+  var x = from_x;
+  var y = from_y;
+  var width = 0;
+  var height = 0;
+
+  while(x < to_x && y < to_y && width < to_width && height < to_height) {
+    
+    if(y <= to_y) {
+      newY = cleanUnits(div.style.top,"height");
+      newY += yProgress;
+      y += yProgress;
+      div.style.top = newY+"px";
+    }
+    if(x <= to_x) {
+      newX = cleanUnits(div.style.left,"width");
+      newX += xProgress;
+      x += xProgress;
+      div.style.left = newX+"px";
+    }
+    if(width <= to_width) {
+      newWidth = cleanUnits(div.style.width,"width");
+      newWidth += wProgress;
+      width += wProgress;
+      div.style.width = newWidth+"px";
+    }
+    if(height <= to_height) {
+      newHeight = cleanUnits(div.style.height,"height");
+      newHeight += hProgress;
+      height += hProgress;
+      div.style.height = newHeight+"px";
+    }
+  }
+
 }
 
 // quick and dirty function to open the three windows from the first icon, one after the other.
@@ -347,19 +415,6 @@ function getJSON(url) {
     }
 }
 
-// check if a string has a word (simpler then includes because this checks between spaces)
-function hasWord(find, match) {
-  var found = false;
-  var lookThru = find.split(" ");
-  for(var i = 0; i < lookThru.length; i++) {
-    if(lookThru[i] == match) {
-      found = true;
-      return found;
-    }
-  }
-  return found;
-}
-
 // the initialization function :tm: (synchronously)
 function init() {
   try {
@@ -394,6 +449,14 @@ function init() {
   // (or no longer has service.)
   // (and a smart phone that can't do async but do javascript is probably in that weird era of smartphones that nobody likes to collect,
   // unless you're that one guy who collects windows phones and fucks with them)
+
+  try {
+    registerEventListeners();
+  } catch(ex) {
+    // if the listeners fail to register we don't give a fuck because the likely chance is that the browser just doesn't support them,
+    // but the browser also stops execution when it sees them, hence why we need to make sure it ignores them.
+    var fuck = "piss";
+  }
 
 }
 

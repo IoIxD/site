@@ -50,7 +50,7 @@ function logUpdate() {
 // getElementsByClassName BACKPORT
 // (hand-done)
 
-if(typeof document.getElementsByClassName !== "object") {
+if(typeof document.getElementsByClassName !== "function") {
 	var found = [];
 	// create a recursive function for doing this so that we can recursively go through elements to find what we need
 	function recurse(searchFor, element) {
@@ -66,7 +66,6 @@ if(typeof document.getElementsByClassName !== "object") {
 						found.push(obj);
 					} 
 				}
-
 			}
 
 			// any children? 
@@ -83,6 +82,47 @@ if(typeof document.getElementsByClassName !== "object") {
 		return found;
 	}
 } 
+
+// CLASSLIST BACKPORT
+
+if(typeof HTMLElement.prototype.classList !== "object") {
+    HTMLElement.prototype.classList = {};
+}
+
+(function() {
+    "use strict";
+
+    HTMLElement.prototype.classList.get = (function(e) {
+        alert(this);
+        var classes = this.className.split(" ");
+        classes.prototype.add = function(value) {
+            alert(value);
+        }
+        return classes;
+
+    })(this);
+
+    HTMLElement.classList.add = function(value) {
+        var classes = this.classList.get();
+        classes.push(value);
+        this.className = classes.join(" ");
+    };
+
+    HTMLElement.prototype.classList.remove = function(value) {
+        var classes = this.classList.get();
+        var newArray = classes.filter(
+            function(e) {return e !== value});
+        this.className = newArray.join(" ");
+    }
+
+    HTMLElement.prototype.classList.contains = function(value) {
+        var classes = this.classList.get();
+        var newArray = classes.filter(
+            function(e) {return e === value});
+        this.className = newArray.join(" ");
+    }
+
+});
 
 // JSON BACKPORT
 // (https://raw.githubusercontent.com/douglascrockford/JSON-js/master/json2.js)

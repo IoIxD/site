@@ -1,4 +1,4 @@
-// javascript that isn't referenced by any script can be used in any context no matter what (and thank god)
+// javascript that isn't called from scripts and can be used no matter what (and thank god)
 
 // remove window
 function windowRemove(page) {

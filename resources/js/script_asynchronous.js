@@ -17,7 +17,6 @@ var ratio; var desiredRatio;                                            // the r
 // LISTENERS
 function registerEventListeners() {
   document.addEventListener("mousedown", function(e) {
-    console.log(e);
     // which button was pressed?
     switch(e.which) {
       case 1:
@@ -148,25 +147,15 @@ function registerEventListeners() {
 
 
 // window creation
-async function windowCreate(page, exoptions) {
-  if(exoptions == null) {exoptions = "";}
+async function windowCreate(page) {
   // if there's already a window with the page, do nothing.
   if(document.getElementById(page) || page == null) {
     return 0;
   }
 
   var pageToMatch = "";
-  
-  // wait until properties is defined
-  if(properties == undefined) {
-    setTimeout(function(){
-      windowCreate(page, exoptions)
-    },250);
-    return;
-  }
 
   var pageProperties = properties[page];
-  var loadOptionsAsValues = false;
 
   // First see if the properties for the window is in memory.
   // If they aren't, try and load one of the internal pages
@@ -174,23 +163,20 @@ async function windowCreate(page, exoptions) {
     page = window.location.pathname.replace('.html','').replace('/','',1);
     pageRoot = window.location.pathname.replace('.html','').split("/")[1];
     if(page.match(/\.txt$/gm)) {
-      exoptions += "valload "+page;
-      pageToMatch = "generic_text";
+      pageToMatch = pageProperties["generic_text"];
     } else if(page.match(/\.png$/gm)) {
-      exoptions += "valload "+page;
-      pageToMatch = "generic_image";
+      pageToMatch = pageProperties["generic_image"];
     } else {
-      pageToMatch = pageRoot;
-      options += "dirlist";
+      pageToMatch = pageProperties[pageRoot];
     }
-    pageProperties = await properties[page];
-    if(pageProperties == undefined) {
+    if(pageToMatch == undefined) {
       console.error("could not get the properties for page "+page+". properties json is: "+properties);
       return;
     }
   } else {
     pageToMatch = page;
   }
+
 
   var width = pageProperties.width;
   var height = pageProperties.height;
@@ -215,6 +201,7 @@ async function windowCreate(page, exoptions) {
     document.documentElement.style.setProperty('--mpy', my+"px");
   }
 
+
   var titlebar_additions = "";
 
   // textfile options adds a WordPerfect inspired text bar to the window
@@ -223,13 +210,6 @@ async function windowCreate(page, exoptions) {
   }
 
   pageUrl = location.origin+"/"+page;
-
-  // valload option contains files and what not that generic_text or generic_image should read from.
-  if(hasWord(exoptions,"valload")) {
-    exoptions = exoptions.replace("valload ", "");
-    pageUrl += "?val="+exoptions;
-    page += "_"+idGen(6);
-  }
 
   // get the contents of the page.
   var pageContents = await fetch(pageUrl).then(r => r.text());
@@ -289,6 +269,7 @@ function idGen(length) {
    return result;
 }
 
+// get a json from a url
 async function getJSON(url) {
   var fuck2;
   await fetch(url)
