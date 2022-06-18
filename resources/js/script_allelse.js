@@ -57,6 +57,11 @@ try {
 // function for handling zoom ins and zoom outs.
 // essentially we want to make sure the body can only ever scale evenly.
 function scaleUpdate() {
+  // if the dpi element is missing, try this function again in 100ms
+  if(document.getElementById("dpi") == undefined) {
+    setTimeout(scaleUpdate,100);
+    return;
+  }
   // set the scale of the body
   var dpi = (document.getElementById("dpi").offsetHeight / 96)-1;
   ratio = window.devicePixelRatio;
@@ -66,14 +71,14 @@ function scaleUpdate() {
   document.body.style.transform = "scale("+desiredRatio+")";
   document.body.style.width = +(window.innerWidth/desiredRatio)-30+"px";
   document.body.style.height = +(window.innerHeight/desiredRatio)+"px";
-  //document.body.style.height = "0px";
+  if(desiredRatio == 1) {
+    document.body.style.marginTop = "0px";
+  } else {
+    document.body.style.marginTop = +((window.innerHeight/desiredRatio)/desiredRatio)+"px";
+  }
 }
 
-// dummy function
-function init() {}
-
-// we actually want things to be run when the window is loaded
-window.onload = function() {
-  // update the scale based on the device pixel ratio
+// init function
+function init() {
   scaleUpdate();
 }
