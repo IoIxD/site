@@ -8,7 +8,7 @@
 	"discordwarn": {"name":"Warning", "width": "400px", "height": "140px", "left": "50%", "top": "50%", "options": "noanim transparent"},
 	"pokesource": {"name":"Pokemon: Source", "width": "400px", "height": "400px", "left": "50%", "top": "350px", "options": ""},
 	"blog": {"name": "Blog", "width": "600px", "height": "670px", "left":"50%", "top":"50%", "options": "dirlist"},
-	"art": {"name": "Art", "width": "600px", "height": "670px", "left":"50%", "top":"50%", "options": "dirlist"},
+	"art": {"name": "Art", "width": "600px", "height": "570px", "left":"50%", "top":"50%", "options": "dirlist"},
 	"dirlist": {"name": "Art", "width": "600px", "height": "670px", "left":"50%", "top":"50%", "options": "dirlist"},
 	"generic_image": {"name": "Art Viewer", "width": "400px", "height": "400px", "left": "50%", "top":"50%", "options": "nooverflow"},
 	"generic_text": {"name": "Text Viewer", "width": "400px", "height": "400px", "left": "50%", "top":"50%", "options": "nooverflow textfile"},

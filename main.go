@@ -10,6 +10,7 @@ import (
 	"io/fs"
 
 	"strings"
+	"strconv"
 
 	"time"
 	"bytes"
@@ -19,7 +20,6 @@ import (
 	"fmt"
 	"log"
 
-	"regexp"
 	"path"
 	"errors"
 	"math"
@@ -31,8 +31,6 @@ import (
 //go:embed internalpages/*
 var internalPages embed.FS
 var tmpl *template.Template
-
-var re *regexp.Regexp  		= regexp.MustCompile(`(.*?)( |\n)`)
 
 type Foo struct { 
 	Directory 	[]os.FileInfo
@@ -289,35 +287,41 @@ func FileType(filename string) (string) {
 }
 
 // function that converts a number to bytes 
-func PrettySize(size_ int64) (string) {
-	size := float64(size_)
+func PrettySize(size int64) (string) {
 	// If the size is 4096, make an unsafe approximation and assume it's a folder. 
 	// it's not like users will be able to upload files, worst that happens is that 
 	// I accidentally put in a file that's 4096 bytes
 	if(size == 4096) {
 		return "-"
 	}
-	switch(math.Round(math.Log10(size))) {
-		case 1, 2, 3: 		return fmt.Sprintf("%.0fB",size) 	// B
-		case 4, 5: 			return fmt.Sprintf("%.0fK",size)	// K
-		case 6, 7: 			return fmt.Sprintf("%.0fMB",size)	// MB
-		case 8, 9: 			return fmt.Sprintf("%.0fGB",size)	// GB
-		case 10, 11: 		return fmt.Sprintf("%.0fTB",size)	// TB
-		case 12, 13:		return fmt.Sprintf("%.0fPB",size)	// PB
-		case 14, 15: 		return fmt.Sprintf("%.0fEB",size)	// EB
-		case 16, 17: 		return fmt.Sprintf("%.0fZB",size)	// ZB
-		case 18, 19: 		return fmt.Sprintf("%.0fYB",size)	// YB
+
+	log10 := math.Round(math.Log10(float64(size)))
+	sizeNew := size/int64(math.Pow(10,log10))
+	switch(log10) {
+		case 1, 2, 3: 		return fmt.Sprintf("%dB",sizeNew) 	// B
+		case 4, 5: 			return fmt.Sprintf("%dK",sizeNew)		// K
+		case 6, 7: 			return fmt.Sprintf("%dMB",sizeNew)	// MB
+		case 8, 9: 			return fmt.Sprintf("%dGB",sizeNew)	// GB
+		case 10, 11: 		return fmt.Sprintf("%dTB",sizeNew)	// TB
+		case 12, 13:		return fmt.Sprintf("%dPB",sizeNew)	// PB
+		case 14, 15: 		return fmt.Sprintf("%dEB",sizeNew)	// EB
+		case 16, 17: 		return fmt.Sprintf("%dZB",sizeNew)	// ZB
+		case 18, 19: 		return fmt.Sprintf("%dYB",sizeNew)	// YB
 	}
 	return "-"
 }
 
 // function to show how much disk space is left on the server
 func Diskfree() (string) {
-	cmd := exec.Command("df","-h","/")
+	cmd := exec.Command("df","-B1","--output=avail","/")
 	df, err := cmd.Output()
 	if(err != nil) {
 		return "Error getting disk space: "+err.Error()
 	}
-	dfSplit := re.FindAll(df,-1)
-	return string(dfSplit[20])
+	dfSecondLine := strings.Split(string(df),"\n")[1]
+	dfFinal, err := strconv.Atoi(dfSecondLine)
+	if(err != nil) {
+		return "Error converting the df output to an int64: "+err.Error()
+	} 
+	return PrettySize(int64(dfFinal)) // use PrettySize instead of -h for consistency 
 }
