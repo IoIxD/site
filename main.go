@@ -2,18 +2,27 @@ package main
 
 import (
 	"net/http"
+
 	"html/template"
 	"embed"
+
 	"os"
 	"io/fs"
+	"path"
+
 	"strings"
-	"log"
+
 	"time"
 	"bytes"
-	"fmt"
-	"path"
+
 	"errors"
 	"math"
+	"os/exec"
+
+	"fmt"
+	"log"
+
+	"regexp"
 
 	"github.com/gabriel-vasile/mimetype"
 )
@@ -22,6 +31,8 @@ import (
 //go:embed internalpages/*
 var internalPages embed.FS
 var tmpl *template.Template
+
+var re *regexp.Regexp  		= regexp.MustCompile(`(.*?)( |\n)`)
 
 // i literally have no other name for this 
 // and honestly given that it has two objects i wish it wasn't necessary
@@ -34,10 +45,11 @@ type Foo struct {
 func main() {
 	tmpl = template.New("")
 	tmpl.Funcs(template.FuncMap{
-		"Include": Include,
-		"Time": Time,
-		"FileType": FileType,
-		"PrettySize": PrettySize,
+		"Include": 		Include,
+		"Time": 		Time,
+		"FileType": 	FileType,
+		"PrettySize": 	PrettySize,
+		"Diskfree": 	Diskfree,
 	})
 	_, err := tmpl.ParseFS(internalPages, "internalpages/*")
 	if err != nil {
@@ -95,7 +107,13 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func ServeFileOrFolder(w http.ResponseWriter, r *http.Request, filename string) {
-	// Whether or not a page being served should actually be served, or if we should just serve the index page.
+	// This is my main excuse for not using mux, basically we use a query string
+	// to determine whether the file should *actually* be served or not. This allows me
+	// to redirect most valid requests to the home page and then have the Javascript create
+	// a window with the page (which uses the query string).
+
+	// (TODO: include the file contents in a noscript tag for those on javascript-less browsers)
+
 	embed := false
 	embedQuery := r.URL.Query().Get("embed")
 	if(embedQuery == "true") {
@@ -105,14 +123,22 @@ func ServeFileOrFolder(w http.ResponseWriter, r *http.Request, filename string) 
 	// Is it a directory? If so, switch to that function.
 	if finfo, err := os.Lstat(filename); err == nil {
 		if(finfo.Mode().IsDir()) {
-			ServeFolder(w,filename)
+			if(embed) {
+				ServeFolder(w,filename)
+			} else {
+				ServeInternalPage(w, "index")
+			}
 			return
 		}
 	}
 	// it could also be in the pages directory
 	if finfo, err := os.Lstat("./pages/"+filename); err == nil {
 		if(finfo.Mode().IsDir()) {
-			ServeFolder(w,"./pages/"+filename)
+			if(embed) {
+				ServeFolder(w,"./pages/"+filename)
+			} else {
+				ServeInternalPage(w, "index")
+			}
 			return
 		}
 	}
@@ -133,11 +159,6 @@ func ServeFileOrFolder(w http.ResponseWriter, r *http.Request, filename string) 
 
 	// 2. as an html file in pages/
 	if page, err := os.ReadFile("./pages/"+filename+".html"); err == nil {
-		// This one is the reason we don't just use mux, because we handle the file
-		// differently based on the query string.
-		// If ?embed is true, we serve the file as we would, but otherwise, we
-		// actually serve the index and let the javascript side open up a window
-		// with our file contents.
 		if(embed) {
 			ServeFile(w,"./pages/"+filename+".html",page)
 		} else {
@@ -290,4 +311,15 @@ func PrettySize(size_ int64) (string) {
 		case 18, 19: 		return fmt.Sprintf("%.0fYB",size)	// YB
 	}
 	return "-"
+}
+
+// function to show how much disk space is left on the server
+func Diskfree() (string) {
+	cmd := exec.Command("df","-h","/")
+	df, err := cmd.Output()
+	if(err != nil) {
+		return "Error getting disk space: "+err.Error()
+	}
+	dfSplit := re.FindAll(df,-1)
+	return string(dfSplit[20])
 }

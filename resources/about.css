@@ -11,16 +11,16 @@ body.transparent {
     font-family: Charcoal, "WebCharcoal", sans-serif!important;
     background: #cecece!important;
 }
-body.main {
-    background-image: url("images/19201080_filter.png");
-    background-color: #9c9cce;
-    color: black!important;
-    overflow-x: hidden;
-}
 body {
     padding-left:30px;
     display: block;
     margin: auto auto;
+    font-family: Verdana;
+    font-size: 75%;
+    background-image: url("images/19201080_filter.png");
+    background-color: #9c9cce;
+    color: black!important;
+    overflow-x: hidden;
 }
 * {
     image-rendering: optimizeSpeed!important;
@@ -114,24 +114,35 @@ button:focus {
     vertical-align: center;
     padding: 1px 4px 2px 4px;
 }
-.window .content {
+.window .content { /* default padding */
     vertical-align: top;
     display: block;
-    margin: 8px;
     padding: 16px 16px 16px 30px;
     width: calc(100% + -61px);
     height: calc(100% + -64px);
-    overflow-x: scroll;
+    overflow: scroll;
     display: block;
     min-height:1px!important;
     min-width: 1px!important;
     position: relative;
 }
-.window .content.textfile {
-    width: calc(100% + -29px);
-    height: calc(100% + -66px);
-    margin: 4px;
+.window .content.textfile { /* default uniform padding */
+    width: calc(100% + -21px);
+    height: calc(100% + -61px);
     padding: 10px;
+}
+.window .content.dirlist { /* basically no padding */
+    padding: 2px;
+    width: calc(100% + -4px);
+    height: calc(100% + -24px);
+    overflow: hidden; /* overflow is handled differently for directory listings, though. */
+}
+.window .content.dirlist .scroll {
+    display: block;
+    margin-left: -1px;
+    width: calc(100% + 3px);
+    height: calc(100% + -18px);
+    overflow: scroll!important;
 }
 .window:not(.transparent) .content {
     background: white!important;
