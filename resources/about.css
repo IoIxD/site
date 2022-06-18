@@ -6,6 +6,9 @@
 }
 html, body {
     height: 100%;
+    font-family: Verdana;
+    font-size: 75%;
+    overflow: visible;
 }
 body.transparent {
     font-family: Charcoal, "WebCharcoal", sans-serif!important;

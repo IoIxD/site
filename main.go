@@ -8,21 +8,21 @@ import (
 
 	"os"
 	"io/fs"
-	"path"
 
 	"strings"
 
 	"time"
 	"bytes"
 
-	"errors"
-	"math"
 	"os/exec"
 
 	"fmt"
 	"log"
 
 	"regexp"
+	"path"
+	"errors"
+	"math"
 
 	"github.com/gabriel-vasile/mimetype"
 )
@@ -34,9 +34,6 @@ var tmpl *template.Template
 
 var re *regexp.Regexp  		= regexp.MustCompile(`(.*?)( |\n)`)
 
-// i literally have no other name for this 
-// and honestly given that it has two objects i wish it wasn't necessary
-// (it's for the file listing template)
 type Foo struct { 
 	Directory 	[]os.FileInfo
 	FolderName 	string
@@ -114,6 +111,7 @@ func ServeFileOrFolder(w http.ResponseWriter, r *http.Request, filename string) 
 
 	// (TODO: include the file contents in a noscript tag for those on javascript-less browsers)
 
+	// Whether or not a page being served should actually be served, or if we should just serve the index page.
 	embed := false
 	embedQuery := r.URL.Query().Get("embed")
 	if(embedQuery == "true") {

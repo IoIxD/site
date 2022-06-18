@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 81108509076bdeb11e4b6c2bc5ea4bd8cddd27ef
 ul, li {
     margin: 0;
     padding-left: .1em;
     list-style-type: none;
 }
+<<<<<<< HEAD
 table {
     width: calc(100% + 2px);
     font-size: 92%;
@@ -29,11 +33,14 @@ td img {
     vertical-align: middle;
 }
 
+=======
+>>>>>>> 81108509076bdeb11e4b6c2bc5ea4bd8cddd27ef
 .thead td {
     background: #ccc;
     padding: 3px;
     box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #888, 1px 1px 0 0 #333, 0px 0px 0px 1px #666;
 }
+<<<<<<< HEAD
 
 .folderinfo {
     width: calc(100% + -6px);
@@ -43,4 +50,24 @@ td img {
     text-align: center;
     background: #ddd;
     box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #aaa;
+=======
+td p {
+    height: 1.5em;
+    line-height: 1.5em;
+    display: inline;
+}
+td img {
+    vertical-align: middle;
+}
+td{
+    background: #eee;
+}
+td.hcolumn {
+    background: #ddd;
+    cursor: pointer;
+}
+table {
+    width: 100%;
+    font-size: 92%;
+>>>>>>> 81108509076bdeb11e4b6c2bc5ea4bd8cddd27ef
 }
