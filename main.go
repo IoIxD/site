@@ -5,25 +5,39 @@ import (
 	"html/template"
 	"embed"
 	"os"
+	"io/fs"
 	"strings"
 	"log"
 	"time"
 	"bytes"
 	"fmt"
 	"path"
+	"errors"
+	"math"
 
 	"github.com/gabriel-vasile/mimetype"
 )
 
+
 //go:embed internalpages/*
 var internalPages embed.FS
 var tmpl *template.Template
+
+// i literally have no other name for this 
+// and honestly given that it has two objects i wish it wasn't necessary
+// (it's for the file listing template)
+type Foo struct { 
+	Directory 	[]os.FileInfo
+	FolderName 	string
+}
 
 func main() {
 	tmpl = template.New("")
 	tmpl.Funcs(template.FuncMap{
 		"Include": Include,
 		"Time": Time,
+		"FileType": FileType,
+		"PrettySize": PrettySize,
 	})
 	_, err := tmpl.ParseFS(internalPages, "internalpages/*")
 	if err != nil {
@@ -67,103 +81,146 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 			internal = false
 			fileToServe = strings.Replace(pagename,"/","",1)
 	}
-	// inline function for sending the contents 
-	writeFile := func(w http.ResponseWriter, fileToServe, pagename string, page []byte) {
-		w.WriteHeader(200)
-		// Get the content type for that file to send.
-		contentType := ContentType("./"+fileToServe)
-		w.Header().Set("Content-Type", contentType)
-		w.Header().Set("Content-Disposition", "attachment; filename="+fileToServe)
-		w.Header().Set("Content-Name", pagename)
-		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(page)))
-		_, err := w.Write(page)
-		if(err != nil) {
-			fmt.Println(err)
-			return
-		}
+
+	// Is it an internal page? If so, switch to that function.
+	if(internal) {
+		ServeInternalPage(w, fileToServe)
+		return
+	// otherwise go through the function to see what we need to serve.
+	} else {
+		ServeFileOrFolder(w, r, fileToServe)
 		return
 	}
+	
+}
 
-	// Whether or not a page being served should actually be served, or if we should just serve the index
+func ServeFileOrFolder(w http.ResponseWriter, r *http.Request, filename string) {
+	// Whether or not a page being served should actually be served, or if we should just serve the index page.
 	embed := false
 	embedQuery := r.URL.Query().Get("embed")
 	if(embedQuery == "true") {
 		embed = true
 	}
 
-	// Is it an internal page? If so, treat it like a template.
-	if(internal) {
-		serveInternalPage(w, fileToServe)
-	} else {
-		// Otherwise we should read it as it currently is, without loading it 
-		// into memory, and serve it.
-		// First, assume it's the name of a page in the html folder without an extension
-		page, err := os.ReadFile("./pages/"+fileToServe)
-		if(err != nil) {
-			if(!os.IsNotExist(err)) {
-				SendError(w,500,pagename,err)
-				return
-			}
-
-			// Then assume it has an extension
-			page, err = os.ReadFile("./pages/"+fileToServe+".html")
-
-			if(err != nil) {
-				if(!os.IsNotExist(err)) {
-					SendError(w,500,pagename,err)
-					return
-				}
-			} else {
-				// If there's no error, serve it, but only if the embed query string is here.
-				if(embed) {
-					writeFile(w,"./pages/"+fileToServe+".html",pagename,page)
-				} else {
-					// if it isn't, we just serve the index page and let the javascript handle opening a window for this page.
-					serveInternalPage(w, "index")
-				}
-				return
-			}
-
-			// Finally, try and load it from anywhere within the root directory. 
-			// Send a 404 if this doesn't work.
-
-			file, err := os.Open(path.Clean(fileToServe))
-			if(err != nil) {
-				SendError(w,404,pagename,err)
-				return
-			}
-
-			stat, err := file.Stat()
-			if(err != nil) {
-				SendError(w,404,pagename,err)
-				return
-			}
-			http.ServeContent(w, r, stat.Name(), stat.ModTime(), file)
-		} else {
-			writeFile(w,"./pages"+fileToServe,pagename,page)
+	// Is it a directory? If so, switch to that function.
+	if finfo, err := os.Lstat(filename); err == nil {
+		if(finfo.Mode().IsDir()) {
+			ServeFolder(w,filename)
+			return
 		}
+	}
+	// it could also be in the pages directory
+	if finfo, err := os.Lstat("./pages/"+filename); err == nil {
+		if(finfo.Mode().IsDir()) {
+			ServeFolder(w,"./pages/"+filename)
+			return
+		}
+	}
+
+	// Ok, so we're loading a file. There's three places a file could be.
+
+	// 1. as an extensionless file in pages/
+	if page, err := os.ReadFile("./pages/"+filename); err == nil {
+		ServeFile(w,"./pages"+filename,page)
+		return
+	} else {
+		// if we didn't get a 404 back there, send a 500 error.
+		if(!os.IsNotExist(err)) {
+			SendError(w,500,filename,err)
+			return
+		}
+	}
+
+	// 2. as an html file in pages/
+	if page, err := os.ReadFile("./pages/"+filename+".html"); err == nil {
+		// This one is the reason we don't just use mux, because we handle the file
+		// differently based on the query string.
+		// If ?embed is true, we serve the file as we would, but otherwise, we
+		// actually serve the index and let the javascript side open up a window
+		// with our file contents.
+		if(embed) {
+			ServeFile(w,"./pages/"+filename+".html",page)
+		} else {
+			ServeInternalPage(w, "index")
+		}
+		return
+	} else {
+		if(!os.IsNotExist(err)) {
+			SendError(w,500,filename,err)
+			return
+		}
+	}
+
+	// 3. just anywhere in the file system.
+	if file, err := os.Open(path.Clean(filename)); err == nil {
+		stat, err := file.Stat()
+		if(err != nil) {
+			SendError(w,500,filename,err)
+			return
+		}
+		http.ServeContent(w, r, stat.Name(), stat.ModTime(), file)
+		return
+	}
+
+	// If we are still here then give the user a 404.
+	err := errors.New("File or folder does not exist")
+	SendError(w,404,filename,err)
+}
+
+// function for writing the contents of a directory to the writer
+func ServeFolder(w http.ResponseWriter, Foldername string) {
+	directoryFile, err := os.Open(Foldername)
+	if(err != nil) {SendError(w,500,Foldername,err)}
+	Directory, err := directoryFile.Readdir(0)
+	if(err != nil) {SendError(w,500,Foldername,err)}
+
+	w.WriteHeader(200)
+	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Name", Foldername)
+
+	//FoldernameStripped := strings.Replace(Foldername, ".", "", 1)
+	fuck := Foo{Directory,Foldername+"/"}
+
+	if err := tmpl.ExecuteTemplate(w, "dirlist.html",fuck); err != nil {
+		w.Write([]byte(err.Error()))
 	}
 }
 
-// function to serve an internal page
+// function for writing the contents of a file to the writer
+func ServeFile(w http.ResponseWriter, filename string, page []byte) {
+	w.WriteHeader(200)
+	// Get the content type for that file to send.
+	contentType := ContentType("./"+filename)
+	w.Header().Set("Content-Type", contentType)
+	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+	w.Header().Set("Content-Name", filename)
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(page)))
+	_, err := w.Write(page)
+	if(err != nil) {
+		fmt.Println(err)
+		return
+	}
+	return
+}
 
-func serveInternalPage(w http.ResponseWriter, filename string) {
-		w.WriteHeader(200)
-		contentType := ContentType("./internalpages/"+filename+".html")
-		w.Header().Set("Content-Type", contentType)
-		w.Header().Set("Content-Disposition", "attachment; filename="+filename)
-		w.Header().Set("Content-Name", filename)
-		w.Header().Set("Content-Length", fmt.Sprintf("%d", len([]byte(Include(filename)))))
-		fmt.Printf("Sending internal page %s.html\n",filename)
+// function to write an internal (template) page to the writer 
+func ServeInternalPage(w http.ResponseWriter, filename string) {
+	w.WriteHeader(200)
+	contentType := ContentType("./internalpages/"+filename+".html")
+	w.Header().Set("Content-Type", contentType)
+	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+	w.Header().Set("Content-Name", filename)
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", len([]byte(Include(filename)))))
+	fmt.Printf("Sending internal page %s.html\n",filename)
 
-		i, err := w.Write([]byte(Include(filename)))
-		if(err != nil) {
-			fmt.Println(err)
-			return
-		}
+	i, err := w.Write([]byte(Include(filename)))
+	if(err != nil) {
+		fmt.Println(err)
+		return
+	}
 
-		fmt.Printf("%d bytes written for %s.html!\n",i,filename)
-	} 
+	fmt.Printf("%d bytes written for %s.html!\n",i,filename)
+} 
 
 func SendError(w http.ResponseWriter, code int, pagename string, err error) {
 	w.WriteHeader(500)
@@ -180,6 +237,7 @@ func ContentType(filename string) (string) {
 	return mtype.String()
 }
 
+// function for executing and including templates before i realized this is is just a thing you can do with in the templating language itself
 func Include(filename string) (string) {
 	var returnString bytes.Buffer
 	if err := tmpl.ExecuteTemplate(&returnString, filename+".html",nil); err != nil {
@@ -188,9 +246,48 @@ func Include(filename string) (string) {
 	return returnString.String()
 }
 
+// function for returning the server time
 func Time() (string) {
 	today := time.Now().UTC() // the UTC date
 	yesterday := today.Unix() - 820454400 // 820454400 = Jan 1 1996, 12:00AM
 	date := time.Unix(yesterday,0)
 	return date.Format("Mon Jan 02 2006")
+}
+
+// function for returning a string based on the file type of something.
+func FileType(filename string) (string) {
+	if finfo, err := os.Lstat(filename); err == nil {
+		switch mode := finfo.Mode(); {
+			case mode.IsDir():					return "folder"
+			case mode.IsRegular():  			return "document"
+			case mode&fs.ModeSymlink != 0: 		return "symlink"
+			case mode&fs.ModeNamedPipe != 0: 	return "named pipe"
+			default: 							return "unknown"
+		}
+	} else {
+		return "error ("+err.Error()+")"
+	}
+}
+
+// function that converts a number to bytes 
+func PrettySize(size_ int64) (string) {
+	size := float64(size_)
+	// If the size is 4096, make an unsafe approximation and assume it's a folder. 
+	// it's not like users will be able to upload files, worst that happens is that 
+	// I accidentally put in a file that's 4096 bytes
+	if(size == 4096) {
+		return "-"
+	}
+	switch(math.Round(math.Log10(size))) {
+		case 1, 2, 3: 		return fmt.Sprintf("%.0fB",size) 	// B
+		case 4, 5: 			return fmt.Sprintf("%.0fK",size)	// K
+		case 6, 7: 			return fmt.Sprintf("%.0fMB",size)	// MB
+		case 8, 9: 			return fmt.Sprintf("%.0fGB",size)	// GB
+		case 10, 11: 		return fmt.Sprintf("%.0fTB",size)	// TB
+		case 12, 13:		return fmt.Sprintf("%.0fPB",size)	// PB
+		case 14, 15: 		return fmt.Sprintf("%.0fEB",size)	// EB
+		case 16, 17: 		return fmt.Sprintf("%.0fZB",size)	// ZB
+		case 18, 19: 		return fmt.Sprintf("%.0fYB",size)	// YB
+	}
+	return "-"
 }

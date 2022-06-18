@@ -17,18 +17,12 @@ body.main {
     color: black!important;
     overflow-x: hidden;
 }
-body:not(main) {
-    background: white;
-    font-family: Verdana;
-    font-size: 75%;
-    overflow: visible;
-}
 body {
     padding-left:30px;
     display: block;
     margin: auto auto;
 }
-img, * {
+* {
     image-rendering: optimizeSpeed!important;
     image-rendering: -moz-crisp-edges!important;
     image-rendering: -o-crisp-edges!important;
@@ -39,11 +33,6 @@ img, * {
     font-smooth: never!important;
     scrollbar-color: #9999ff #cccccc;
     scrollbar-width: 25px;
-}
-ul, li {
-    margin: 0;
-    padding-left: .1em;
-    list-style-type: none;
 }
 button {
     background: #ddd!important;
@@ -58,30 +47,7 @@ button:active {
 button:focus {
     outline: 0px!important;
 }
-.thead td {
-    background: #ccc;
-    padding: 3px;
-    box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #888, 1px 1px 0 0 #333, 0px 0px 0px 1px #666;
-}
-td p {
-    height: 1.5em;
-    line-height: 1.5em;
-    display: inline;
-}
-td img {
-    vertical-align: middle;
-}
-td{
-    background: #eee;
-}
-td.hcolumn {
-    background: #ddd;
-    cursor: pointer;
-}
-table {
-    width: 100%;
-    font-size: 92%;
-}
+\
 .offscreen {
     position: absolute;
     left: -100000px;
@@ -152,8 +118,8 @@ table {
     vertical-align: top;
     display: block;
     margin: 8px;
-    padding: 16px;
-    width: calc(100% + -47px);
+    padding: 16px 16px 16px 30px;
+    width: calc(100% + -61px);
     height: calc(100% + -64px);
     overflow-x: scroll;
     display: block;
@@ -162,8 +128,8 @@ table {
     position: relative;
 }
 .window .content.textfile {
-    width: calc(100% + -24px);
-    height: calc(100% + -60px);
+    width: calc(100% + -29px);
+    height: calc(100% + -66px);
     margin: 4px;
     padding: 10px;
 }
@@ -173,15 +139,6 @@ table {
 }
 .window .directions:after {
     content:"it's on the right";
-}
-.window:not(.maximized):not(.shaded) .window-drag {
-    display: block;
-    width: 17px;
-    height: 17px;
-    background: url("images/window-drag.png");
-    bottom: 3px;
-    right: 5px;
-    position: absolute;
 }
 .window .tl_button {
     display: inline-block;

@@ -1,8 +1,6 @@
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="../resources/about.css">
-		<style>
-		</style>
+		<link rel="stylesheet" type="text/css" href="/resources/dirlist.css">
 	</head>
 	<body style='margin: 0px; width: 100%;'>
 		<table>
@@ -13,7 +11,22 @@
 					<td align='right'>Size</td>
 					<td>Kind</td>
 				</tr>
-		<?php
+				{{ $fname := (printf .FolderName) }}
+				{{range .Directory}}
+				<tr>
+					<td>{{- .Name}}</td>
+					<td>{{- .ModTime}}</td>
+					<td align='right'>{{- PrettySize .Size}}</td>
+					<td>
+						{{FileType (print $fname .Name) }}
+					</td>
+				</tr>
+				{{end}}
+			</tbody>
+		</table>
+	</body>
+</html>
+<!--	<?php
 		ini_set('display_errors', 1);
 		ini_set('display_startup_errors', 1);
 		error_reporting(E_ALL);
@@ -76,7 +89,8 @@
 			}
 		}
 		DirectoryList($_GET['dir'], 0);
-		?>
+		?>--->
+		<!---
 			</tbody>
 		</table>
 		<script>
@@ -93,5 +107,6 @@
 				}
 			}
 		</script>
+		--->
 	</body>
 </html>

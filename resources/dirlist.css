@@ -1,0 +1,35 @@
+ul, li {
+    margin: 0;
+    padding-left: .1em;
+    list-style-type: none;
+}
+.thead td {
+    background: #ccc;
+    padding: 3px;
+    box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #888, 1px 1px 0 0 #333, 0px 0px 0px 1px #666;
+}
+td p {
+    height: 1.5em;
+    line-height: 1.5em;
+    display: inline;
+}
+td img {
+    vertical-align: middle;
+}
+td{
+    background: #eee;
+}
+td.hcolumn {
+    background: #ddd;
+    cursor: pointer;
+}
+table {
+    width: 100%;
+    font-size: 92%;
+}
+body {
+    background: white;
+    font-family: Verdana;
+    font-size: 75%;
+    overflow: visible;
+}
