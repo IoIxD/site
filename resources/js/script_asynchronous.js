@@ -160,30 +160,31 @@ async function windowCreate(page) {
   // First see if the properties for the window is in memory.
   // If they aren't, try and load one of the internal pages
   if(pageProperties == undefined) {
-    page = window.location.pathname.replace('.html','').replace('/','',1);
-    pageRoot = window.location.pathname.replace('.html','').split("/")[1];
+    pageRoot = window.location.pathname.split("/")[1];
+    var altPage;
     if(page.match(/\.txt$/gm)) {
-      pageToMatch = pageProperties["generic_text"];
+      altPage = "generic_text";
     } else if(page.match(/\.png$/gm)) {
-      pageToMatch = pageProperties["generic_image"];
+      altPage = "generic_image";
     } else {
-      pageToMatch = pageProperties[pageRoot];
+      altPage = pageRoot;
     }
     if(pageToMatch == undefined) {
       console.error("could not get the properties for page "+page+". properties json is: "+properties);
       return;
     }
+    pageProperties = properties[altPage];
+    pageToMatch = altPage;
   } else {
     pageToMatch = page;
   }
-
 
   var width = pageProperties.width;
   var height = pageProperties.height;
   var left = pageProperties.left;
   var top = pageProperties.top;
   var options = pageProperties.options;
-  var title = properties[page].name;
+  var title = pageProperties.name;
 
   windows.length = 0;
   windows_r = document.getElementsByClassName("window");
@@ -241,6 +242,17 @@ async function windowCreate(page) {
                 "</div>";
   document.body.append(div);
   windowPopulate(div,pageContents);
+}
+
+async function windowPopulateThroughFilename(div,pagename) {
+  var pageUrl = location.protocol+"//"+location.host+"/"+pagename+"?embed=true";
+  var pageContents = await fetch(pageUrl).then(r => r.text()).then(r => {
+      var content = div.getElementsByClassName("content")[0];
+      if(typeof content === undefined) {
+        return;
+      }
+      content.innerHTML = r;
+    });
 }
 
 // update the contents of a window.

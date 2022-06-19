@@ -21,7 +21,6 @@ function windowResize(page) {
       windowShade(page);
     }
   }
-
 }
 
 // shade window

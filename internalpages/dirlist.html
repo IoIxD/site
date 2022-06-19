@@ -11,13 +11,25 @@
 		</thead>
 		<tbody>
 			{{ $fname := (printf .FolderName) }}
+			{{ $fnamestripped := (printf .StrippedFoldername) }}
 			{{range .Directory}}
+			{{ $fullfilename := (print $fname .Name) }}
+			{{ $fullfilenamestripped := (print $fnamestripped .Name)}}
 			<tr>
-				<td>{{- .Name}}</td>
-				<td>{{- .ModTime}}</td>
+				<td class='hcolumn' onclick='
+					{{$isdir := (IsDirectory $fullfilename)}}
+					{{if eq $isdir true}}
+						parent.windowPopulateThroughFilename(this.closest(".window"),{{(print $fname .Name)}})
+					{{else}}
+						parent.windowCreate({{(print $fullfilenamestripped)}})
+					{{end}}
+				'>
+					{{- .Name}}
+				</td>
+				<td>{{- PrettyTime .ModTime}}</td>
 				<td align='right'>{{- PrettySize .Size}}</td>
 				<td>
-					{{FileType (print $fname .Name) }}
+					{{FileType (print $fullfilename) }}
 				</td>
 			</tr>
 			{{end}}

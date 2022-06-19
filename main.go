@@ -2,29 +2,16 @@ package main
 
 import (
 	"net/http"
-
 	"html/template"
 	"embed"
-
 	"os"
-	"io/fs"
-
 	"strings"
-	"strconv"
-
-	"time"
 	"bytes"
-
-	"os/exec"
-
 	"fmt"
 	"log"
-
 	"path"
 	"errors"
-	"math"
-
-	"github.com/gabriel-vasile/mimetype"
+	"time"
 )
 
 
@@ -32,9 +19,11 @@ import (
 var internalPages embed.FS
 var tmpl *template.Template
 
+// i really don't know what else to call this tbh, it's really only here
+// because golang's templates function won't accept more then on variable  
 type Foo struct { 
-	Directory 	[]os.FileInfo
-	FolderName 	string
+	Directory 						[]os.FileInfo
+	FolderName,	StrippedFoldername 	string
 }
 
 func main() {
@@ -44,7 +33,9 @@ func main() {
 		"Time": 		Time,
 		"FileType": 	FileType,
 		"PrettySize": 	PrettySize,
+		"PrettyTime": 	PrettyTime,
 		"Diskfree": 	Diskfree,
+		"IsDirectory": 	IsDirectory,
 	})
 	_, err := tmpl.ParseFS(internalPages, "internalpages/*")
 	if err != nil {
@@ -116,17 +107,16 @@ func ServeFileOrFolder(w http.ResponseWriter, r *http.Request, filename string) 
 		embed = true
 	}
 
-	// Is it a directory? If so, switch to that function.
-	if finfo, err := os.Lstat(filename); err == nil {
-		if(finfo.Mode().IsDir()) {
-			if(embed) {
-				ServeFolder(w,filename)
-			} else {
-				ServeInternalPage(w, "index")
-			}
-			return
+	// Is it a directory? If so, switch to the function for serving those.
+	if(IsDirectory(filename)) {
+		if(embed) {
+			ServeFolder(w,filename)
+		} else {
+			ServeInternalPage(w, "index")
 		}
+		return
 	}
+
 	// it could also be in the pages directory
 	if finfo, err := os.Lstat("./pages/"+filename); err == nil {
 		if(finfo.Mode().IsDir()) {
@@ -195,8 +185,10 @@ func ServeFolder(w http.ResponseWriter, Foldername string) {
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("Content-Name", Foldername)
 
-	//FoldernameStripped := strings.Replace(Foldername, ".", "", 1)
-	fuck := Foo{Directory,Foldername+"/"}
+	// we strip the foldername of the pages/ prefix on the server side because god forbid 
+	// this site use one more line of javascript
+	StrippedFoldername := strings.Replace(Foldername,"pages/","",1)
+	fuck := Foo{Directory,Foldername+"/",StrippedFoldername+"/"}
 
 	if err := tmpl.ExecuteTemplate(w, "dirlist.html",fuck); err != nil {
 		w.Write([]byte(err.Error()))
@@ -246,13 +238,6 @@ func SendError(w http.ResponseWriter, code int, pagename string, err error) {
 	return
 }
 
-func ContentType(filename string) (string) {
-	mtype, err := mimetype.DetectFile(filename)
-	if(err != nil) {
-		return "application/x-octet-stream"
-	}
-	return mtype.String()
-}
 
 // function for executing and including templates before i realized this is is just a thing you can do with in the templating language itself
 func Include(filename string) (string) {
@@ -261,67 +246,4 @@ func Include(filename string) (string) {
 		return err.Error()
 	}
 	return returnString.String()
-}
-
-// function for returning the server time
-func Time() (string) {
-	today := time.Now().UTC() // the UTC date
-	yesterday := today.Unix() - 820454400 // 820454400 = Jan 1 1996, 12:00AM
-	date := time.Unix(yesterday,0)
-	return date.Format("Mon Jan 02 2006")
-}
-
-// function for returning a string based on the file type of something.
-func FileType(filename string) (string) {
-	if finfo, err := os.Lstat(filename); err == nil {
-		switch mode := finfo.Mode(); {
-			case mode.IsDir():					return "folder"
-			case mode.IsRegular():  			return "document"
-			case mode&fs.ModeSymlink != 0: 		return "symlink"
-			case mode&fs.ModeNamedPipe != 0: 	return "named pipe"
-			default: 							return "unknown"
-		}
-	} else {
-		return "error ("+err.Error()+")"
-	}
-}
-
-// function that converts a number to bytes 
-func PrettySize(size int64) (string) {
-	// If the size is 4096, make an unsafe approximation and assume it's a folder. 
-	// it's not like users will be able to upload files, worst that happens is that 
-	// I accidentally put in a file that's 4096 bytes
-	if(size == 4096) {
-		return "-"
-	}
-
-	log10 := math.Round(math.Log10(float64(size)))
-	sizeNew := size/int64(math.Pow(10,log10))
-	switch(log10) {
-		case 1, 2, 3: 		return fmt.Sprintf("%dB",sizeNew) 	// B
-		case 4, 5: 			return fmt.Sprintf("%dK",sizeNew)		// K
-		case 6, 7: 			return fmt.Sprintf("%dMB",sizeNew)	// MB
-		case 8, 9: 			return fmt.Sprintf("%dGB",sizeNew)	// GB
-		case 10, 11: 		return fmt.Sprintf("%dTB",sizeNew)	// TB
-		case 12, 13:		return fmt.Sprintf("%dPB",sizeNew)	// PB
-		case 14, 15: 		return fmt.Sprintf("%dEB",sizeNew)	// EB
-		case 16, 17: 		return fmt.Sprintf("%dZB",sizeNew)	// ZB
-		case 18, 19: 		return fmt.Sprintf("%dYB",sizeNew)	// YB
-	}
-	return "-"
-}
-
-// function to show how much disk space is left on the server
-func Diskfree() (string) {
-	cmd := exec.Command("df","-B1","--output=avail","/")
-	df, err := cmd.Output()
-	if(err != nil) {
-		return "Error getting disk space: "+err.Error()
-	}
-	dfSecondLine := strings.Split(string(df),"\n")[1]
-	dfFinal, err := strconv.Atoi(dfSecondLine)
-	if(err != nil) {
-		return "Error converting the df output to an int64: "+err.Error()
-	} 
-	return PrettySize(int64(dfFinal)) // use PrettySize instead of -h for consistency 
 }
