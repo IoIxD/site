@@ -4,10 +4,9 @@
 		/* this code is somewhat sluggish, but i think it's better then having the site appear on screen for a second before showing
 		the no-javascript error screen (if applicable). that said, text needs to be hidden and then shown with css as a result of this, to make the look less embaressing */
 
-		var intended = location.origin+'/has_script.php';
 		document.open();
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', intended, true);
+		xhr.open('GET', location.origin+'/has_script.php', true);
 		xhr.onerror = function(e) {
 			console.log(e);
 		}
