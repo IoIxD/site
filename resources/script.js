@@ -429,51 +429,6 @@ function init() {
   // initialize the properties variable
   properties = getJSON(window.location.protocol+"//"+window.location.host+"/pages/properties.json");
 
-  try {
-    var bareURL = location.href.split("?")[0];
-    var xhr = new XMLHttpRequest(null);
-    try {
-      xhr.onload = function() {load(xhr.responseText)};
-    } catch(ex) {
-      xhr.readystatechange = function() {load(xhr.responseText)};
-    }
-    xhr.onerror = function(e) {
-      console.error(e);
-    }
-    xhr.open("GET", bareURL+'has_script', true);
-    xhr.send(null);
-  } catch(ex) {
-    document.body.innerHTML += "ERROR: <br>"+ex;
-  }
-  
-  function load(e) {
-    document.body.innerHTML += xhr.responseText;
-  }
-
-
-  try {
-    var bareURL = location.protocol+"//"+location.host;
-    var xhr = new XMLHttpRequest(null);
-    try {
-      xhr.onload = function() {load(xhr.responseText)};
-    } catch(ex) {
-      xhr.readystatechange = function() {load(xhr.responseText)};
-    }
-    xhr.onerror = function(e) {
-      console.error(e);
-    }
-    xhr.open("GET", bareURL+'/has_script', true);
-    xhr.send(null);
-  } catch(ex) {
-    document.body.innerHTML += "ERROR: <br>"+ex;
-  }
-  
-  function load(e) {
-    document.body.innerHTML += xhr.responseText;
-  }
-
-  logUpdate();
-
   // get the page we're on
   page = window.location.pathname.replace('.html','').replace('/','',1);
   if (page != "") { // if it's not blank, try and open a window based on it.
@@ -482,11 +437,17 @@ function init() {
     OpenTheThree(); // otherwise, open the default three windows
   }
 
-  // skip checking for phones because a phone that doesn't support async is probably too old to do javascript
-  // (or no longer has service.)
-  // (and a smart phone that can't do async but do javascript is probably in that weird era of smartphones that nobody likes to collect,
-  // unless you're that one guy who collects windows phones and fucks with them)
-
+  // set a variable if we're on a mobile device.
+  if(navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
+    onPhone = 1;
+    // and while we're here, add a class to the html element to match our device.
+    var html = document.getElementsByTagName('html')[0];
+    if (navigator.userAgent.match(/(iPad|iPhone|iPod)/i)) html.classList.add('device-ios');
+    if (navigator.userAgent.match(/android/i)) html.classList.add('device-android');
+  } else {
+    onPhone = 0;
+  }
+  
   try {
     registerEventListeners();
   } catch(ex) {
