@@ -1,225 +1,385 @@
-// global variables
-var mx = 0; var my = 0; mx_o = 0; my_o = 0; wx_o = 0; wy_o = 0; var hoveredWin; var mouseDown = 0; var titlebar_additions = ""; var options_iframe = "";
-var movingWindow = 0;
-var onPhone = 0; var windows = [];
+// synchronous version of the site.
 
-var properties = getJSON(window.location.protocol+"//"+window.location.host+"/pages/properties.json");
 
-var pageid_regex = /(?![A-z])(?![0-9])(?!\.)./gm;
-var heldCtrl = 0; var heldShift = 0; var heldAlt = 0; var heldO = 0;
+// GLOBAL VARIABLES
+var mx = 0; var my = 0; mx_o = 0; my_o = 0;                             // mouse positions, _o = original
+var mouseDown = 0;                                                      // is our mouse down?
+var wx_o = 0; var wy_o = 0;                                             // original x/y of a window
+var hoveredWin;                                                         // what window we're hovering over
+var heldCtrl = 0; var heldShift = 0; var heldAlt = 0; var heldO = 0;    // keys to listen to
+var movingWindow = 0;                                                   // window options
+var windows = [];                                                       // cached windows
+var onPhone = 0;                                                        // are we on a mobile device?
+var properties;                                                         // window properties
+var ratio; var desiredRatio;                                            // the ratio according to which to place objects on the screen
 
-function init() {
-    document.addEventListener("mousedown", function(e) {
+
+// LISTENERS
+function registerEventListeners() {
+  document.addEventListener("mousedown", function(e) {
+    // which button was pressed?
+    switch(e.which) {
+      case 1:
+        // our mouse is down
         mouseDown = 1; 
-        elemHover = document.querySelectorAll(`:hover`);
+        // what element are we hovering over?
+        elemHover = document.querySelectorAll(":hover");
+        // not only does it need to window but it needs to be at leat three layers deep
         if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+          // decrease the z index of every other window
           windows = document.getElementsByClassName("window");
           for( i=0; i< windows.length; i++ ) {
-           windows[i].style.zIndex = 0;
+            curZIndex = windows[i].style.zIndex;
+            if(curZIndex == undefined) {
+              curZIndex = 1;
+            }
+            if(curZIndex > 0) windows[i].style.zIndex = curZIndex-1;
           }
-          elemHover[2].style.zIndex = 999;
+          // and push ours to the top
+          if(elemHover[2].style.zIndex == undefined) {
+            elemHover[2].style.zIndex = 21;
+          } else {
+            elemHover[2].style.zIndex = windows.length+2;
+          }
+          
+          // save our current mouse position to the "original" mouse position
           mx_o = e.pageX; my_o = e.pageY;
+
+          // get the position of the window we're hovering over
           ex = elemHover[2].style.left; ey = elemHover[2].style.top;
+          // if the x is in a percentage, convert it to pixels.
           if(ex.includes("%")) {
             wx_o = +(window.innerWidth) * +("."+ex.replace('%',''));
-          } else {wx_o = ex.replace('px', '')}
+          } else {
+            wx_o = ex.replace('px', '');
+          }
+          // same for y
           if(ey.includes("%")) {
             wy_o = +(window.innerHeight) * +("."+ey.replace('%',''));
-          } else {wy_o = ey.replace('px', '')}
+          } else {
+            wy_o = ey.replace('px', '');
+          }
         }
-
-      })
-    document.addEventListener("mouseup", function() {mouseDown = 0; movingWindow = 0;})
-
-    document.addEventListener('keydown', function(e) {
-      switch(e.key) {
-        case "Control":
-          heldCtrl = 1;
-          break;
-        case "Alt":
-          heldAlt = 1;
-          break;
-        case "Shift":
-          heldShift = 1;
-          break;
-        case "O":
-          heldO = 1;
-          break;
-      }
-      if(heldCtrl == 1 && heldAlt == 1 && heldShift == 1 && heldO == 1) {
-        window.location.replace("https://ioi-xd.net/no_script.php");
-      }
-    })
-    document.addEventListener('keyup', function(e) {
-      switch(e.key) {
-        case "Control":
-          heldCtrl = 0;
-          break;
-        case "Alt":
-          heldAlt = 0;
-          break;
-        case "Shift":
-          heldShift = 0;
-          break;
-        case "O":
-          heldO = 0;
-          break;
-      }
-    })
-    page = window.location.pathname.replace('.html','').replace('/','',1);
-    if (page != "") {
-      windowCreate(page);
-    } else {
-      OpenTheThree()
+        break;
+      default: 
+        break; // nothing for now.
     }
-    var classNames = [];
-    if (navigator.userAgent.match(/(iPad|iPhone|iPod)/i)) classNames.push('device-ios');
-    if (navigator.userAgent.match(/android/i)) classNames.push('device-android');
+  })
 
-    var html = document.getElementsByTagName('html')[0];
-
-    if (classNames.length) classNames.push('on-device');
-    if (html.classList) html.classList.add.apply(html.classList, classNames);
-};
-// WINDOW CREATION
-function windowCreate(page, exoptions="") {
-  try {
-    console.log(page)
-    var width = properties[`${page}`].width;
-    var height = properties[`${page}`].height;
-    var left = properties[`${page}`].left;
-    var top = properties[`${page}`].top;
-    var options = properties[`${page}`].options;
-    var title = properties[`${page}`].name;
-  } catch {
-    page = window.location.pathname.replace('.html','').replace('/','',1);
-    pageRoot = window.location.pathname.replace('.html','').split("/")[1];
-    pageToMatch = "";
-    if(page.match(/\.txt$/gm)) {
-      // i ran out of variable names
-      exoptions += "valload "+page;
-      pageToMatch = "generic_text";
-    } else if(page.match(/\.png$/gm)) {
-      // i ran out of variable names
-      exoptions += "valload "+page;
-      pageToMatch = "generic_image";
-    } else {
-      pageToMatch = pageRoot;
-      options += "dirlist";
+  document.addEventListener("mouseup", function() {
+    mouseDown = 0; // our mouse is no longer down
+    // if we were moving a window, stop moving it and deselect everything.
+    if(movingWindow == 1) {
+      for(var i = 0; i < windows.length; i++) {
+        windows[i].style.pointerEvents = 'initial';
+        windows[i].style.userSelect = 'initial';
+      }
+      window.getSelection().removeAllRanges();
+      movingWindow = 0;
     }
-    var width = properties[`${pageToMatch}`].width;
-    var height = properties[`${pageToMatch}`].height;
-    var left = properties[`${pageToMatch}`].left;
-    var top = properties[`${pageToMatch}`].top;
-    var options = properties[`${pageToMatch}`].options;
-    var title = properties[`${pageToMatch}`].name;
-  }
+  })
+
+  document.addEventListener('keydown', function(e) {
+    switch(e.key) {
+      case "Control":   heldCtrl = 1;   break;
+      case "Alt":       heldAlt = 1;    break;
+      case "Shift":     heldShift = 1;  break;
+      case "O":         heldO = 1;      break;
+    }
+    if(heldCtrl == 1 && heldAlt == 1 && heldShift == 1 && heldO == 1) {
+      window.location.replace("https://ioi-xd.net/no_script");
+    }
+  })
+
+  document.addEventListener('keyup', function(e) {
+    switch(e.key) {
+      case "Control":   heldCtrl = 0;   break;
+      case "Alt":       heldAlt = 0;    break;
+      case "Shift":     heldShift = 0;  break;
+      case "O":         heldO = 0;      break;100 
+    }
+  })
+
+  // window dragging 
+  document.addEventListener("mousemove", function(e) {
+    // are we moving a window?
+    if(movingWindow) {
+      // if the window we're supposed to be moving is maximized then no we aren't.
+      if(hoveredWin.classList.contains("maximized")) {
+        return;
+      }
+      // move whatever window we're hovering over.
+      // first get what the position should be, in pixels.
+      newTop = (+(e.pageY-my_o) + +wy_o);
+      newLeft = (+(e.pageX-mx_o) + +wx_o);
+
+      // adjust it according to the window's width, converting it to a percentage.
+      newTop = (newTop / window.innerWidth)*100;
+      newLeft = (newLeft / window.innerHeight)*100;
+
+      // convert it back to pixels, again using the window's inner width.
+      newTop = window.innerWidth * (newTop)/100;
+      newLeft = window.innerHeight * (newLeft)/100;
+
+      hoveredWin.style.top = newTop+"px";
+      hoveredWin.style.left = newLeft+"px";
+
+      // disallow every window from being selected while we're moving the current one.
+      for(var i = 0; i < windows.length; i++) {
+        if(windows[i] != hoveredWin) {
+          windows[i].style.pointerEvents = 'none';
+          windows[i].style.userSelect = 'none';
+        }
+      }
+    } else {
+      // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
+      if(mouseDown) {
+        elemHover = document.querySelectorAll(":hover");
+        if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+          movingWindow = 1;
+          hoveredWin = elemHover[2];
+        }
+      }
+    }
+  })
+
+}
+
+// window creation
+function windowCreate(page) {
+  // if there's already a window with the page, do nothing.
   if(document.getElementById(page) || page == null) {
     return 0;
   }
-  if(navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
-    onPhone = 1;
-  } else {onPhone = 0;}
+
+  var pageToMatch = "";
+
+  var pageProperties = properties[page];
+
+  // First see if the properties for the window is in memory.
+  // If they aren't, try and load one of the internal pages
+  if(pageProperties == undefined) {
+    page = window.location.pathname.replace('.html','').replace('/','',1);
+    pageRoot = window.location.pathname.replace('.html','').split("/")[1];
+    if(page.match(/\.txt$/gm)) {
+      pageToMatch = pageProperties["generic_text"];
+    } else if(page.match(/\.png$/gm)) {
+      pageToMatch = pageProperties["generic_image"];
+    } else {
+      pageToMatch = pageProperties[pageRoot];
+    }
+    if(pageToMatch == undefined) {
+      console.error("could not get the properties for page "+page+". properties json is: "+properties);
+      return;
+    }
+  } else {
+    pageToMatch = page;
+  }
+
+  var width = pageProperties.width;
+  var height = pageProperties.height;
+  var left = pageProperties.left;
+  var top = pageProperties.top;
+  var options = pageProperties.options;
+  var title = properties[page].name;
+
+  windows.length = 0;
   windows_r = document.getElementsByClassName("window");
-  windows = [];
-  // (we add the windows to a seperate list to ensure that the list doesn't change until we're done with it.)
-  for( i=0; i < windows_r.length; i++ ) {
+  for ( i = 0; i < windows_r.length; i++ ) {
     windows.push(windows_r[i])
   }
 
-  for( i=0; i < windows.length; i++ ) {
-   if(!windows[i].classList.contains('noanim')) {
-    windows[i].classList.add('noanim');
-   }
-   if(!options.includes("om_dc") && onPhone == 1) {
-      windowRemove(windows[i].id);
-   }
+  // if we're not phone and the window should animate, set that up.
+  var legacyAnimate = false;
+  // if we're not phone and the window should animate, set that up.
+  if(!hasWord(options,"noanim") && onPhone != 1) {
+    try {
+      document.documentElement.style.setProperty('--iw', width);
+      document.documentElement.style.setProperty('--ih', height);
+      document.documentElement.style.setProperty('--ix', left);
+      document.documentElement.style.setProperty('--iy', top);
+      document.documentElement.style.setProperty('--mpx', mx+"px");
+      document.documentElement.style.setProperty('--mpy', my+"px");
+    } catch(ex) {
+      // if those fail then the browser doesn't support css variables, so turn on legacy animation.
+      legacyAnimate = true;
+    }
   }
-  windows = [];
-  try {
-    mx = window.event.pageX; my = window.event.pageY;
-  } catch(e) {
 
-  }
-  if (onPhone == 1){
-    options += " noanim"
-  }
-  if(!options.includes("noanim")) {
-    document.documentElement.style.setProperty('--iw', width);
-    document.documentElement.style.setProperty('--ih', height);
-    document.documentElement.style.setProperty('--ix', left);
-    document.documentElement.style.setProperty('--iy', top);
-    document.documentElement.style.setProperty('--mpx', mx+"px");
-    document.documentElement.style.setProperty('--mpy', my+"px");
-  }
-  if(options.includes("nooverflow")) {
-    options_iframe = "scrolling='no'";
-  } else {
-    options_iframe = "";
-  }
-  if(options.includes("textfile")) {
+  var titlebar_additions = "";
+
+  // textfile options adds a WordPerfect inspired text bar to the window
+  if(hasWord(options, "textfile")) {
     titlebar_additions = "<span class='wp-bar-fake'></span>";
-  } else {
-    titlebar_additions = "";
   }
-  if(options.includes("dirlist")) { 
-    pageUrl = `/pages/dirlist.php?dir=${page}/`;
-  } else {
-    pageUrl = `/pages/${page}.php`;
+
+  pageUrl = location.protocol+"//"+location.host+"/"+page+"?embed=true";
+
+  // get the contents of the page.
+  var pageContents = "";
+  try {
+      var xhr = new XMLHttpRequest();
+      if (xhr != null) {
+          function load(e) {
+              pageContents = xhr.responseText;
+          }
+          xhr.onerror = function(e) {
+              console.error(e);
+          }
+          try {
+            xhr.onload = load;
+          } catch(ex) {
+            xhr.readystatechange = load;
+          }
+          xhr.open('GET', pageUrl, false);
+          xhr.send(null);
+      } else {
+          console.error("XMLHttpRequest not supported. Cannot continue properly.");
+          return;
+      }
+  } catch (ex) {
+      console.error(ex);
+      pageContents = "ERROR: <br>" + ex;
   }
-  if(exoptions.includes("valload")) {
-    exoptions = exoptions.replace("valload ", "");
-    // the text wasn't replaced and i couldn't get the css to properly cut off the title how i wanted. i should come back to this.
-    // title = exoptions.replace("%2F","\/");
-    pageUrl += "?val="+exoptions;
-    page += "_"+makeid(6);
+
+  // create a div the proper way so that we can reference it
+  var div = document.createElement("div");
+  document.body.appendChild(div);
+  div.style.display =   "block";
+  div.style.width   =   width;
+  div.style.height  =   height;
+  div.style.left    =   left;
+  div.style.top     =   top;
+  div.id            =   page;
+  addClass(div,"window");
+  addClass(div,options);
+
+  // create a div the improper way because fuck that
+  div.innerHTML = "<span class='titlebar'>"+
+                    "<span class='tl_lines'></span>"+
+                    "<span onclick='windowRemove(\""+page+"\");' class='tl_button close'></span>"+
+                    "<span class='title'>"+title+"</span>"+
+                    "<span onclick='windowShade(\""+page+"\");' class='tl_button shade'></span>"+
+                    "<span onclick='windowResize(\""+page+"\");' class='tl_button maxmin'></span>"+
+                  "</span>"+
+                  titlebar_additions+
+                  "<span class='content "+options+"'></span>"+
+                  "<span class='window-drag'></span>";
+
+  //if(legacyAnimate) windowAnimate(div,mx,my,left,top,width,height);
+  windowPopulate(div,pageContents);
+  return document.body.innerHTML;
+}
+
+// update the contents of a window.
+function windowPopulate(div,pageContents) {
+  var content = getElementsInElementByClassName(div,"content")[0];
+  if(typeof content === undefined) {
+    return;
   }
-  document.body.innerHTML += `
-  <div id="${page}" style="display: block; z-index: 0; width: ${width}; height: ${height}; left:${left}; top:${top};" class="window ${options}">
-    <span class="titlebar">
-      <span class='tl_lines'></span>
-      <span onclick="windowRemove('${page}');"class='tl_button close'></span>
-      <span class="title">`+title+`</span>
-      <span class='tl_button maxmin'></span>
-      <span class='tl_button shade'></span>
-    </span>
-    ${titlebar_additions}
-    <span class="content ${options}">
-      <iframe class="tempid id_`+page.replace(pageid_regex, '')+`" ${options_iframe} class="${options}" src="${pageUrl}">
-    </span>
-    <span class="window-drag"></span>
-  </div>`;
-  // firefox has had a 15 year old bug that causes iframes to always be permenantly cached.
-  // i've also had this issue with a chromium based browser. 
-  var geniframe = document.getElementsByClassName("tempid");
-  geniframe[0].contentWindow.location.href = geniframe[0].src;
-  geniframe[0].classList.remove('tempid');
+  content.innerHTML = pageContents;
 }
-// WINDOW REMOVAL
-function windowRemove(page) {
-  document.getElementById(page).remove();
+
+function percentageToPixels(percent, basedOn) {
+  percent = parseInt(percent.replace(/\%/, "", 1));
+  return basedOn * (percent / 100);
 }
-function iframeSet(target, page) {
-  var iframes = document.getElementsByClassName("id_"+target.replace(pageid_regex, ''));
-  var relframe = iframes[0];
-  relframe.src = page;
-  relframe.classList.remove("id_"+target.replace(pageid_regex, ''));
-  relframe.classList.add("id_"+page.replace(pageid_regex, '').replace('pagesdirlist.phpdir', ''));
-}
-// DRAGGING
-document.addEventListener("mousemove", function(e) {
-  if(mouseDown == 1) {
-    elemHover = document.querySelectorAll(`:hover`);
-    if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
-      movingWindow = 1;
-      hoveredWin = elemHover[2];
+
+function cleanUnits(target, basedOn) {
+  if(hasLetter(target,"%")) {
+    switch(basedOn) {
+      case "width":
+        target = percentageToPixels(target,window.innerWidth);
+        break;
+      case "height":
+        target = percentageToPixels(target,window.innerHeight);
+        break;
     }
-    if(movingWindow) {
-      hoveredWin.style.top = (+(e.pageY-my_o) + +wy_o)+"px";
-      hoveredWin.style.left = (+(e.pageX-mx_o) + +wx_o)+"px";
+  }
+  if(hasLetter(target,"p")) target = target.replace(/px/,"",2);
+  return +(target);
+}
+
+
+// check if a string has a word (simpler then includes because this checks between spaces)
+function hasWord(find, match) {
+  var found = false;
+  var lookThru = find.split(" ");
+  for(var i = 0; i < lookThru.length; i++) {
+    if(lookThru[i] == match) {
+      found = true;
+      return found;
     }
   }
-})
+  return found;
+}
+
+// check if a string has a letter.
+// we roll our own function both for browser compatibility and to save on speed when we only need to check one letter.
+function hasLetter(find, match) {
+  var found = false;
+  for(var i = 0; i < find.length; i++) {
+    if(find[i] == match) {
+      found = true;
+      return found;
+    }
+  }
+  return found;
+}
+
+// animate a window
+// (we don't use css animations because we want this to work on browsers from 20 years ago, i.e. firefox 2)
+function windowAnimate(div,from_x,from_y,to_x,to_y,to_width,to_height) {
+
+  // clean up the measurements we get
+  from_x = 0;
+  from_y = 0;
+  to_x = cleanUnits(to_x,"width");
+  to_y = cleanUnits(to_y,"height");
+  to_width = cleanUnits(to_width,"width");
+  to_height = cleanUnits(to_height,"height");
+
+  // we want to make sure this animation only has 250 frames.
+  var frameCount = 240;
+  var xProgress = (to_x-from_x)/frameCount;
+  var yProgress = (to_y-from_y)/frameCount;
+  var wProgress = (to_width)/frameCount;
+  var hProgress = (to_height)/frameCount;
+
+  var x = from_x;
+  var y = from_y;
+  var width = 0;
+  var height = 0;
+
+  while(x < to_x && y < to_y && width < to_width && height < to_height) {
+    
+    if(y <= to_y) {
+      newY = cleanUnits(div.style.top,"height");
+      newY += yProgress;
+      y += yProgress;
+      div.style.top = newY+"px";
+    }
+    if(x <= to_x) {
+      newX = cleanUnits(div.style.left,"width");
+      newX += xProgress;
+      x += xProgress;
+      div.style.left = newX+"px";
+    }
+    if(width <= to_width) {
+      newWidth = cleanUnits(div.style.width,"width");
+      newWidth += wProgress;
+      width += wProgress;
+      div.style.width = newWidth+"px";
+    }
+    if(height <= to_height) {
+      newHeight = cleanUnits(div.style.height,"height");
+      newHeight += hProgress;
+      height += hProgress;
+      div.style.height = newHeight+"px";
+    }
+  }
+
+}
 
 // quick and dirty function to open the three windows from the first icon, one after the other.
 function OpenTheThree() {
@@ -228,19 +388,8 @@ function OpenTheThree() {
   setTimeout(function(){windowCreate('dislikes');}, 1000);
 }
 
-function getJSON(url) {
-    var resp, xmlHttp;
-    xmlHttp = new XMLHttpRequest();
-    if(xmlHttp != null) {
-        xmlHttp.open("GET", url, false);
-        xmlHttp.send(null);
-        resp = xmlHttp.responseText;
-    }
-    return JSON.parse(resp);
-}
-
-// this code was taken from stack overflow don't blame me if it sucks
-function makeid(length) {
+// id generation for image windows.
+function idGen(length) {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
@@ -249,4 +398,103 @@ function makeid(length) {
    }
    return result;
 }
+
+// synchronous getJSON code
+function getJSON(url) {
+    var resp;
+    var xhr = new XMLHttpRequest();
+    if(xhr != null) {
+        function load(e) {
+          resp = xhr.responseText;
+        }
+        xhr.onerror = function(e) {
+          console.error(e);
+        }
+        try {
+          xhr.onload = load;
+        } catch(ex) {
+          xhr.readystatechange = load;
+        }
+        xhr.open("GET", url, false);
+        xhr.send(null);
+        return JSON.parse(resp);
+    } else {
+      console.error("XMLHttpRequest not supported. Cannot continue properly.");
+      return JSON.parse("{'ok': 'false'}");
+    }
+}
+
+// the initialization function :tm: (synchronously)
+function init() {
+  // initialize the properties variable
+  properties = getJSON(window.location.protocol+"//"+window.location.host+"/pages/properties.json");
+
+  try {
+    var bareURL = location.href.split("?")[0];
+    var xhr = new XMLHttpRequest(null);
+    try {
+      xhr.onload = function() {load(xhr.responseText)};
+    } catch(ex) {
+      xhr.readystatechange = function() {load(xhr.responseText)};
+    }
+    xhr.onerror = function(e) {
+      console.error(e);
+    }
+    xhr.open("GET", bareURL+'has_script', true);
+    xhr.send(null);
+  } catch(ex) {
+    document.body.innerHTML += "ERROR: <br>"+ex;
+  }
+  
+  function load(e) {
+    document.body.innerHTML += xhr.responseText;
+  }
+
+
+  try {
+    var bareURL = location.protocol+"//"+location.host;
+    var xhr = new XMLHttpRequest(null);
+    try {
+      xhr.onload = function() {load(xhr.responseText)};
+    } catch(ex) {
+      xhr.readystatechange = function() {load(xhr.responseText)};
+    }
+    xhr.onerror = function(e) {
+      console.error(e);
+    }
+    xhr.open("GET", bareURL+'/has_script', true);
+    xhr.send(null);
+  } catch(ex) {
+    document.body.innerHTML += "ERROR: <br>"+ex;
+  }
+  
+  function load(e) {
+    document.body.innerHTML += xhr.responseText;
+  }
+
+  logUpdate();
+
+  // get the page we're on
+  page = window.location.pathname.replace('.html','').replace('/','',1);
+  if (page != "") { // if it's not blank, try and open a window based on it.
+    windowCreate(page);
+  } else {
+    OpenTheThree(); // otherwise, open the default three windows
+  }
+
+  // skip checking for phones because a phone that doesn't support async is probably too old to do javascript
+  // (or no longer has service.)
+  // (and a smart phone that can't do async but do javascript is probably in that weird era of smartphones that nobody likes to collect,
+  // unless you're that one guy who collects windows phones and fucks with them)
+
+  try {
+    registerEventListeners();
+  } catch(ex) {
+    // if the listeners fail to register we don't give a fuck because the likely chance is that the browser just doesn't support them,
+    // but the browser also stops execution when it sees them, hence why we need to make sure it ignores them.
+    var fuck = "piss";
+  }
+
+}
+
 
