@@ -252,7 +252,12 @@ function windowCreate(page) {
   div.style.top     =   top;
   div.id            =   page;
   div.classList.add("window");
-  div.classList.add(options);
+
+  var options_split = options.split(" ");
+  for (className in options_split) {
+    div.classList.add(className);
+  }
+  
 
   // create a div the improper way because fuck that
   div.innerHTML = "<span class='titlebar'>"+
