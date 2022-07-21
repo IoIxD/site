@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html>
+    <?php include("../common.php");?>
+    <head>
+        <link rel="stylesheet" type="text/css" href="../resources/about.css">
+    </head>
+    <body class='embed'>
+            <span <?php echo $clicktype?>="parent.windowCreate('discordwarn');" class='desktop-item'><img src="../files/icons/irc-icon.png"><span class='text discord'>Discord</span></span>
+            <span <?php echo $clicktype?>="window.open('https://twitter.com/IoI_xD');" class='desktop-item'><img src="../files/icons/network.png"><span class='text twitter'>Twitter.</span></span>
+            <span <?php echo $clicktype?>="window.open('https://www.youtube.com/channel/UCIs34jgOmfk8CPqNvNQiUlw/featured');" class='desktop-item'><img src="../files/icons/quicktime.png"><span class='text youtube'>YouTube</span></span>
+	    <span <?php echo $clicktype?>="window.open('
+    </body>
+</html>

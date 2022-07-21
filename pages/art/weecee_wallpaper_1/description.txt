@@ -1,0 +1,1 @@
+A Y2k-inspired wallpaper for use with the Weecee, a miniature Windows 98 PC. Rendered at multiple resolutions in case you want to be conservative with memory usage.
