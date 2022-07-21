@@ -1,5 +1,5 @@
 <html>
 	<body>
-		<?php include('script.php'); ?>
+		<?php include('has_script.php'); ?>
 	</body>
 </html>
