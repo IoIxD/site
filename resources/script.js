@@ -278,7 +278,7 @@ function windowCreate(page) {
 
 // update the contents of a window.
 function windowPopulate(div,pageContents) {
-  var content = getElementsInElementByClassName(div,"content")[0];
+  var content = div.getElementsByClassName("content")[0];
   if(typeof content === undefined) {
     return;
   }
