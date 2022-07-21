@@ -251,8 +251,8 @@ function windowCreate(page) {
   div.style.left    =   left;
   div.style.top     =   top;
   div.id            =   page;
-  addClass(div,"window");
-  addClass(div,options);
+  div.classList.add(div,"window");
+  div.classList.add(div,options);
 
   // create a div the improper way because fuck that
   div.innerHTML = "<span class='titlebar'>"+
@@ -447,7 +447,7 @@ function init() {
   } else {
     onPhone = 0;
   }
-  
+
   try {
     registerEventListeners();
   } catch(ex) {
