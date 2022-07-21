@@ -2,7 +2,7 @@ package main
 // This file contains functions that relate to the file listing.
 
 import (
-	"strconv"
+	//"strconv"
 	"os"
 	"os/exec"
 	"math"
@@ -28,7 +28,9 @@ func FileType(filename string) (string) {
 }
 
 // function that converts a number to bytes 
-func PrettySize(size int64) (string) {
+func PrettySize(size_ int64) (string) {
+	size := float64(size_)
+
 	// If the size is 4096, make an unsafe approximation and assume it's a folder. 
 	// it's not like users will be able to upload files, worst that happens is that 
 	// I accidentally put in a file that's 4096 bytes
@@ -37,34 +39,29 @@ func PrettySize(size int64) (string) {
 	}
 
 	log10 := math.Round(math.Log10(float64(size)))
-	sizeNew := size/int64(math.Pow(10,log10))
 	switch(log10) {
-		case 1, 2, 3: 		return fmt.Sprintf("%dB",sizeNew) 	// B
-		case 4, 5: 			return fmt.Sprintf("%dK",sizeNew)		// K
-		case 6, 7: 			return fmt.Sprintf("%dMB",sizeNew)	// MB
-		case 8, 9: 			return fmt.Sprintf("%dGB",sizeNew)	// GB
-		case 10, 11: 		return fmt.Sprintf("%dTB",sizeNew)	// TB
-		case 12, 13:		return fmt.Sprintf("%dPB",sizeNew)	// PB
-		case 14, 15: 		return fmt.Sprintf("%dEB",sizeNew)	// EB
-		case 16, 17: 		return fmt.Sprintf("%dZB",sizeNew)	// ZB
-		case 18, 19: 		return fmt.Sprintf("%dYB",sizeNew)	// YB
+		case 1, 2, 3: 		return fmt.Sprintf("%.0fB",math.Round(size 	/1)) 				// B
+		case 4, 5, 6: 		return fmt.Sprintf("%.0fK",math.Round(size 	/math.Pow(10,3)))	// K
+		case 7, 8, 9: 		return fmt.Sprintf("%.0fMB",math.Round(size 	/math.Pow(10,6)))	// MB
+		case 10, 11, 12: 	return fmt.Sprintf("%.0fGB",math.Round(size 	/math.Pow(10,9)))	// GB
+		case 13, 14, 15: 	return fmt.Sprintf("%.0fTB",math.Round(size 	/math.Pow(10,12)))	// TB
+		case 16, 17, 18:	return fmt.Sprintf("%.0fPB",math.Round(size 	/math.Pow(10,15)))	// PB
+		case 19, 20, 21: 	return fmt.Sprintf("%.0fEB",math.Round(size 	/math.Pow(10,18)))	// EB
+		case 22, 23, 24: 	return fmt.Sprintf("%.0fZB",math.Round(size 	/math.Pow(10,21)))	// ZB
+		case 25, 26, 27: 	return fmt.Sprintf("%.0fYB",math.Round(size 	/math.Pow(10,24)))	// YB
 	}
 	return "-"
 }
 
 // function to show how much disk space is left on the server
 func Diskfree() (string) {
-	cmd := exec.Command("df","-B1","--output=avail","/")
+	cmd := exec.Command("df","--output=avail","-h","/")
 	df, err := cmd.Output()
 	if(err != nil) {
 		return "Error getting disk space: "+err.Error()
 	}
 	dfSecondLine := strings.Split(string(df),"\n")[1]
-	dfFinal, err := strconv.Atoi(dfSecondLine)
-	if(err != nil) {
-		return "Error converting the df output to an int64: "+err.Error()
-	} 
-	return PrettySize(int64(dfFinal)) // use PrettySize instead of -h for consistency 
+	return dfSecondLine+"B"
 }
 
 

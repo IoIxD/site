@@ -49,6 +49,7 @@ func main() {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
+
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatalln(err);
 	}
@@ -69,12 +70,19 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 	pagename = strings.Replace(pagename,".html","",1)
 	pagename = strings.Replace(pagename,".php","",1) 
 	switch(pagename) {
-		case "/":
+		// root
+		case "/": 
 			internal = true
 			fileToServe = "index"
+		// internal pages
 		case "/dirlist", "/generic_image", "/generic_text", "/has_script", "/no_script":
 			internal = true
 			fileToServe = strings.Replace(pagename,"/","",1)
+		// the image generator page
+		case "/image": 
+			ImageHandle(w,r)
+			return
+		// regular pages
 		default:
 			internal = false
 			fileToServe = strings.Replace(pagename,"/","",1)
