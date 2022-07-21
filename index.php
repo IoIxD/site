@@ -6,7 +6,6 @@
 
 		document.open();
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', location.origin+'/has_script.php', true);
 		xhr.onerror = function(e) {
 			console.log(e);
 		}
@@ -14,6 +13,7 @@
 			console.log(xhr.responseText);
 			document.write(xhr.responseText);
 		}
+		xhr.open('GET', location.origin+'/has_script.php', true);
 		document.close();
 
 		</script>
