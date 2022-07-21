@@ -32,19 +32,19 @@
             
         </span>
     	<span class='desktop-item' style='font-size:0px; margin-top: 35px;' <?php echo $clicktype?>="OpenTheThree()">
-            <img width='32' height='32' src="/files/icons/accessories-text-editor.svg"><br><img width='27' height='12' src="/images/font_main.svg">
+            <img width='32' height='32' src="/resources/icons/accessories-text-editor.svg"><br><img width='27' height='12' src="/images/font_main.svg">
         </span><br><span class='desktop-item' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('downloads');">
-            <img width='32' height='32' src="/files/icons/drive-harddisk.svg"><br>
+            <img width='32' height='32' src="/resources/icons/drive-harddisk.svg"><br>
             <img width='52' height='13' src="/images/font_downloads.svg">
         </span><br><span class='desktop-item' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('links');">
-            <img width='32' height='32' src="/files/icons/folder-remote.svg"><br>
+            <img width='32' height='32' src="/resources/icons/folder-remote.svg"><br>
             <img width='60' height='12' src="/images/font_social_media.svg">
         </span><br><span class='desktop-item' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('art');">
-            <img width='32' height='32' src="/files/icons/folder-pictures.svg"><br>
+            <img width='32' height='32' src="/resources/icons/folder-pictures.svg"><br>
             <img width='30' height='12' src="/images/font_art.svg">
         </span><br><!--- (re-add this when i have a games folder)
         <span class='desktop-item nomobile' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('ftype');">
-            <img width='32' height='32' src="/files/icons/ftype_icon.svg"><br>
+            <img width='32' height='32' src="/resources/icons/ftype_icon.svg"><br>
             <img width='30' height='12' src="/images/font_ftype.svg">
         </span><br>--->
         <span class='note mobile_only hidden-android visible-ios' style='font-size:0px; width: 30vw; top: 7vw; right:7vw'>On iOS devices, the scrollbar for windows do not show up. In general, though, the site doesn't look great, and for the full experience you should view it on a desktop computer.</span>

@@ -50,7 +50,7 @@
 					case "dir":
 						$GLOBALS['lastfolder'] = $value;
 						echo "
-						<td class='hcolumn' onclick=\"parent.iframeSet('$dir', '/pages/dirlist.php?dir=$path')\"><img width='16' height='16' src='../files/icons/folder-documents-16x16.svg'><p>$value</p></td> 
+						<td class='hcolumn' onclick=\"parent.iframeSet('$dir', '/pages/dirlist.php?dir=$path')\"><img width='16' height='16' src='../resources/icons/folder-documents-16x16.svg'><p>$value</p></td> 
 						<td>$date</td>
 						<td align='right'>-</td>
 						<td>$filetype</td>
@@ -59,11 +59,11 @@
 					case "file":
 						switch($mime) {
 							case "image":
-								echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_image', 'valload ".str_replace("/", "%2F", $path)."')\"><img width='16' height='16' src='../files/icons/photoshop.svg'><p>$value</p></td>";
+								echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_image', 'valload ".str_replace("/", "%2F", $path)."')\"><img width='16' height='16' src='../resources/icons/photoshop.svg'><p>$value</p></td>";
 								break;
 							default:
 							case "text":
-								echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_text', 'valload ".str_replace("/", "%2F", $path)."')\"><img width='16' height='16' src='../files/icons/accessories-text-editor_16x16.svg'><p>$value</p></td>";
+								echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_text', 'valload ".str_replace("/", "%2F", $path)."')\"><img width='16' height='16' src='../resources/icons/accessories-text-editor_16x16.svg'><p>$value</p></td>";
 								break;
 						}
 						echo "
