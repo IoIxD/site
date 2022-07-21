@@ -1,0 +1,6 @@
+[submodule "vlc"]
+	path = vlc
+	url = https://github.com/IoIxD/VLCConeChanger
+[submodule "pages/funfun"]
+	path = pages/funfun
+	url = https://github.com/IoIxD/Funfun
