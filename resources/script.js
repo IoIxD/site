@@ -213,7 +213,7 @@ function windowCreate(page) {
     titlebar_additions = "<span class='wp-bar-fake'></span>";
   }
 
-  pageUrl = location.protocol+"//"+location.host+"/"+page+"?embed=true";
+  pageUrl = location.protocol+"//"+location.host+"/pages/"+page+"/embed";
 
   // get the contents of the page.
   var pageContents = "";
@@ -258,7 +258,6 @@ function windowCreate(page) {
     div.classList.add(className);
   }
   
-
   // create a div the improper way because fuck that
   div.innerHTML = "<span class='titlebar'>"+
                     "<span class='tl_lines'></span>"+
