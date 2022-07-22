@@ -135,8 +135,10 @@ body.transparent {font-family: Charcoal, "WebCharcoal", sans-serif!important; ba
 
 /* SCROLLBAR */
 *::-webkit-scrollbar {
+    -webkit-appearance: none;
     width: 0.15in;
     height: 0.15in;
+    -webkit-overflow-scrolling: auto;
 }
 *::-webkit-scrollbar-thumb {
     background-color: #9999ff;

@@ -47,7 +47,6 @@
             <img width='32' height='32' src="/resources/icons/ftype_icon.svg"><br>
             <img width='30' height='12' src="/images/font_ftype.svg">
         </span><br>--->
-        <span class='note mobile_only hidden-android visible-ios' style='font-size:0px; width: 30vw; top: 7vw; right:7vw'>On iOS devices, the scrollbar for windows do not show up. In general, though, the site doesn't look great, and for the full experience you should view it on a desktop computer.</span>
         <script type="text/javascript" src="/resources/script.js"></script><script>init();</script>
         <!---
         <span class='note bgnote' style='width: 10%; height: 10%; top: 50%; left: 50%; transform: translate(-50%, -50%)'>(The background takes a bit to load.)</span>
