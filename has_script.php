@@ -1,13 +1,33 @@
 <!DOCTYPE HTML>
 <html>
-    <?php include("common.php");?>
+    <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+    ?>
     <head>
         <link rel="stylesheet" type="text/css" href="/resources/about.css?<?php echo time()?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>noscript {display: none!important;}</style>
         <title>ioi_xd's site</title>
     </head>
-    <body class='main' bgcolor="#9c9cce">
+    <body class='main' bgcolor="#9c9cce" style='background-image: url(<?php
+            // random background
+            $scan = scandir("./pages/art");
+            $num = rand(0, count($scan));
+            $dir = './pages/art/'.$scan[2+$num];
+            // we then want to find the png file with the under 1920x1080;
+            $scan_ = scandir($dir);
+            $highestnumber = 0;
+            $finalfile = "";
+            foreach($scan_ as $val) {
+                $numbersonly = intval(preg_replace('/([^0-9])/','',$val));
+                if($numbersonly > $highestnumber && $highestnumber <= 19201080) {
+                    $highestnumber = $numbersonly;
+                    $finalfile = $val;
+                }
+            }
+            print('"'.$dir."/".$finalfile."\"");
+        ?>)!important;'>
         <article class='sr-only' style='position: absolute; top: -500px'>If you're hearing this, it means you're using a screen reader, I think. I don't see a good way of translating this site into one that's more accessible, so I made a version of the site that is text only. You can view it by pressing Control, Alt, Shift, and O, at the same time.d
 </article><span aria-hidden='true'>
     	<span class='right-click-bar'>

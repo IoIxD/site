@@ -31,9 +31,14 @@ body.main {
     color:  black!important;
     font-size: 75%; 
     overflow-x: hidden;
+
+    margin: 0;
+    backdrop-filter: sepia(1) hue-rotate(270deg) contrast(0.5);
+    background-size: cover;
+    background-position: center center;
 }
 body:not(main) {background: white;font-family: Verdana; font-size: 75%; overflow: hidden visible;}
-body {margin-left:30px;}
+body {padding-left:30px;}
 button {
     background: #ddd!important;
     border: 1px solid black;

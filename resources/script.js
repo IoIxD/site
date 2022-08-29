@@ -239,7 +239,6 @@ function getJSON(url) {
     return JSON.parse(resp);
 }
 
-// this code was taken from stack overflow don't blame me if it sucks
 function makeid(length) {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
