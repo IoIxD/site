@@ -14,11 +14,6 @@ document.addEventListener("mousedown", function(e) {
     mouseDown = 1; 
     elemHover = document.querySelectorAll(`:hover`);
     if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
-      windows = document.getElementsByClassName("window");
-      for( i=0; i< windows.length; i++ ) {
-       windows[i].style.zIndex = 0;
-      }
-      elemHover[2].style.zIndex = 999;
       mx_o = e.pageX; my_o = e.pageY;
       ex = elemHover[2].style.left; ey = elemHover[2].style.top;
       if(ex.includes("%")) {
@@ -30,7 +25,7 @@ document.addEventListener("mousedown", function(e) {
     }
 
   })
-document.addEventListener("mouseup", function() {mouseDown = 0; movingWindow = 0;})
+document.addEventListener("mouseup", function() {mouseDown = 0; movingWindow = 0; hoveredWin = undefined;})
 
 document.addEventListener('keydown', function(e) {
   switch(e.key) {
@@ -268,6 +263,7 @@ document.addEventListener("mousemove", function(e) {
     hoveredWin.style.top = newTop+"px";
     hoveredWin.style.left = newLeft+"px";
 
+
     // disallow every window from being selected while we're moving the current one.
     for(var i = 0; i < windows.length; i++) {
       if(windows[i] != hoveredWin) {
@@ -279,6 +275,9 @@ document.addEventListener("mousemove", function(e) {
     // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
     if(mouseDown) {
       elemHover = document.querySelectorAll(":hover");
+    console.log(elemHover);
+    console.log(hoveredWin);
+
       if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
         movingWindow = 1;
         hoveredWin = elemHover[2];
