@@ -174,6 +174,54 @@ function windowCreate(page, exoptions="") {
     pageUrl += "?val="+exoptions;
     page += "_"+makeid(6);
   }
+  var id = page.replace(pageid_regex, '');
+
+  // create the div properly so we can reference it later.
+  var div = document.createElement("div");
+  div.style.display =   "block";
+  div.style.width   =   width;
+  div.style.height  =   height;
+  div.style.left    =   left;
+  div.style.top     =   top;
+  div.id      =   page;
+  div.classList.add("window");
+
+  if(options != "") {
+    optionsSplit = options.split(" ",99);
+    for (var i in optionsSplit) {
+      div.classList.add(optionsSplit[i]);
+    }
+  }
+
+  // skip ahead a bit 
+  div.innerHTML += `
+  <span class="titlebar">
+      <span class='tl_lines'></span>
+      <span onclick="windowRemove('${page}');"class='tl_button close'></span>
+      <span class="title">`+title+`</span>
+      <span class='tl_button maxmin'></span>
+      <span class='tl_button shade'></span>
+    </span>
+    `;
+  div.innerHTML += titlebar_additions
+
+  // create the contents div and properly add it to the div.
+  var contents = document.createElement("span");
+  contents.classList.add("content");
+  if(options != "") {
+    optionsSplit = options.split(" ",99);
+    for (var i in optionsSplit) {
+      contents.classList.add(optionsSplit[i]);
+    }
+  }
+  setPageContents(contents,pageUrl);
+  div.appendChild(contents);
+
+  var windowDrag = document.createElement("span");
+  windowDrag.classList.add("window-drag");
+  div.appendChild(windowDrag);
+
+/*
   document.body.innerHTML += `
   <div id="${page}" style="display: block; z-index: 0; width: ${width}; height: ${height}; left:${left}; top:${top};" class="window ${options}">
     <span class="titlebar">
@@ -184,28 +232,17 @@ function windowCreate(page, exoptions="") {
       <span class='tl_button shade'></span>
     </span>
     ${titlebar_additions}
-    <span class="content ${options}">
-      <iframe class="tempid id_`+page.replace(pageid_regex, '')+`" ${options_iframe} class="${options}" src="${pageUrl}">
-    </span>
+    <span class="content ${options} id_`+id+`""></span>
     <span class="window-drag"></span>
   </div>`;
-  // firefox has had a 15 year old bug that causes iframes to always be permenantly cached.
-  // i've also had this issue with a chromium based browser. 
-  var geniframe = document.getElementsByClassName("tempid");
-  geniframe[0].contentWindow.location.href = geniframe[0].src;
-  geniframe[0].classList.remove('tempid');
+  */
+  document.body.appendChild(div);
 }
 // WINDOW REMOVAL
 function windowRemove(page) {
   document.getElementById(page).remove();
 }
-function iframeSet(target, page) {
-  var iframes = document.getElementsByClassName("id_"+target.replace(pageid_regex, ''));
-  var relframe = iframes[0];
-  relframe.src = page;
-  relframe.classList.remove("id_"+target.replace(pageid_regex, ''));
-  relframe.classList.add("id_"+page.replace(pageid_regex, '').replace('pagesdirlist.phpdir', ''));
-}
+
 // DRAGGING
 document.addEventListener("mousemove", function(e) {
   if(mouseDown == 1) {
@@ -228,7 +265,24 @@ function OpenTheThree() {
   setTimeout(function(){windowCreate('dislikes');}, 1000);
 }
 
-function getJSON(url) {
+function setPageContents(elem, url) {
+  // try using async
+  try {
+    what = Function("arg0","arg1", `
+      return fetch(arg1)
+        .then((t) => t.text())
+        .then(t => {
+        arg0.innerHTML = t;
+      });
+      `)(elem,url);
+  } catch(ex) {
+    // the code is actually correct so any errors should be handled by using the old xml method
+    contents = getPageContents(url);
+    elem.innerHTML = contents;
+  }
+}
+
+function getPageContents(url) {
     var resp, xmlHttp;
     xmlHttp = new XMLHttpRequest();
     if(xmlHttp != null) {
@@ -236,7 +290,12 @@ function getJSON(url) {
         xmlHttp.send(null);
         resp = xmlHttp.responseText;
     }
-    return JSON.parse(resp);
+    return resp;
+}
+
+function getJSON(url) {
+    var json = getPageContents(url); 
+    return JSON.parse(json);
 }
 
 function makeid(length) {

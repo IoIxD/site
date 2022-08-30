@@ -13,8 +13,13 @@ ini_set('display_errors', '1');
     <body class='main' bgcolor="#9c9cce" style='background-image: url(<?php
             // random background
             $scan = scandir("./pages/art");
-            $num = rand(0, count($scan));
-            $dir = './pages/art/'.$scan[2+$num];
+            $num = rand(2, count($scan));
+            $dir = './pages/art/'.$scan[$num];
+            while($scan[$num] == "") {
+                $num--;
+                $dir = './pages/art/'.$scan[$num];
+            }
+
             // we then want to find the png file with the under 1920x1080;
             $scan_ = scandir($dir);
             $highestnumber = 0;
