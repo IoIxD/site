@@ -1,0 +1,1 @@
+This folder is filtered out from the code that chooses a random background, either because it was commission based or because I don't think it looks good as a wallpaper.

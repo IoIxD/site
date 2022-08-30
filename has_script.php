@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html>
     <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+    //error_reporting(E_ALL);
+    //ini_set('display_errors', '1');
     ?>
     <head>
         <link rel="stylesheet" type="text/css" href="/resources/about.css?<?php echo time()?>">
@@ -13,6 +13,10 @@ ini_set('display_errors', '1');
     <body class='main' bgcolor="#9c9cce" style='background-image: url(<?php
             // random background
             $scan = scandir("./pages/art");
+            // go through the listing and remove the "other" listing
+            $scan = array_filter($scan, function($e) {
+                return $e !== "other";
+            });
             $num = rand(2, count($scan));
             $dir = './pages/art/'.$scan[$num];
             while($scan[$num] == "") {

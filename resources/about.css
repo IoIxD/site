@@ -24,7 +24,10 @@ body {
     color: black!important;
     overflow: hidden;
 
+    background-size: cover;
+    background-position: center 80%;
 }
+
 * {
     image-rendering: optimizeSpeed!important;
     image-rendering: -moz-crisp-edges!important;
