@@ -67,16 +67,8 @@ ini_set('display_errors', '1');
         </span><br><span class='desktop-item' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('art');">
             <img width='32' height='32' src="/resources/icons/folder-pictures.svg"><br>
             <img width='30' height='12' src="/images/font_art.svg">
-        </span><br><!--- (re-add this when i have a games folder)
-        <span class='desktop-item nomobile' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('ftype');">
-            <img width='32' height='32' src="/resources/icons/ftype_icon.svg"><br>
-            <img width='30' height='12' src="/images/font_ftype.svg">
-        </span><br>--->
-        <script type="text/javascript" src="/resources/script.js"></script><script>init();</script>
-        <!---
-        <span class='note bgnote' style='width: 10%; height: 10%; top: 50%; left: 50%; transform: translate(-50%, -50%)'>(The background takes a bit to load.)</span>
-        <script>document.addEventListener('DOMContentLoaded', function() {document.querySelector('.note.bgnote').remove();},false);</script>
-        --->
+        </span><br>
+        <script type="text/javascript" src="/resources/script.js"></script>
     </span>
     </body>
 </html>

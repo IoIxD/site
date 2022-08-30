@@ -8,79 +8,80 @@ var properties = getJSON(window.location.protocol+"//"+window.location.host+"/pa
 var pageid_regex = /(?![A-z])(?![0-9])(?!\.)./gm;
 var heldCtrl = 0; var heldShift = 0; var heldAlt = 0; var heldO = 0;
 
-function init() {
-    document.addEventListener("mousedown", function(e) {
-        mouseDown = 1; 
-        elemHover = document.querySelectorAll(`:hover`);
-        if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
-          windows = document.getElementsByClassName("window");
-          for( i=0; i< windows.length; i++ ) {
-           windows[i].style.zIndex = 0;
-          }
-          elemHover[2].style.zIndex = 999;
-          mx_o = e.pageX; my_o = e.pageY;
-          ex = elemHover[2].style.left; ey = elemHover[2].style.top;
-          if(ex.includes("%")) {
-            wx_o = +(window.innerWidth) * +("."+ex.replace('%',''));
-          } else {wx_o = ex.replace('px', '')}
-          if(ey.includes("%")) {
-            wy_o = +(window.innerHeight) * +("."+ey.replace('%',''));
-          } else {wy_o = ey.replace('px', '')}
-        }
+var hoveredWin;
 
-      })
-    document.addEventListener("mouseup", function() {mouseDown = 0; movingWindow = 0;})
-
-    document.addEventListener('keydown', function(e) {
-      switch(e.key) {
-        case "Control":
-          heldCtrl = 1;
-          break;
-        case "Alt":
-          heldAlt = 1;
-          break;
-        case "Shift":
-          heldShift = 1;
-          break;
-        case "O":
-          heldO = 1;
-          break;
+document.addEventListener("mousedown", function(e) {
+    mouseDown = 1; 
+    elemHover = document.querySelectorAll(`:hover`);
+    if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+      windows = document.getElementsByClassName("window");
+      for( i=0; i< windows.length; i++ ) {
+       windows[i].style.zIndex = 0;
       }
-      if(heldCtrl == 1 && heldAlt == 1 && heldShift == 1 && heldO == 1) {
-        window.location.replace("https://ioi-xd.net/no_script.php");
-      }
-    })
-    document.addEventListener('keyup', function(e) {
-      switch(e.key) {
-        case "Control":
-          heldCtrl = 0;
-          break;
-        case "Alt":
-          heldAlt = 0;
-          break;
-        case "Shift":
-          heldShift = 0;
-          break;
-        case "O":
-          heldO = 0;
-          break;
-      }
-    })
-    page = window.location.pathname.replace('.html','').replace('/','',1);
-    if (page != "") {
-      windowCreate(page);
-    } else {
-      OpenTheThree()
+      elemHover[2].style.zIndex = 999;
+      mx_o = e.pageX; my_o = e.pageY;
+      ex = elemHover[2].style.left; ey = elemHover[2].style.top;
+      if(ex.includes("%")) {
+        wx_o = +(window.innerWidth) * +("."+ex.replace('%',''));
+      } else {wx_o = ex.replace('px', '')}
+      if(ey.includes("%")) {
+        wy_o = +(window.innerHeight) * +("."+ey.replace('%',''));
+      } else {wy_o = ey.replace('px', '')}
     }
-    var classNames = [];
-    if (navigator.userAgent.match(/(iPad|iPhone|iPod)/i)) classNames.push('device-ios');
-    if (navigator.userAgent.match(/android/i)) classNames.push('device-android');
 
-    var html = document.getElementsByTagName('html')[0];
+  })
+document.addEventListener("mouseup", function() {mouseDown = 0; movingWindow = 0;})
 
-    if (classNames.length) classNames.push('on-device');
-    if (html.classList) html.classList.add.apply(html.classList, classNames);
-};
+document.addEventListener('keydown', function(e) {
+  switch(e.key) {
+    case "Control":
+      heldCtrl = 1;
+      break;
+    case "Alt":
+      heldAlt = 1;
+      break;
+    case "Shift":
+      heldShift = 1;
+      break;
+    case "O":
+      heldO = 1;
+      break;
+  }
+  if(heldCtrl == 1 && heldAlt == 1 && heldShift == 1 && heldO == 1) {
+    window.location.replace("https://ioi-xd.net/no_script.php");
+  }
+})
+document.addEventListener('keyup', function(e) {
+  switch(e.key) {
+    case "Control":
+      heldCtrl = 0;
+      break;
+    case "Alt":
+      heldAlt = 0;
+      break;
+    case "Shift":
+      heldShift = 0;
+      break;
+    case "O":
+      heldO = 0;
+      break;
+  }
+})
+page = window.location.pathname.replace('.html','').replace('/','',1);
+if (page != "") {
+  windowCreate(page);
+} else {
+  OpenTheThree()
+}
+var classNames = [];
+if (navigator.userAgent.match(/(iPad|iPhone|iPod)/i)) classNames.push('device-ios');
+if (navigator.userAgent.match(/android/i)) classNames.push('device-android');
+
+var html = document.getElementsByTagName('html')[0];
+
+if (classNames.length) classNames.push('on-device');
+if (html.classList) html.classList.add.apply(html.classList, classNames);
+
 // WINDOW CREATION
 function windowCreate(page, exoptions="") {
   try {
@@ -245,18 +246,47 @@ function windowRemove(page) {
 
 // DRAGGING
 document.addEventListener("mousemove", function(e) {
-  if(mouseDown == 1) {
-    elemHover = document.querySelectorAll(`:hover`);
-    if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
-      movingWindow = 1;
-      hoveredWin = elemHover[2];
+  // are we moving a window?
+  if(movingWindow) {
+    // if the window we're supposed to be moving is maximized then no we aren't.
+    if(hoveredWin.classList.contains("maximized")) {
+      return;
     }
-    if(movingWindow) {
-      hoveredWin.style.top = (+(e.pageY-my_o) + +wy_o)+"px";
-      hoveredWin.style.left = (+(e.pageX-mx_o) + +wx_o)+"px";
+    // move whatever window we're hovering over.
+    // first get what the position should be, in pixels.
+    newTop = (+(e.pageY-my_o) + +wy_o);
+    newLeft = (+(e.pageX-mx_o) + +wx_o);
+
+    // adjust it according to the window's width, converting it to a percentage.
+    newTop = (newTop / window.innerWidth)*100;
+    newLeft = (newLeft / window.innerHeight)*100;
+
+    // convert it back to pixels, again using the window's inner width.
+    newTop = window.innerWidth * (newTop)/100;
+    newLeft = window.innerHeight * (newLeft)/100;
+
+    hoveredWin.style.top = newTop+"px";
+    hoveredWin.style.left = newLeft+"px";
+
+    // disallow every window from being selected while we're moving the current one.
+    for(var i = 0; i < windows.length; i++) {
+      if(windows[i] != hoveredWin) {
+        windows[i].style.pointerEvents = 'none';
+        windows[i].style.userSelect = 'none';
+      }
+    }
+  } else {
+    // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
+    if(mouseDown) {
+      elemHover = document.querySelectorAll(":hover");
+      if(elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+        movingWindow = 1;
+        hoveredWin = elemHover[2];
+      }
     }
   }
 })
+
 
 // quick and dirty function to open the three windows from the first icon, one after the other.
 function OpenTheThree() {
