@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="../resources/about.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo $_SERVER['HTTP_X_FORWARDED_PROTO']."://".$_SERVER['HTTP_HOST'];?>/resources/about.css">
 		<style>
 		</style>
 	</head>
@@ -19,14 +19,23 @@
 		error_reporting(E_ALL);
 		$GLOBALS['lastfolder'] = '';
 		function DirectoryList($dir, $subdir) {
-			$scan = scandir($dir);
+			$dirfull = $_SERVER['DOCUMENT_ROOT']."/".$dir;
+			$scan = scandir($dirfull);
 			foreach($scan as $value) {
-				if($value == "." || ($value == ".." && realpath($dir."/..") == "/var/www/html/pages")) {continue;}
-				$path = $dir."/".$value;
+				if(
+					$value == "." || 
+					($value == ".." && realpath($dirfull."/..") == $_SERVER['DOCUMENT_ROOT']."/pages") || 
+					$value == "index.php"
+				) {
+					continue;
+				}
+
+				$path = $dirfull."/".$value;
 				$filetype = filetype($path);
 				$mime = explode("/", mime_content_type($path))[0];
 				$date = gmdate('r', filemtime($path));
 				$filesize = filesize($path);
+
 				switch(strlen($filesize)) {
 					case 10:
 					case 9:
@@ -45,12 +54,15 @@
 						$filesize_h = $filesize." B";
 						break;
 				}
+
 				if($subdir == 1) {echo "<tr class='hidden ".$GLOBALS['lastfolder']."'>";} else {echo "<tr class='a'>";}
+
 				switch($filetype) {
 					case "dir":
 						$GLOBALS['lastfolder'] = $value;
 						echo "
-						<td class='hcolumn' onclick=\"parent.iframeSet('$dir', '/pages/dirlist.php?dir=$path')\"><img width='16' height='16' src='../resources/icons/folder-documents-16x16.svg'><p>$value</p></td> 
+						<td class='hcolumn' onclick=\"parent.setPageContents(this.parentElement.parentElement.parentElement, '/pages/dirlist.php?dir=$dir/$value')\">
+							<img width='16' height='16' src='../resources/icons/folder-documents-16x16.svg'>$value</td> 
 						<td>$date</td>
 						<td align='right'>-</td>
 						<td>$filetype</td>
@@ -59,17 +71,16 @@
 					case "file":
 						switch($mime) {
 							case "image":
-								echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_image', 'valload ".str_replace("/", "%2F", $path)."')\"><img width='16' height='16' src='../resources/icons/photoshop.svg'><p>$value</p></td>";
+								echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_image', 'valload ".str_replace("/", "%2F", $dir."/".$value)."')\"><img width='16' height='16' src='../resources/icons/photoshop.svg'><p>$value</p></td>";
 								break;
-							default:
 							case "text":
-								echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_text', 'valload ".str_replace("/", "%2F", $path)."')\"><img width='16' height='16' src='../resources/icons/accessories-text-editor_16x16.svg'><p>$value</p></td>";
+								echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_text', 'valload ".str_replace("/", "%2F", $dir."/".$value)."')\"><img width='16' height='16' src='../resources/icons/accessories-text-editor_16x16.svg'><p>$value</p></td>";
 								break;
 						}
 						echo "
 						<td>$date</td>
 						<td align='right'>$filesize_h</td>
-						<td>$filetype</td>
+						<td>$mime</td>
 						</tr>";
 						break;
 				}

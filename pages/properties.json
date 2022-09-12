@@ -10,7 +10,8 @@
 	"blog": {"name": "Blog", "width": "600px", "height": "670px", "left":"50%", "top":"50%", "options": "dirlist"},
 	"art": {"name": "Art", "width": "600px", "height": "570px", "left":"50%", "top":"50%", "options": "dirlist"},
 	"dirlist": {"name": "Art", "width": "600px", "height": "670px", "left":"50%", "top":"50%", "options": "dirlist"},
-	"generic_image": {"name": "Art Viewer", "width": "400px", "height": "400px", "left": "50%", "top":"50%", "options": "nooverflow"},
+	"generic_image": {"name": "Art Viewer", "width": "700px", "height": "700px", "left": "50%", "top":"50%", "options": "nooverflow"},
 	"generic_text": {"name": "Text Viewer", "width": "400px", "height": "400px", "left": "50%", "top":"50%", "options": "nooverflow textfile"},
-	"ftype": {"name":"FType", "width":"350px", "height":"250px", "left":"50%", "top":"50%", "options": "nooverflow"}
+	"ftype": {"name":"FType", "width":"350px", "height":"250px", "left":"50%", "top":"50%", "options": "nooverflow"},
+	"404": {"name":"404", "width":"350px", "height":"250px", "left":"50%", "top":"50%", "options": "nooverflow"}
 }

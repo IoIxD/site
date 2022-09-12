@@ -28,7 +28,7 @@ body {
     background-position: center 80%;
 }
 
-* {
+img:not(.antialias) {
     image-rendering: optimizeSpeed!important;
     image-rendering: -moz-crisp-edges!important;
     image-rendering: -o-crisp-edges!important;
@@ -53,7 +53,16 @@ button:active {
 button:focus {
     outline: 0px!important;
 }
-\
+
+.thead td {background: #ccc; padding: 3px; 
+    box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #888,
+    1px 1px 0 0 #333, 0px 0px 0px 1px #666;}
+td p {height: 1.5em;line-height: 1.5em;display: inline;}
+td img {vertical-align: middle;}
+td{background: #eee;}
+td.hcolumn {background: #ddd; cursor: pointer;}
+table {width: 100%; font-size: 92%;}
+
 .offscreen {
     position: absolute;
     left: -100000px;
@@ -122,9 +131,12 @@ button:focus {
 .window .content { /* default padding */
     vertical-align: top;
     display: block;
-    padding: 16px 16px 16px 30px;
+    /*padding: 16px 16px 16px 30px;
     width: calc(100% + -61px);
-    height: calc(100% + -64px);
+    height: calc(100% + -64px);*/
+    width: 100%;
+    height: calc(100% - 18px);
+    padding: 0;
     overflow: scroll;
     display: block;
     min-height:1px!important;
@@ -136,7 +148,11 @@ button:focus {
     height: calc(100% + -61px);
     padding: 10px;
 }
-/* dirlist windows have been moved to dirlist.css */
+.window .content.dirlist { /* no padding */
+    width: 100%;
+    height: calc(100% + -18px);
+    padding: 0;
+}
 .window:not(.transparent) .content {
     background: white!important;
     box-shadow: inset 1px 1px 0 0 #9c9c9c, inset -1px -1px 0 0 white, inset 1px 1px 0 1px black, inset -1px -1px 0 1px black;

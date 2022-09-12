@@ -10,33 +10,7 @@
         <style>noscript {display: none!important;}</style>
         <title>ioi_xd's site</title>
     </head>
-    <body class='main' bgcolor="#9c9cce" style='background-image: url(<?php
-            // random background
-            $scan = scandir("./pages/art");
-            // go through the listing and remove the "other" listing
-            $scan = array_filter($scan, function($e) {
-                return $e !== "other";
-            });
-            $num = rand(2, count($scan));
-            $dir = './pages/art/'.$scan[$num];
-            while($scan[$num] == "") {
-                $num--;
-                $dir = './pages/art/'.$scan[$num];
-            }
-
-            // we then want to find the png file with the under 1920x1080;
-            $scan_ = scandir($dir);
-            $highestnumber = 0;
-            $finalfile = "";
-            foreach($scan_ as $val) {
-                $numbersonly = intval(preg_replace('/([^0-9])/','',$val));
-                if($numbersonly > $highestnumber && $highestnumber <= 19201080) {
-                    $highestnumber = $numbersonly;
-                    $finalfile = $val;
-                }
-            }
-            print('"'.$dir."/".$finalfile."\"");
-        ?>)!important;'>
+    <body class='main' bgcolor="#9c9cce">
         <article class='sr-only' style='position: absolute; top: -500px'>If you're hearing this, it means you're using a screen reader, I think. I don't see a good way of translating this site into one that's more accessible, so I made a version of the site that is text only. You can view it by pressing Control, Alt, Shift, and O, at the same time.d
 </article><span aria-hidden='true'>
     	<span class='right-click-bar'>
@@ -60,15 +34,15 @@
             ?>
             
         </span>
-    	<span class='desktop-item' style='font-size:0px; margin-top: 35px;' <?php echo $clicktype?>="OpenTheThree()">
+    	<span class='desktop-item' style='font-size:0px; margin-top: 35px;' onclick="OpenTheThree()">
             <img width='32' height='32' src="/resources/icons/accessories-text-editor.svg"><br><img width='27' height='12' src="/images/font_main.svg">
-        </span><br><span class='desktop-item' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('downloads');">
+        </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('downloads');">
             <img width='32' height='32' src="/resources/icons/drive-harddisk.svg"><br>
             <img width='52' height='13' src="/images/font_downloads.svg">
-        </span><br><span class='desktop-item' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('links');">
+        </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('links');">
             <img width='32' height='32' src="/resources/icons/folder-remote.svg"><br>
             <img width='60' height='12' src="/images/font_social_media.svg">
-        </span><br><span class='desktop-item' style='font-size:0px;' <?php echo $clicktype?>="windowCreate('art');">
+        </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('art');">
             <img width='32' height='32' src="/resources/icons/folder-pictures.svg"><br>
             <img width='30' height='12' src="/images/font_art.svg">
         </span><br>
