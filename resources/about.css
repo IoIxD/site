@@ -19,8 +19,9 @@ body {
     display: block;
     margin: auto auto;
     font-family: Verdana;
-    background-image: url("../images/19201080_filter.png");
-    background-color: #9c9cce;
+    /*background-image: url("../images/19201080_filter.png");
+    background-color: #9c9cce;*/
+    background-color: black;
     color: black!important;
     overflow: hidden;
 
