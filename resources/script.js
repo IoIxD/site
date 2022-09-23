@@ -271,6 +271,7 @@ document.addEventListener("mousemove", function (e) {
       }
     }
   }
+  xeyesCheck(e);
 })
 
 
@@ -354,6 +355,23 @@ async function setBackground() {
   // now we want to fetch the contents of that link and set the page's background to it
   document.body.style.backgroundImage = "url(\"" + file + "\")";
 }
+
+// XEYES
+
+function xeyesCheck(e) {
+  xeyes = document.querySelectorAll(".xeye");
+  xeyes.forEach(eye => {
+    let top = eye.style.top.replace("px", "", 1);
+    let left = eye.style.left.replace("px", "", 1);
+    let parent = document.querySelector("#xeyes");
+    let y = (e.clientY - top) - parent.style.top.replace("px", "", 1);
+    let x = (e.clientX - left) - parent.style.left.replace("px", "", 1);
+    console.log(parent.style.top.replace("px", "", 1));
+    let deg = (Math.atan2(y, x)) * 180 / Math.PI;
+    eye.querySelector(".inner").style.transform = `rotate(${deg}deg)`;
+  });
+}
+
 
 /*
 // random background

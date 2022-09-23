@@ -29,7 +29,7 @@ body {
     background-position: center 80%;
 }
 
-img:not(.antialias) {
+*:not(.antialias) {
     image-rendering: optimizeSpeed!important;
     image-rendering: -moz-crisp-edges!important;
     image-rendering: -o-crisp-edges!important;
@@ -154,6 +154,9 @@ table {width: 100%; font-size: 92%;}
     height: calc(100% + -18px);
     padding: 0;
 }
+.window .content.nooverflow {
+    overflow: hidden!important;
+}
 .window:not(.transparent) .content {
     background: white!important;
     box-shadow: inset 1px 1px 0 0 #9c9c9c, inset -1px -1px 0 0 white, inset 1px 1px 0 1px black, inset -1px -1px 0 1px black;
@@ -165,7 +168,7 @@ table {width: 100%; font-size: 92%;}
     display: inline-block;
     width: 13px;
     height: 13px;
-    background: url("../images/macos_title_buttons.png") 
+    background: url("../images/macos_title_buttons.png");
 }
 .window .tl_button.close {
     float: left;
