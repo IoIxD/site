@@ -5,7 +5,7 @@
     //ini_set('display_errors', '1');
     ?>
     <head>
-        <link rel="stylesheet" type="text/css" href="/resources/about.css?<?php echo time()?>">
+        <link rel="stylesheet" type="text/css" href="/resources/about.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>noscript {display: none!important;}</style>
         <title>ioi_xd's site</title>
