@@ -8,7 +8,7 @@
             <span <?php echo $clicktype?>="parent.windowCreate('discordwarn');" class='desktop-item'>
                 <img width='32' height='32'  src="../resources/icons/irc-icon.svg"><br>
                 <img width='39' height='12' src="/images/font_discord.svg">
-            </span> <span <?php echo $clicktype?>="window.open('https://j.ioi-xd.net/IoI_xD');" class='desktop-item'>
+            </span> <span <?php echo $clicktype?>="window.open('https://wetdry.world/@IoIxD');" class='desktop-item'>
                 <img width='32' height='32' src="../resources/icons/network.svg"><br>
                 <img width='45' height='12' src="/images/font_mastodon.svg">
             </span><br><span <?php echo $clicktype?>="window.open('https://www.youtube.com/channel/UCIs34jgOmfk8CPqNvNQiUlw/featured');" class='desktop-item'>
