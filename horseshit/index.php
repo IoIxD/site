@@ -33,7 +33,7 @@
 					<td>5:01.89</td>
 					<td><b style='color: red'>CHANGE: 64GB Memory</b></td>
 					<td>CPU</td>
-					<td>amd's linux drivers are shit i'm going to linux soon</td>
+					<td>amd's linux drivers are shit i'm going to windows soon</td>
 					<td><b>2.80666666667</b></td>
 				</tr>
 				<tr>
