@@ -29,7 +29,7 @@
 					<td>02:10.50</td> <!--- 02:10.50 --->
 					<td>272</td>
 					<td>5:01.89</td>
-					<td><b style='red'>CHANGE: 64GB</b></td>
+					<td><b style='color: red'>CHANGE: 64GB</b></td>
 					<td>CPU</td>
 					<td>amd's linux drivers are shit i'm going to linux soon</td>
 					<td><b>2.80666666667</b></td>
