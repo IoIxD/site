@@ -18,21 +18,33 @@
 				<td>initialization time</td>
 				<td>samples rendered after 2 minutes</td>
 				<td>time to render the whole thing</td>
-				<td>system specs</td>
+				<td>system specs/change in system specs since previous attempt</td>
 				<td>rendered on cpu or gpu?</td>
 				<td>notes</td>
 				<td>Scerfdollars</td>
 			</thead>
 			<tbody>
-				<td>july 17th 2022</td>
-				<td>7 minutes</td>
-				<td>100</td>
-				<td>11 minutes</td>
-				<td><b>CPU</b>: AMD Ryzen 7 3700X, <b>
-				Memory</b>: 16GB, <b>Storage</b>: 2TB 7GB/s Adata NVME, <b>GPU</b>: AMD RX 6600XT <b>OS</b>: Manjaro Linux,</td>
-				<td>CPU</td>
-				<td>due to some funny driver issues i am physically unable to render this on the GPU. i would have to bring the files over to windows to do that.</td>
-				<td><b>1</b></td>
+			<tr>
+					<td>december 25th 2022</td>
+					<td>02:10.50</td> <!--- 02:10.50 --->
+					<td>272</td>
+					<td>5:01.89</td>
+					<td><b style='red'>CHANGE: 64GB</b></td>
+					<td>CPU</td>
+					<td>amd's linux drivers are shit i'm going to linux soon</td>
+					<td><b>2.80666666667</b></td>
+				</tr>
+				<tr>
+					<td>july 17th 2022</td>
+					<td><em>7 minutes</em></td>
+					<td><em>100</em></td>
+					<td><em>11 minutes</em></td>
+					<td><b>CPU</b>: AMD Ryzen 7 3700X, <b>
+					Memory</b>: 16GB, <b>Storage</b>: 2TB 7GB/s Adata NVME, <b>GPU</b>: AMD RX 6600XT <b>OS</b>: Manjaro Linux,</td>
+					<td>CPU</td>
+					<td>due to some funny driver issues i am physically unable to render this on the GPU. i would have to bring the files over to windows to do that.</td>
+					<td><b>1</b></td>
+				</tr>
 			</tbody>
 		</table>
 	</body>
