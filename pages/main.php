@@ -7,8 +7,7 @@
         <p>
         <img class="broken" src="../images/broken.gif" width="20" height="22"> Hello!
 
-        I am Gavin "ioi_xd" Parker, a 20 year old programmer, artist, and aspiring filmmaker.
-        I have several years of experience in HTML/CSS, and around a year or so of experience with advanced Javascript (and as such, Node.js) and roughly a year with Golang though I am still coding with it to better learn how to best utilize it. I'm alright, albiet rusty, with PHP and Python.
+        I am Gavin "ioi_xd" Parker, a 20 year old programmer (see the windows beside this for more info on that), artist, and aspiring filmmaker.
         In general, I really like technology, especially that of the older variety (1980-2002) but i consider myself a general fan. I'm probably going to go into programming full time, but I'd also like to make at least one film or comic in my life, as I also like doing 3d modelling and sometimes 2d art.
 
         In addition to this being my resume (kind of), this is generally where I put all my dumb shit. In addition to serving as my carrd/listography (the actual sites don't give the customization i'm looking for) this is where i put my art and sometimes programs.

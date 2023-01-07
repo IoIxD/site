@@ -278,7 +278,9 @@ document.addEventListener("mousemove", function (e) {
 // quick and dirty function to open the three windows from the first icon, one after the other.
 function OpenTheThree() {
   windowCreate('main');
-  setTimeout(function () { windowCreate('likes'); }, 500);
+  setTimeout(function () { windowCreate('top-languages'); }, 250);
+  setTimeout(function () { windowCreate('github-stats'); }, 500);
+  setTimeout(function () { windowCreate('likes'); }, 750);
   setTimeout(function () { windowCreate('dislikes'); }, 1000);
 }
 
