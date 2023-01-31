@@ -1,2 +1,3 @@
 *.css linguist-detectable=false
 *.php linguist-language=php
+*.sh linguist-detectable=false
