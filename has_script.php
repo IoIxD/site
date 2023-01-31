@@ -1,10 +1,14 @@
 <!DOCTYPE HTML>
 <html>
-    <?php
-    //error_reporting(E_ALL);
-    //ini_set('display_errors', '1');
-    ?>
     <head>
+        <script
+            src="https://code.jquery.com/jquery-1.5.min.js"
+            integrity="sha256-IpJ49qnBwn/FW+xQ8GVI/mTCYp9Z9GLVDKwo5lu5OoM="
+            crossorigin="anonymous">
+        </script><script
+            src="https://code.jquery.com/ui/1.9.0/jquery-ui.min.js"
+            crossorigin="anonymous">
+        </script>
         <link rel="stylesheet" type="text/css" href="/resources/about.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>noscript {display: none!important;}</style>
@@ -42,11 +46,19 @@
         </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('links');">
             <img width='32' height='32' src="/resources/icons/folder-remote.svg"><br>
             <img width='60' height='12' src="/images/font_social_media.svg">
-        </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('art');">
+        </span><br><span class='desktop-item' style='font-size:0px;' onclick="windowCreate('art/');">
             <img width='32' height='32' src="/resources/icons/folder-pictures.svg"><br>
             <img width='30' height='12' src="/images/font_art.svg">
         </span><br>
-        <script type="text/javascript" src="/resources/script.js"></script>
+        <script type="text/javascript" src="/resources/js/properties.js"></script>
+        <script type="text/javascript" src="/resources/js/setpagecontents.js"></script>
+        <script type="text/javascript" src="/resources/js/makeid.js"></script>
+        <script type="text/javascript" src="/resources/js/setbackground.js"></script>
+        <script type="text/javascript" src="/resources/js/arrincludes.js"></script>
+        <script type="text/javascript" src="/resources/js/wincreate.js"></script>
+        <script type="text/javascript" src="/resources/js/winremove.js"></script>
+        <script type="text/javascript" src="/resources/js/xeyes.js"></script>
+        <script type="text/javascript" src="/resources/js/main.js"></script>
     </span>
     </body>
 </html>
