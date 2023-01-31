@@ -27,6 +27,7 @@ body {
 
     background-size: cover;
     background-position: center 80%;
+    background-repeat: no-repeat;
 }
 
 *:not(.antialias) {
@@ -196,6 +197,7 @@ table {width: 100%; font-size: 92%;}
     width: calc(100% - 53px);
     height: 13px;
     background: url("../images/macos_title.svg") repeat;
+    background: url("../images/macos_title.png") repeat;
     padding-right: 2px;
 }
 .window .tl_lines:before, .window .tl_lines:after, .window .titlebar .title:before, .window .titlebar .title:after {
@@ -234,7 +236,8 @@ table {width: 100%; font-size: 92%;}
     right: -4px;
 }
 .window .ui-resizable-se {
-    background: url("../images/window-drag.png");;
+    background: url("../images/window-drag.svg");
+    background: url("../images/window-drag.png");
     display: block;
     width: 16px;
     height: 16px;
@@ -444,6 +447,7 @@ table {width: 100%; font-size: 92%;}
     display:block;
     width:16px;
     height:17px;
+    background:url('images/ioi_icon.svg');
     background:url('images/ioi_icon.png');
     left:17px;
     top:2px;
@@ -472,7 +476,9 @@ table {width: 100%; font-size: 92%;}
     width: 268px;
     height: 16px;
     background: url('../images/wp_bar_fake.svg');
+    background: url('../images/wp_bar_fake.png');
     margin: 5px auto 2px auto;
+    overflow: hidden;
 }
 .content.textfile {
     cursor: text!important;
