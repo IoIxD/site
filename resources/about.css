@@ -19,8 +19,6 @@ body {
     display: block;
     margin: auto auto;
     font-family: Verdana;
-    /*background-image: url("../images/19201080_filter.png");
-    background-color: #9c9cce;*/
     background-color: black;
     color: black!important;
     overflow: hidden;
@@ -56,9 +54,13 @@ button:focus {
     outline: 0px!important;
 }
 
-.thead td {background: #ccc; padding: 3px; 
+.thead td {
+    background: #ccc; 
+    padding: 3px; 
     box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #888,
-    1px 1px 0 0 #333, 0px 0px 0px 1px #666;}
+    1px 1px 0 0 #333, 0px 0px 0px 1px #666;
+}
+
 td p {height: 1.5em;line-height: 1.5em;display: inline;}
 td img {vertical-align: middle;}
 td{background: #eee;}
@@ -79,11 +81,14 @@ table {width: 100%; font-size: 92%;}
     position: absolute;
     display: block;
     padding: 3px;
-    border: 1px solid black;
+    border-left: 1px solid white;
+    border-top: 1px solid white;
+    border-bottom: 1px solid #9c9c9c;
+    border-right: 1px solid #9c9c9c;
+    outline: 1px solid black;
     min-width: 1px;
-    box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #9c9c9c, 1px 1px 0 0 black;
     overflow:hidden!important;
-
+    z-index: 1;
 }
 .window:not(.noanim) {
     animation: winAppear .2s linear;
@@ -133,11 +138,9 @@ table {width: 100%; font-size: 92%;}
 }
 .window .content { /* default padding */
     display: block;
-    /*padding: 16px 16px 16px 30px;
-    width: calc(100% + -61px);
-    height: calc(100% + -64px);*/
-    width: 100%;
-    height: calc(100% - 18px);
+    width: 95%;
+    height: calc(95% - 18px);
+    height: 79%;
     padding: 0;
     overflow: scroll;
     display: block;
@@ -146,13 +149,16 @@ table {width: 100%; font-size: 92%;}
     position: relative;
 }
 .window .content.textfile { /* default uniform padding */
+    width: 95%;
     width: calc(100% + -21px);
+    height: 79%;
     height: calc(100% + -61px);
     padding: 10px;
 }
 .window .content.dirlist { /* no padding */
     width: 100%;
     height: calc(100% + -18px);
+    height: 79%;
     padding: 0;
 }
 .window .content.nooverflow {
@@ -160,7 +166,12 @@ table {width: 100%; font-size: 92%;}
 }
 .window:not(.transparent) .content {
     background: white!important;
-    box-shadow: inset 1px 1px 0 0 #9c9c9c, inset -1px -1px 0 0 white, inset 1px 1px 0 1px black, inset -1px -1px 0 1px black;
+    outline: 1px solid black;
+    border-left: 1px solid white;
+    border-top: 1px solid white;
+    border-bottom: 1px solid #9c9c9c;
+    border-right: 1px solid #9c9c9c;
+    /*box-shadow: inset 1px 1px 0 0 #9c9c9c, inset -1px -1px 0 0 white, inset 1px 1px 0 1px black, inset -1px -1px 0 1px black;*/
 }
 .window .directions:after {
     content:"it's on the right";
