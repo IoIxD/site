@@ -102,7 +102,6 @@ function windowCreate(page) {
 
     var div = $("<div></div>");
     div.addClass("window")
-              .css("display", "block")
               .css("width", width)
               .css("height", height)
               .css("left",left)
@@ -124,7 +123,7 @@ function windowCreate(page) {
   
     // create the contents div and properly add it to the div.
     $.get(pageUrl, function(data) {
-      var contents = $("<span>"+data+"</span>");
+      var contents = $("<span><span class='inner'>"+data+"</span></span>");
       contents.addClass("content");
       for (var i in options) {
         contents.addClass(options[i]);
