@@ -127,7 +127,7 @@ table {width: 100%; font-size: 92%;}
     top: -2px;
     transform: translate(-50%, 0);
     vertical-align: center;
-    padding: 1px 4px 2px 4px;
+    padding: 2px 4px;
 }
 .window .content { /* default padding */
     vertical-align: top;
@@ -168,22 +168,37 @@ table {width: 100%; font-size: 92%;}
     display: inline-block;
     width: 13px;
     height: 13px;
-    background: url("../images/macos_title_buttons.png");
+    
 }
 .window .tl_button.close {
     float: left;
     margin: 1px 0;
-    background-position-y: 0px;
+    background: url("../images/button_close.png");
+    background: url("../images/button_close.svg");
+}
+.window .tl_button.close:active {
+    background: url("../images/button_close_active.png");
+    background: url("../images/button_close_active.svg");
 }
 .window .tl_button.maxmin {
     float: right;
-    background-position-y: -13px;
     margin: 1px 3px;
+    background: url("../images/button_maximize.png");
+    background: url("../images/button_maximize.svg");
+}
+.window .tl_button.maxmin:active {
+    background: url("../images/button_maximize_active.png");
+    background: url("../images/button_maximize_active.svg");
 }
 .window .tl_button.shade {
     float: right;
     margin: 1px 0;
-    background-position-y: -26px;
+    background: url("../images/button_shade.png");
+    background: url("../images/button_shade.svg");
+}
+.window .tl_button.shade:active {
+    background: url("../images/button_shade_active.png");
+    background: url("../images/button_shade_active.svg");
 }
 .window .tl_button:active {
     background-position-x: 13px;
@@ -213,7 +228,7 @@ table {width: 100%; font-size: 92%;}
     background-position: -11px 0;
 }
 .window .titlebar .title:before, .window .titlebar .title:after {
-    margin-top: 2px;
+    margin-top: 1px;
 }
 .window .tl_lines:before {
     left: 0;
@@ -312,6 +327,7 @@ table {width: 100%; font-size: 92%;}
 }
  ::-webkit-scrollbar-corner {
     background-color: #cecece;
+    background-image: url("../images/window-drag.svg");
     background-image: url("../images/window-drag.png");
 }
  @keyframes winAppear {
@@ -475,6 +491,9 @@ table {width: 100%; font-size: 92%;}
 .mobile_only{
     display: none;
 }
+.print {
+    display: none;
+}
  @media (max-width:1024px) {
     body.main {
         background-image:url("../images/1024768_filter.png");
@@ -598,4 +617,18 @@ table {width: 100%; font-size: 92%;}
     font-size: 12px;
     line-height: 12px;
     background: transparent;
+}
+
+/* show the javascript-less version when printing */
+@media print {
+    .print {
+        display: block!important;
+        position: absolute;
+        background: white!important;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 99999;
+    }
 }
