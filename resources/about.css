@@ -233,6 +233,10 @@ table {width: 100%; font-size: 92%;}
     top: 1px;
     right: -4px;
 }
+.window .content .desktop-item {
+    margin: 2px;
+    transform: none;
+}
 /* SCROLLBAR */
  *::-webkit-scrollbar {
     width: 0.15in;
