@@ -1,1 +1,1 @@
-<img width="100%" src='https://github-readme-stats.vercel.app/api/top-langs/?username=IoIxD&hide=javascript,java,c,cpp,makefile,html,css,idl,assembly,shell&langs_count=10&exclude_repo=Psychopath' alt='Top Langs'>
+<img style='margin: 1%' width="98%" src='https://github-readme-stats.vercel.app/api/top-langs/?username=IoIxD&hide=javascript,java,c,cpp,makefile,html,css,idl,assembly,shell,hack&langs_count=10&exclude_repo=Psychopath' alt='Top Langs'>
