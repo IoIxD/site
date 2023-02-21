@@ -20,8 +20,6 @@
 		<li>Peter Griffin 64: <i>http://ioi-xd.net/Peter Griffin 64.zip</i></li>
 	</ul>
 </span>
-	<br>
-	<em tabindex="4" alt="">(this is the javascript-less version of the site, you either chose to see this or were redirected here)</em></font>
 </article>
 </body>
 </html>
