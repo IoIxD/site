@@ -1,4 +1,4 @@
-<span style='padding: 5em; width: 75%; margin: 0 auto; display: block;'>
+<span>
 	<h1>Gavin Parker</h1>
 	<article>
 		<span tabindex="1"><?php 
