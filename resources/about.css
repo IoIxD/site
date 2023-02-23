@@ -131,11 +131,6 @@ table {width: 100%; font-size: 92%;}
     padding: 2px 4px;
 }
 .window .content { /* default padding */
-    vertical-align: top;
-    display: block;
-    /*padding: 16px 16px 16px 30px;
-    width: calc(100% + -61px);
-    height: calc(100% + -64px);*/
     width: 100%;
     height: calc(100% - 18px);
     padding: 0;
@@ -482,6 +477,9 @@ table {width: 100%; font-size: 92%;}
     display: block;
     width: 268px;
     height: 16px;
+    line-height: 16px;
+    background-repeat: no-repeat;
+    background: url('../images/wp_bar_fake.png');
     background: url('../images/wp_bar_fake.svg');
     margin: 5px auto 2px auto;
 }
