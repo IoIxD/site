@@ -8,7 +8,7 @@
 - linux<br>
 - old technology<br>
     - tracker music <a target="_blank" href="https://gba.ioi-xd.net"><em>(psst hey check out this radio station me and my mates set up for this genre of music)</em></a><br>
-- shitty memes<br>
+- bad memes<br>
 - film and filmmaking<br>
 - vaporwave &amp; all of its sub-genres<br>
 - japanese jazz, japanese jazz fusion<br>

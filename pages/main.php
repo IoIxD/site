@@ -4,7 +4,7 @@
   I am Gavin "ioi_xd" Parker, a 20 year old programmer<noprint> (see the windows beside this for more info on that)</noprint>, artist, and aspiring filmmaker.
   In general, I really like technology, especially that of the older variety (1980-2002) but i consider myself a general fan. I'm probably going to go into programming full time, but I'd also like to make at least one film or comic in my life, as I also like doing 3d modelling and sometimes 2d art.
 
-  In addition to this being my resume (kind of), this is generally where I put all my dumb shit. In addition to serving as my carrd/listography (the actual sites don't give the customization i'm looking for) this is where i put my art and sometimes programs.
+  In addition to this being my resume (kind of), this is generally . In addition to serving as my carrd/listography (the actual sites don't give the customization i'm looking for) this is where i put my art and sometimes programs.
 
   Feel free to look around here, or check out <a target="_blank" href="https://github.com/IoIxD/site">my github</a> to see what my main projects are and gauge the quality of my code. If you like any of the other things I like/do, we should be friends!
 

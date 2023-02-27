@@ -3,14 +3,14 @@
 		<title>ioi's personal benchmark</title>
 	</head>
 	<body>
-		<h1>ioi's personal benchmark.txt ("Horseshit™")</h1>
+		<h1>ioi's personal benchmark.txt ("gbench™")</h1>
 		<p>the benchmark that wastes your time.</p>
 		<p>you will never render this scene in a timely manner. <strikethrough><b>I</b> will never render this scene in a timely manner.</strikethrough> it loads 8192x8192 PNG quality textures onto a scene with a 16384x8192 skybox, with a ground that takes up 52,448,800 triangles, 26,224,400 faces, and 26,356,900 faces.</p>
-		<p><em><a href='./br.png' target='_blank'>this is all really funny because the scene looks like shit. like legitimately this looks awful it's an eyesore you would not believe this takes as long as it does.</a></em></p>
-		<p>if you should actually fucking attempt this then i would hope you have a 255GB swapfile ready so that this can chew through the RAM you don't have. if you get a faster time then me i'll post it<br>
+		<p><em><a href='./br.png' target='_blank'>this is all really funny because the scene looks really bad. like legitimately this looks awful it's an eyesore you would not believe this takes as long as it does.</a></em></p>
+		<p>if you should actually attempt this then i would hope you have a 255GB swapfile ready so that this can chew through the RAM you don't have. if you get a faster time then me i'll post it<br>
 		unless otherwise stated, for all results the scene was rendered at 2048x1536, with 4096 samples.
 		</p>
-		<p><a href="./horeshit.tar.xz">download</a></p>
+		<p><a href="./gbench.tar.xz">download</a></p>
 		<h1>leaderboard</h1>
 		<table border="1">
 			<thead>
@@ -33,7 +33,7 @@
 					<td>5:01.89</td>
 					<td><b style='color: red'>CHANGE: 64GB Memory</b></td>
 					<td>CPU</td>
-					<td>amd's linux drivers are shit i'm going to windows soon</td>
+					<td>amd's linux drivers are bad i'm going to windows soon</td>
 					<td><b>2.80666666667</b></td>
 				</tr>
 				<tr>
