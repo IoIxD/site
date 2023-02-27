@@ -11,8 +11,6 @@
         <title>ioi_xd's site</title>
     </head>
     <body class='main'>
-        <article class='sr-only' style='position: absolute; top: -500px'>If you're hearing this, it means you're using a screen reader, I think. I don't see a good way of translating this site into one that's more accessible, so I made a version of the site that is text only. You can view it by pressing Control, Alt, Shift, and O, at the same time.d
-</article><span aria-hidden='true'>
     	<span class='right-click-bar'>
             <?php
             $month = "";
@@ -47,6 +45,5 @@
             <img width='30' height='12' src="/images/font_art.svg">
         </span><br>
         <script type="text/javascript" src="/resources/script.js"></script>
-    </span>
     </body>
 </html>

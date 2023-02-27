@@ -1,11 +1,10 @@
 // global variables
 var mx = 0; var my = 0; mx_o = 0; my_o = 0; wx_o = 0; wy_o = 0; var hoveredWin; var mouseDown = 0; var titlebar_additions = ""; var options_iframe = "";
 var movingWindow = 0;
-var onPhone = 0; var windows = [];
+var onPhone = 0;
 
 var properties = getJSON(window.location.protocol + "//" + window.location.host + "/pages/properties.json");
 
-var pageid_regex = /(?![A-z])(?![0-9])(?!\.)./gm;
 var heldCtrl = 0; var heldShift = 0; var heldAlt = 0; var heldO = 0;
 
 var hoveredWin;
@@ -24,56 +23,17 @@ document.addEventListener("mousedown", function (e) {
       wy_o = +(window.innerHeight) * +("." + ey.replace('%', ''));
     } else { wy_o = ey.replace('px', '') }
   }
-
 })
 document.addEventListener("mouseup", function () { mouseDown = 0; movingWindow = 0; hoveredWin = undefined; })
-
-document.addEventListener('keydown', function (e) {
-  switch (e.key) {
-    case "Control":
-      heldCtrl = 1;
-      break;
-    case "Alt":
-      heldAlt = 1;
-      break;
-    case "Shift":
-      heldShift = 1;
-      break;
-    case "O":
-      heldO = 1;
-      break;
-  }
-  if (heldCtrl == 1 && heldAlt == 1 && heldShift == 1 && heldO == 1) {
-    window.location.replace("https://ioi-xd.net/no_script.php");
-  }
-})
-document.addEventListener('keyup', function (e) {
-  switch (e.key) {
-    case "Control":
-      heldCtrl = 0;
-      break;
-    case "Alt":
-      heldAlt = 0;
-      break;
-    case "Shift":
-      heldShift = 0;
-      break;
-    case "O":
-      heldO = 0;
-      break;
-  }
-})
 
 // WINDOW CREATION
 function windowCreate(page, exoptions = "") {
   var width, height, left, top, options, title;
-  console.log(page);
   if (properties[page] === undefined) {
     let url = window.location.pathname.replace('.html', '');
     page = url.replace('/', '', 1);
     pageRoot = url.split("/")[0] ? 0 : url.split("/")[1];
     pageToMatch = pageRoot;
-    console.log(pageRoot);
     if (page.match(/\.txt$/gm)) {
       exoptions += "valload " + page;
       pageToMatch = "generic_text";
@@ -102,11 +62,9 @@ function windowCreate(page, exoptions = "") {
   if (document.getElementById(page) || page == null) {
     return 0;
   }
-  if (navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
-    onPhone = 1;
-  } else { onPhone = 0; }
-  windows_r = document.getElementsByClassName("window");
-  windows = [];
+
+  var windows_r = document.getElementsByClassName("window");
+  var windows = [];
   // (we add the windows to a seperate list to ensure that the list doesn't change until we're done with it.)
   for (i = 0; i < windows_r.length; i++) {
     windows.push(windows_r[i])
@@ -120,7 +78,6 @@ function windowCreate(page, exoptions = "") {
       windowRemove(windows[i].id);
     }
   }
-  windows = [];
   try {
     mx = window.event.pageX; my = window.event.pageY;
   } catch (e) {
@@ -159,7 +116,6 @@ function windowCreate(page, exoptions = "") {
     pageUrl += "?val=" + exoptions;
     page += "_" + makeid(6);
   }
-  var id = page.replace(pageid_regex, '');
 
   // create the div properly so we can reference it later.
   var div = document.createElement("div");
@@ -206,21 +162,6 @@ function windowCreate(page, exoptions = "") {
   windowDrag.classList.add("window-drag");
   div.appendChild(windowDrag);
 
-  /*
-    document.body.innerHTML += `
-    <div id="${page}" style="display: block; z-index: 0; width: ${width}; height: ${height}; left:${left}; top:${top};" class="window ${options}">
-      <span class="titlebar">
-        <span class='tl_lines'></span>
-        <span onclick="windowRemove('${page}');"class='tl_button close'></span>
-        <span class="title">`+title+`</span>
-        <span class='tl_button maxmin'></span>
-        <span class='tl_button shade'></span>
-      </span>
-      ${titlebar_additions}
-      <span class="content ${options} id_`+id+`""></span>
-      <span class="window-drag"></span>
-    </div>`;
-    */
   document.body.appendChild(div);
 }
 // WINDOW REMOVAL
@@ -415,7 +356,9 @@ function makeid(length) {
 
 
 function main() {
-  setBackground();
+  if (navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
+    onPhone = 1;
+  } else { onPhone = 0; }
 
   page = window.location.pathname.replace('.html', '').replace('/', '', 1);
   if (page != "") {
@@ -431,5 +374,7 @@ function main() {
 
   if (classNames.length) classNames.push('on-device');
   if (html.classList) html.classList.add.apply(html.classList, classNames);
+
+  setBackground();
 }
 main();
