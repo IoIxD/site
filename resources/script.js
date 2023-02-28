@@ -27,10 +27,11 @@ document.addEventListener("mouseup", function () {
   mouseDown = 0; 
   movingWindow = 0; 
   hoveredWin = undefined; 
+  var windows = document.getElementsByClassName("window");
   for (var i = 0; i < windows.length; i++) {
     if (windows[i] != hoveredWin) {
-      windows[i].style.pointerEvents = 'full';
-      windows[i].style.userSelect = 'full';
+      windows[i].style.pointerEvents = 'initial';
+      windows[i].style.userSelect = 'initial';
     }
   }
 })
