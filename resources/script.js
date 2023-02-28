@@ -12,19 +12,28 @@ var hoveredWin;
 document.addEventListener("mousedown", function (e) {
   if (e.which != 1) { return; }
   mouseDown = 1; 
-  elemHover = document.querySelectorAll(`:hover`);
-  if (elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+  if(hoveredWin) {
     mx_o = e.pageX; my_o = e.pageY;
-    ex = elemHover[2].style.left; ey = elemHover[2].style.top;
+    ex = hoveredWin.style.left; ey = hoveredWin.style.top;
     if (ex.includes("%")) {
       wx_o = +(window.innerWidth) * +("." + ex.replace('%', ''));
     } else { wx_o = ex.replace('px', '') }
     if (ey.includes("%")) {
       wy_o = +(window.innerHeight) * +("." + ey.replace('%', ''));
     } else { wy_o = ey.replace('px', '') }
+  };
+})
+document.addEventListener("mouseup", function () { 
+  mouseDown = 0; 
+  movingWindow = 0; 
+  hoveredWin = undefined; 
+  for (var i = 0; i < windows.length; i++) {
+    if (windows[i] != hoveredWin) {
+      windows[i].style.pointerEvents = 'full';
+      windows[i].style.userSelect = 'full';
+    }
   }
 })
-document.addEventListener("mouseup", function () { mouseDown = 0; movingWindow = 0; hoveredWin = undefined; })
 
 // WINDOW CREATION
 function windowCreate(page, exoptions = "") {
@@ -163,6 +172,13 @@ function windowCreate(page, exoptions = "") {
   div.appendChild(windowDrag);
 
   document.body.appendChild(div);
+
+  div.querySelector(".titlebar").addEventListener("mouseenter", function(e) {
+    if(e.fromElement.classList.contains("window")) {
+      hoveredWin = e.fromElement;
+    }
+  });
+
 }
 // WINDOW REMOVAL
 function windowRemove(page) {
@@ -193,22 +209,22 @@ document.addEventListener("mousemove", function (e) {
     hoveredWin.style.top = newTop + "px";
     hoveredWin.style.left = newLeft + "px";
 
+    hoveredWin.style.zIndex = "999";
+    var windows = document.getElementsByClassName("window");
 
     // disallow every window from being selected while we're moving the current one.
     for (var i = 0; i < windows.length; i++) {
       if (windows[i] != hoveredWin) {
         windows[i].style.pointerEvents = 'none';
         windows[i].style.userSelect = 'none';
+        windows[i].style.zIndex = '0';
       }
     }
   } else {
     // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
     if (mouseDown) {
-      elemHover = document.querySelectorAll(":hover");
-
-      if (elemHover.length >= 3 && elemHover[2].classList[0] == "window") {
+      if (hoveredWin) {
         movingWindow = 1;
-        hoveredWin = elemHover[2];
       }
     }
   }

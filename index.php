@@ -15,5 +15,6 @@
 			<?php include('print.php')?>
         </span>
 		<?php include('main.php'); ?>
+		<script type="text/javascript" src="/resources/script.js"></script>
 	</body>
 </html>

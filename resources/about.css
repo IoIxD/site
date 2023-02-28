@@ -107,7 +107,7 @@ table {
 }
 /* WINDOWS */
 .window {
-    background: #cecece!important;
+    background: hsl(0, 0%, 81%)!important;
     position: absolute;
     display: block;
     padding: 3px;
@@ -117,6 +117,7 @@ table {
     box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 #9c9c9c, 1px 1px 0 0 black;
     overflow: hidden;
 }
+
 .window:not(.noanim) {
     animation: winAppear .2s linear;
 }
@@ -174,6 +175,8 @@ table {
     transform: translate(-50%, 0);
     white-space: nowrap;
     padding: 2px 4px;
+    pointer-events: none;
+    user-select: none;
 }
 .window .content {
    /* default padding */
@@ -411,6 +414,7 @@ table {
     margin: 17px 15px;
     text-align: center;
     clear:both;
+    user-select: none;
     transform: translateX(-50%);
 }
 .desktop-item .text {
