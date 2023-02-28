@@ -8,7 +8,11 @@
 			echo preg_replace('(<img (.*?)>|<(noprint)>(.*?)<\/(noprint)>)', '', $page);
 			?>
 		</span>
-		<span style='display: inline-block; width: 40vw;' tabindex="2"><?php echo file_get_contents('pages/top-languages.php');?></span>
-		<span style='display: inline-block; width: 40vw;' tabindex="3"><?php echo file_get_contents('pages/github-stats.php');?></span>
+		<table>
+			<tr>
+				<td tabindex="2"><?php echo file_get_contents('pages/top-languages.php');?></td>
+				<td tabindex="3"><?php echo file_get_contents('pages/github-stats.php');?></td>
+			</tr>
+		</table>
 	</article>
 </span>
