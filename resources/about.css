@@ -177,7 +177,7 @@ table {
 }
 .window .content {
    /* default padding */
-    width: 100%;
+    width: 98%;
     height: calc(100% - 18px);
     padding: 15px;
     overflow: scroll;

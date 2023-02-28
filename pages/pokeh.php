@@ -4,3 +4,13 @@
 <h1 style='margin: 0;'><a target="_blank" href="/files/pokeh.bps" download>Download v1.1</a></h1>
 <small><a target="_blank" href="/files/pokeh_100.bps" download>Download v1.0</a></small>
 <h2><a target="_blank" href="https://twitter.com/sb2749">"H" sprite made by Twitter user @SB2749</a></h2>
+<table>
+    <tr>
+        <td><img title="Gameplay of Pokemon H Edition" src="/images/1.png"></td>
+        <td><img title="Gameplay of Pokemon H Edition" src="/images/2.png"></td>
+    </tr>
+    <tr>
+        <td><img title="Gameplay of Pokemon H Edition" src="/images/3.png"></td>
+        <td><img title="Gameplay of Pokemon H Edition" src="/images/4.png"></td>
+    </tr>
+</table>
