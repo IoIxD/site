@@ -12,7 +12,7 @@
 <p>
   <b>You can contact me at:</b><br>
   <ul>
-    <li><a href='mailto:legavinparker@gmail.com'>legavinparker@gmail.com</a></li>
+    <li><a class='hideparensinprint' href='mailto:legavinparker@gmail.com'>legavinparker@gmail.com</a></li>
     <li>(320) 584-9657</li>
   </ul>
 

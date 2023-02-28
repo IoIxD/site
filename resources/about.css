@@ -686,4 +686,18 @@ table {
         text-align: center;
         z-index: 99999;
    }
+   .print ul {
+        list-style: none;
+        padding-left: 0;
+   }
+   a {
+    color: black;
+    text-decoration: none;
+   }
+   a:not(.hideparensinprint):after {
+    color: #03c;
+    font-weight: bold;
+    text-decoration: underline;
+    content: " (" attr(href) ")";
+   }
 }
