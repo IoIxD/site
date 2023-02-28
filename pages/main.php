@@ -2,7 +2,6 @@
   <img title="Broken File" class="broken" src="../images/broken.gif" width="20" height="22"> Hello!
 
   I am Gavin "ioi_xd" Parker, a 20 year old programmer<noprint> (see the windows beside this for more info on that)</noprint>, artist, and aspiring filmmaker.
-  In general, I really like technology, especially that of the older variety (1980-2002) but i consider myself a general fan. I'm probably going to go into programming full time, but I'd also like to make at least one film or comic in my life, as I also like doing 3d modelling and sometimes 2d art.
 </p>
 <p>
   I specialize in writing applications in Rust, Go, and Python. I also can write an HTML/CSS/JS frontend and have written backends in Javascript and PHP. I don't currently have any high profile projects that demonstrate my abilities (aside from <a href='https://github.com/IoIxD/OpenCard'>these</a> <a href='https://github.com/IoIxD/YASE'>two</a> projects that demonstrate me parsing a file format and unravelling it into a large Rust struct; this is probably the greatest demonstration of how much I know about Rust, given that one extensively uses macros and even imports some FFI code, and the other demonstrates me taking advantage of traits to write a custom deserializer).
