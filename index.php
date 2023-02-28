@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+<!DOCTYPE html lang="en">
 <html>
 	<head>
 		<a href="https://wetdry.world/@IoIxD" rel="me"></a>
-	</head>
+        <link rel="stylesheet" type="text/css" href="/resources/about.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>noscript {display: none!important;}</style>
+        <title>ioi_xd's site</title>
+    </head>
 	<body>
 		<noscript>
 			<h1>This site simulates an old operating system. Javascript is required.</h1>

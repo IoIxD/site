@@ -17,4 +17,4 @@
       <a target="_blank" href="https://gba.ioi-xd.net"><img src="https://media.discordapp.net/attachments/680549525902983194/963295134236180540/sherbetbutton.gif"></a>
     </center>
   </noprint>
-</p
+</p>

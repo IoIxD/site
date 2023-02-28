@@ -10,7 +10,7 @@
 				<tr class='thead'>
 					<td>Name</td>
 					<td>Date Modified</td>
-					<td align='right'>Size</td>
+					<td style='text-align: right'>Size</td>
 					<td>Kind</td>
 				</tr>
 		<?php

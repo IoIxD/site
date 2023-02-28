@@ -1,9 +1,3 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="../resources/about.css">
-    </head>
-    <body class='embed textfile'>
 <p><strong>general</strong><br>
 - linux<br>
 - old technology<br>
@@ -23,6 +17,3 @@
 <strong>favorite youtubers:</strong><br>
 - vargskelethor joel<br>
 - tom scott</p>
-
-	</body>
-</html>
