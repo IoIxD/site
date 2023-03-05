@@ -1,7 +1,7 @@
 // global variables
 var mx = 0; var my = 0; mx_o = 0; my_o = 0; wx_o = 0; wy_o = 0; var hoveredWin; var mouseDown = 0; var titlebar_additions = ""; var options_iframe = "";
 var movingWindow = 0;
-var onPhone = 0;
+var onPhone = false;
 var lastTop = 0;
 
 var properties = getJSON(window.location.protocol + "//" + window.location.host + "/pages/properties.json");
@@ -70,12 +70,6 @@ function windowCreate(page, exoptions = "", removePrevious = true) {
     title = properties[`${page}`].name;
   }
 
-  if(onPhone) {
-    if(lastTop != 0) {
-      top = lastTop;
-    }
-    lastTop = height;
-  }
 
   if (document.getElementById(page) || page == null) {
     return 0;
@@ -92,7 +86,7 @@ function windowCreate(page, exoptions = "", removePrevious = true) {
     if (!windows[i].classList.contains('noanim')) {
       windows[i].classList.add('noanim');
     }
-    if (removePrevious && onPhone == 1) {
+    if (removePrevious && onPhone) {
       windowRemove(windows[i].id);
     }
   }
@@ -101,7 +95,7 @@ function windowCreate(page, exoptions = "", removePrevious = true) {
   } catch (e) {
 
   }
-  if (onPhone == 1) {
+  if (onPhone) {
     options += " noanim"
   }
   if (!options.includes("noanim")) {
@@ -387,8 +381,8 @@ function makeid(length) {
 
 function main() {
   if (navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
-    onPhone = 1;
-  } else { onPhone = 0; }
+    onPhone = true;
+  } else { onPhone = false; }
 
   page = window.location.pathname.replace('.html', '').replace('/', '', 1);
   if (page != "") {

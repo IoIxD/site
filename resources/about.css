@@ -644,6 +644,40 @@ table {
         height: 216px!important;
    }
 }
+
+@media (max-device-width: 800px) {
+    .desktop-item {
+        display: inline-block;
+        min-width: 0;
+        margin: 17px 15px!important;
+        width: 64px;
+        max-width: 59px;
+        max-height: 48px;
+        text-align: center;
+        clear:both;
+        transform: translateX(-50%);
+   }
+    .desktop-item+br, .desktop-item.nomobile {
+        display: none!important;
+   }
+    .window {
+        display: block;
+        position: static;
+        min-width: 1px;
+        max-width: none!important;
+        width: 98%!important;
+        height: auto!important;
+        margin: 10px auto 10px 4%;
+        transform: translate(-7vw,0px);
+   }
+   .window .titlebar {
+        height: 3vw;
+        line-height: 3vw;
+   }
+   .window .content, .window .titlebar .title {
+        font-size: 3vw;
+    }
+}
 /* hide/show things on some phones */
 .visible-android, .visible-ios {
     display:none;
