@@ -92,7 +92,9 @@ function windowCreate(page, exoptions = "") {
     if (!windows[i].classList.contains('noanim')) {
       windows[i].classList.add('noanim');
     }
-
+    if (!options.includes("om_dc") && onPhone == 1) {
+      windowRemove(windows[i].id);
+    }
   }
   try {
     mx = window.event.pageX; my = window.event.pageY;
