@@ -38,7 +38,7 @@ document.addEventListener("mouseup", function () {
 })
 
 // WINDOW CREATION
-function windowCreate(page, exoptions = "") {
+function windowCreate(page, exoptions = "", removePrevious = true) {
   var width, height, left, top, options, title;
   if (properties[page] === undefined) {
     let url = window.location.pathname.replace('.html', '');
@@ -92,7 +92,7 @@ function windowCreate(page, exoptions = "") {
     if (!windows[i].classList.contains('noanim')) {
       windows[i].classList.add('noanim');
     }
-    if (!options.includes("om_dc") && onPhone == 1) {
+    if (removePrevious && onPhone == 1) {
       windowRemove(windows[i].id);
     }
   }
@@ -148,7 +148,10 @@ function windowCreate(page, exoptions = "") {
   if (options != "") {
     optionsSplit = options.split(" ", 99);
     for (var i in optionsSplit) {
-      div.classList.add(optionsSplit[i]);
+      if(optionsSplit[i] != "") {
+        div.classList.add(optionsSplit[i]);
+      }
+      
     }
   }
 
@@ -170,7 +173,9 @@ function windowCreate(page, exoptions = "") {
   if (options != "") {
     optionsSplit = options.split(" ", 99);
     for (var i in optionsSplit) {
-      contents.classList.add(optionsSplit[i]);
+      if(optionsSplit[i] != "") {
+        contents.classList.add(optionsSplit[i]);
+      }
     }
   }
   setPageContents(contents, pageUrl);
@@ -244,10 +249,10 @@ document.addEventListener("mousemove", function (e) {
 // quick and dirty function to open the three windows from the first icon, one after the other.
 function OpenTheThree() {
   windowCreate('main');
-  setTimeout(function () { windowCreate('top-languages'); }, 250);
-  setTimeout(function () { windowCreate('github-stats'); }, 500);
-  setTimeout(function () { windowCreate('likes'); }, 750);
-  setTimeout(function () { windowCreate('dislikes'); }, 1000);
+  setTimeout(function () { windowCreate('top-languages',"",false); }, 250);
+  setTimeout(function () { windowCreate('github-stats',"",false); }, 500);
+  setTimeout(function () { windowCreate('likes',"",false); }, 750);
+  setTimeout(function () { windowCreate('dislikes',"",false); }, 1000);
 }
 
 function setPageContents(elem, url) {
