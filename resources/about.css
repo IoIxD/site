@@ -597,9 +597,10 @@ table {
         position: static;
         min-width: 1px;
         max-width: none!important;
-        width: 98%!important;
-        margin: 10px auto 10px 4%;
-        transform: translate(-7vw,0px);
+        width: 40vh!important;
+        height: auto!important;
+        transform: translate(0px,0px);
+
    }
     .window .content, .window .titlebar .title {
         font-size: 3vw;
@@ -645,7 +646,7 @@ table {
    }
 }
 
-@media (max-device-width: 800px) {
+@media (max-device-width: 800px) and (orientation: landscape) {
     .desktop-item {
         display: inline-block;
         min-width: 0;
@@ -665,10 +666,9 @@ table {
         position: static;
         min-width: 1px;
         max-width: none!important;
-        width: 98%!important;
+        width: 90vw!important;
         height: auto!important;
-        margin: 10px auto 10px 4%;
-        transform: translate(-7vw,0px);
+        transform: translate(0px,0px);
    }
    .window .titlebar {
         height: 3vw;
