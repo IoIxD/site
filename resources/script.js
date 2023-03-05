@@ -2,6 +2,7 @@
 var mx = 0; var my = 0; mx_o = 0; my_o = 0; wx_o = 0; wy_o = 0; var hoveredWin; var mouseDown = 0; var titlebar_additions = ""; var options_iframe = "";
 var movingWindow = 0;
 var onPhone = 0;
+var lastTop = 0;
 
 var properties = getJSON(window.location.protocol + "//" + window.location.host + "/pages/properties.json");
 
@@ -69,6 +70,13 @@ function windowCreate(page, exoptions = "") {
     title = properties[`${page}`].name;
   }
 
+  if(onPhone) {
+    if(lastTop != 0) {
+      top = lastTop;
+    }
+    lastTop = height;
+  }
+
   if (document.getElementById(page) || page == null) {
     return 0;
   }
@@ -84,9 +92,7 @@ function windowCreate(page, exoptions = "") {
     if (!windows[i].classList.contains('noanim')) {
       windows[i].classList.add('noanim');
     }
-    if (!options.includes("om_dc") && onPhone == 1) {
-      windowRemove(windows[i].id);
-    }
+
   }
   try {
     mx = window.event.pageX; my = window.event.pageY;

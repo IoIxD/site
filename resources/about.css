@@ -24,7 +24,7 @@ body {
    */
     background-color: #9c9cce;
     color: black!important;
-    overflow: hidden;
+    overflow-x: hidden;
     background-size: cover;
     background-position: center 80%;
 }
