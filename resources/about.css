@@ -82,6 +82,13 @@ table {
    width: 100%;
     font-size: 92%;
 }
+input[type=checkbox] {
+    appearance: none;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+}
+
+
 .offscreen {
     position: absolute;
     left: -100000px;
@@ -165,7 +172,7 @@ table {
     font-family: Charcoal, "WebCharcoal", sans-serif;
     cursor: pointer;
 }
-.window .titlebar .title {
+.window .title {
     background: #cecece!important;
     height: 13px;
     line-height: 13px;
@@ -215,6 +222,7 @@ table {
     display: inline-block;
     width: 13px;
     height: 13px;
+    cursor: pointer;
 }
 .window .tl_button.close {
     float: left;

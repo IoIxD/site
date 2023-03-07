@@ -155,8 +155,8 @@ function windowCreate(page, exoptions = "", removePrevious = true) {
       <span class='tl_lines'></span>
       <span onclick="windowRemove('${page}');"class='tl_button close'></span>
       <span class="title">`+ title + `</span>
-      <span class='tl_button maxmin'></span>
-      <span class='tl_button shade'></span>
+      <span onclick="windowMaximizeToggle(this.parentElement.parentElement);" class='tl_button maxmin'></span>
+      <span onclick="windowShadeToggle(this.parentElement.parentElement);" class='tl_button shade'></span>
     </span>
     `;
   div.innerHTML += titlebar_additions
@@ -191,6 +191,35 @@ function windowCreate(page, exoptions = "", removePrevious = true) {
 // WINDOW REMOVAL
 function windowRemove(page) {
   document.getElementById(page).remove();
+}
+
+
+function windowShadeToggle(el) {
+  let height = el.style.height;
+  
+  if(height.endsWith("%")) {
+    // get the height in pixels
+    height = +(height.replace("%",""));
+    height = +(window.innerHeight * (height / 100));
+  } else {
+    height = +(height.replace("px",""));
+  }
+
+  if(el.classList.contains("shaded")) {
+    el.classList.remove("shaded");
+    el.style.marginTop = "0px";
+  } else {
+    el.classList.add("shaded");
+    el.style.marginTop = (-(height/2) + 9)+"px";
+  }
+}
+
+function windowMaximizeToggle(el) {
+  if(el.classList.contains("maximized")) {
+    el.classList.remove("maximized");
+  } else {
+    el.classList.add("maximized");
+  }
 }
 
 // DRAGGING
