@@ -26,6 +26,32 @@ document.addEventListener("mousedown", function (e) {
 })
 document.addEventListener("mouseup", function () { 
   mouseDown = 0; 
+  if(movingWindow) {
+    let el = hoveredWin;
+    movingWindowReset();
+    movingWindowDetect(el);
+  }
+})
+
+function movingWindowDetect(el) {
+  if(el == null) {
+    return;
+  }
+  if(el.classList.contains("window")) {
+    hoveredWin = el;
+    var windows = document.getElementsByClassName("window");
+    // disallow every window from being selected while we're moving the current one.
+    for (var i = 0; i < windows.length; i++) {
+      if (windows[i] != hoveredWin) {
+        windows[i].style.pointerEvents = 'none';
+        windows[i].style.userSelect = 'none';
+        windows[i].style.zIndex = '0';
+      }
+    }
+  }
+}
+
+function movingWindowReset() {
   movingWindow = 0; 
   hoveredWin = undefined; 
   var windows = document.getElementsByClassName("window");
@@ -35,7 +61,7 @@ document.addEventListener("mouseup", function () {
       windows[i].style.userSelect = 'initial';
     }
   }
-})
+}
 
 // WINDOW CREATION
 function windowCreate(page, exoptions = "", removePrevious = true) {
@@ -182,18 +208,23 @@ function windowCreate(page, exoptions = "", removePrevious = true) {
   document.body.appendChild(div);
 
   div.querySelector(".titlebar").addEventListener("mouseenter", function(e) {
-    if(e.fromElement.classList.contains("window")) {
-      hoveredWin = e.fromElement;
-    }
+    movingWindowDetect(e.target.parentElement);
   });
+
+  div.querySelector(".titlebar").addEventListener("mouseleave", function(e) {
+    if(!movingWindow) {
+      movingWindowReset();
+    }
+  })
 
 }
 // WINDOW REMOVAL
 function windowRemove(page) {
+  movingWindowReset();
   document.getElementById(page).remove();
 }
 
-
+// WINDOW SHADING
 function windowShadeToggle(el) {
   let height = el.style.height;
   
@@ -214,6 +245,7 @@ function windowShadeToggle(el) {
   }
 }
 
+// WINDOW MAXMIZING
 function windowMaximizeToggle(el) {
   if(el.classList.contains("maximized")) {
     el.classList.remove("maximized");
@@ -231,32 +263,15 @@ document.addEventListener("mousemove", function (e) {
       return;
     }
     // move whatever window we're hovering over.
+
     // first get what the position should be, in pixels.
     newTop = (+(e.pageY - my_o) + +wy_o);
     newLeft = (+(e.pageX - mx_o) + +wx_o);
-
-    // adjust it according to the window's width, converting it to a percentage.
-    newTop = (newTop / window.innerWidth) * 100;
-    newLeft = (newLeft / window.innerHeight) * 100;
-
-    // convert it back to pixels, again using the window's inner width.
-    newTop = window.innerWidth * (newTop) / 100;
-    newLeft = window.innerHeight * (newLeft) / 100;
 
     hoveredWin.style.top = newTop + "px";
     hoveredWin.style.left = newLeft + "px";
 
     hoveredWin.style.zIndex = "999";
-    var windows = document.getElementsByClassName("window");
-
-    // disallow every window from being selected while we're moving the current one.
-    for (var i = 0; i < windows.length; i++) {
-      if (windows[i] != hoveredWin) {
-        windows[i].style.pointerEvents = 'none';
-        windows[i].style.userSelect = 'none';
-        windows[i].style.zIndex = '0';
-      }
-    }
   } else {
     // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
     if (mouseDown) {

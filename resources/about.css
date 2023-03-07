@@ -143,24 +143,6 @@ input[type=checkbox] {
     height: 18px!important;
     overflow: hidden!important;
 }
-.window:not(.noanim) {
-   animation: winAppear .2s linear;
-}
-.window:not(.noanim) *:not(.noanim) {
-   animation: winContentsHidden .1s linear;
-}
-.window.maximized {
-   width: calc(100% + -8px)!important;
-   height: 100%!important;
-    top: 0!important;
-    left: 0!important;
-    z-index: 2147483647!important;
-    transform: translate(0%,0%)!important;
-}
-.window.shaded {
-   height: 18px!important;
-    overflow: hidden!important;
-}
 .window .titlebar {
     display: block;
     width: 100%;
