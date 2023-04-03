@@ -12,7 +12,7 @@
 			<h1>This site simulates an old operating system. Javascript is required.</h1>
 		</noscript>
 		<span style='display: none;' class='print'>
-			<?php include('print.php')?>
+			<?php include('resume.php')?>
         </span>
 		<?php include('main.php'); ?>
 		<script type="text/javascript" src="/resources/script.js"></script>
