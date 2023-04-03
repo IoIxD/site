@@ -7,15 +7,6 @@
   I specialize in writing applications in Rust, Go, and Python. I also can write an HTML/CSS/JS frontend and have written backends in Javascript and PHP. I don't currently have any high profile projects that demonstrate my abilities (aside from <a href='https://github.com/IoIxD/OpenCard'>these</a> <a href='https://github.com/IoIxD/YASE'>two</a> projects that demonstrate me parsing a file format and unravelling it into a large Rust struct; this is probably the greatest demonstration of how much I know about Rust, given that one extensively uses macros and even imports some FFI code, and the other demonstrates me taking advantage of traits to write a custom deserializer).
 </p>
 <p>
-  I am currently a student of Gateway Community College and am in the <a href='https://www.yearup.org/locations/az-phoenix'> YearUp Arizona</a> program.
-</p>
-<p>
-  <b>You can contact me at:</b><br>
-  <ul>
-    <li><a class='hideparensinprint' href='mailto:legavinparker@gmail.com'>legavinparker@gmail.com</a></li>
-    <li>(320) 584-9657</li>
-  </ul>
-
   <noprint>
     <center>
     <b>hey check these sites out:</b>
