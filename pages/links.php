@@ -1,7 +1,3 @@
-<span onclick="parent.windowCreate('discordwarn');" class='desktop-item'>
-    <img title="IRC Icon" width='32' height='32'  src="../resources/icons/irc-icon.svg"><br>
-    <img title="Discord" width='39' height='12' src="/images/font_discord.svg">
-</span>
 <span onclick="window.open('https://wetdry.world/@IoIxD');" class='desktop-item'>
     <img title="Network Icon" width='32' height='32' src="../resources/icons/network.svg"><br>
     <img title="Mastodon" width='45' height='12' src="/images/font_mastodon.svg">
