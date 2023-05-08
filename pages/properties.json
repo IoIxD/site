@@ -2,7 +2,7 @@
 	"main": {"name": "About Me", "width": "45%", "height":"90%", "left":"50%", "top": "50%", "options": "textfile om_dc"},
 	"top-languages": {"name": "Top Languages", "width":"20%", "height":"60%", "left":"15%", "top": "40%", "options": "nooverflow om_dc"},
 	"github-stats": {"name": "Github Stats", "width":"20%", "height":"20%", "left":"15%", "top": "85%", "options": "nooverflow om_dc"},
-	"likes": {"name":"Likes", "width": "20%", "height":  "40%", "left": "85%", "top": "25%", "options": "textfile om_dc"},
+	"likes": {"name":"Likes", "width": "20%", "height":  "50%", "left": "85%", "top": "50%", "options": "textfile om_dc"},
 	"dislikes": {"name":"Dislikes", "width": "20%", "height": "40%", "left": "85%", "top": "75%", "options": "textfile om_dc"},
 	"downloads": {"name":"Downloads", "width": "250px", "height": "300px", "left": "50%", "top": "550px", "options": ""},
 	"links": {"name":"Links", "width": "220px", "height": "130px", "left": "80%", "top": "20%", "options": "small"},
