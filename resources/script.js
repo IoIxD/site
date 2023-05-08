@@ -290,7 +290,6 @@ function OpenTheThree() {
   setTimeout(function () { windowCreate('top-languages',"",false); }, 250);
   setTimeout(function () { windowCreate('github-stats',"",false); }, 500);
   setTimeout(function () { windowCreate('likes',"",false); }, 750);
-  setTimeout(function () { windowCreate('dislikes',"",false); }, 1000);
 }
 
 function setPageContents(elem, url) {
