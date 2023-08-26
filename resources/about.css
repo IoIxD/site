@@ -19,7 +19,7 @@ body {
     display: block;
     margin: auto auto;
     font-family: Verdana;
-   /*background-image: url("/images/19201080_filter.png");
+   /*background-image: url("/resources/images/19201080_filter.png");
     background-color: #9c9cce;
    */
     background-color: #9c9cce;
@@ -209,32 +209,32 @@ input[type=checkbox] {
 .window .tl_button.close {
     float: left;
     margin: 1px 0;
-    background: url("/images/button_close.png");
-    background: url("/images/button_close.svg");
+    background: url("/resources/images/button_close.png");
+    background: url("/resources/images/button_close.svg");
 }
 .window .tl_button.close:active {
-    background: url("/images/button_close_active.png");
-    background: url("/images/button_close_active.svg");
+    background: url("/resources/images/button_close_active.png");
+    background: url("/resources/images/button_close_active.svg");
 }
 .window .tl_button.maxmin {
     float: right;
     margin: 1px 3px;
-    background: url("/images/button_maximize.png");
-    background: url("/images/button_maximize.svg");
+    background: url("/resources/images/button_maximize.png");
+    background: url("/resources/images/button_maximize.svg");
 }
 .window .tl_button.maxmin:active {
-    background: url("/images/button_maximize_active.png");
-    background: url("/images/button_maximize_active.svg");
+    background: url("/resources/images/button_maximize_active.png");
+    background: url("/resources/images/button_maximize_active.svg");
 }
 .window .tl_button.shade {
     float: right;
     margin: 1px 0;
-    background: url("/images/button_shade.png");
-    background: url("/images/button_shade.svg");
+    background: url("/resources/images/button_shade.png");
+    background: url("/resources/images/button_shade.svg");
 }
 .window .tl_button.shade:active {
-    background: url("/images/button_shade_active.png");
-    background: url("/images/button_shade_active.svg");
+    background: url("/resources/images/button_shade_active.png");
+    background: url("/resources/images/button_shade_active.svg");
 }
 .window .tl_button:active {
     background-position-x: 13px;
@@ -248,7 +248,7 @@ input[type=checkbox] {
     height: 13px;
     line-height: 13px;
     background-size: contain cover!important;
-    background: url("/images/macos_title.svg") repeat;
+    background: url("/resources/images/macos_title.svg") repeat;
     padding-right: 2px;
 }
 .window .tl_lines:before, .window .tl_lines:after, .window .titlebar .title:before, .window .titlebar .title:after {
@@ -257,7 +257,7 @@ input[type=checkbox] {
     width: 1px;
     height: 12px;
     display: block;
-    background: url("/images/macos_title_lines.png") 
+    background: url("/resources/images/macos_title_lines.png") 
 }
 .window .tl_lines:before, .window .titlebar .title:after {
     background-position: 0 0;
@@ -333,21 +333,21 @@ input[type=checkbox] {
 }
 ::-webkit-scrollbar-button:horizontal:decrement {
     background-size: cover!important;
-    background-image: url("/images/left-arrow.svg");
+    background-image: url("/resources/images/left-arrow.svg");
     border-right-width: 0;
 }
 ::-webkit-scrollbar-button:horizontal:increment {
     background-size: cover!important;
-    background-image: url("/images/right-arrow.svg");
+    background-image: url("/resources/images/right-arrow.svg");
 }
 ::-webkit-scrollbar-button:vertical:decrement {
     background-size: cover!important;
-    background-image: url("/images/up-arrow.svg");
+    background-image: url("/resources/images/up-arrow.svg");
     border-bottom-width: 0;
 }
 ::-webkit-scrollbar-button:vertical:increment {
     background-size: cover!important;
-    background-image: url("/images/down-arrow.svg");
+    background-image: url("/resources/images/down-arrow.svg");
 }
 ::-webkit-scrollbar-button:horizontal:decrement:disabled, ::-webkit-scrollbar-button:horizontal:increment:disabled {
     border-left: 1px #888 solid;
@@ -357,24 +357,24 @@ input[type=checkbox] {
 }
 ::-webkit-scrollbar-button:horizontal:decrement:disabled {
     background-size: cover!important;
-    background-image: url("/images/left-arrow-disabled.svg");
+    background-image: url("/resources/images/left-arrow-disabled.svg");
 }
 ::-webkit-scrollbar-button:horizontal:increment:disabled {
     background-size: cover!important;
-    background-image: url("/images/right-arrow-disabled.svg");
+    background-image: url("/resources/images/right-arrow-disabled.svg");
 }
 ::-webkit-scrollbar-button:vertical:decrement:disabled {
-    background-image: url("/images/up-arrow-disabled.svg");
+    background-image: url("/resources/images/up-arrow-disabled.svg");
 }
 ::-webkit-scrollbar-button:vertical:increment:disabled {
     background-size: cover!important;
-    background-image: url("/images/down-arrow-disabled.svg");
+    background-image: url("/resources/images/down-arrow-disabled.svg");
 }
 ::-webkit-scrollbar-corner {
     background-color: #cecece;
     background-size: cover!important;
-    background-image: url("/images/window-drag.png");
-    background-image: url("/images/window-drag.svg");
+    background-image: url("/resources/images/window-drag.png");
+    background-image: url("/resources/images/window-drag.svg");
 }
 @keyframes winAppear {
     0% {
@@ -530,8 +530,8 @@ input[type=checkbox] {
     line-height: 16px;
     background-repeat: no-repeat;
     background-size: cover!important;
-    background: url('/images/wp_bar_fake.png');
-    background: url('/images/wp_bar_fake.svg');
+    background: url('/resources/images/wp_bar_fake.png');
+    background: url('/resources/images/wp_bar_fake.svg');
     margin: 5px auto 2px auto;
 }
 .content.textfile {
@@ -546,7 +546,7 @@ input[type=checkbox] {
 }
 @media (max-width:1024px) {
     body.main {
-        background-image:url("/images/1024768_filter.png");
+        background-image:url("/resources/images/1024768_filter.png");
    }
 }
 @media (min-width: 640px) and (max-width:800px) {

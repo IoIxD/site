@@ -1,1 +1,0 @@
-<img title="My Github Stats" width="95%" src='https://github-readme-stats.vercel.app/api?username=IoIxD' alt='Github Stats'>

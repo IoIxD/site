@@ -5,7 +5,7 @@
 	"likes": {"name":"Likes", "width": "20%", "height":  "50%", "left": "85%", "top": "50%", "options": "textfile om_dc"},
 	"dislikes": {"name":"Dislikes", "width": "20%", "height": "40%", "left": "85%", "top": "75%", "options": "textfile om_dc"},
 	"downloads": {"name":"Downloads", "width": "250px", "height": "300px", "left": "50%", "top": "550px", "options": ""},
-	"links": {"name":"Links", "width": "220px", "height": "130px", "left": "80%", "top": "20%", "options": "small"},
+	"links": {"name":"Links", "width": "220px", "height": "230px", "left": "80%", "top": "20%", "options": ""},
 	"pokeh": {"name":"Pokemon: H Edition", "width": "400px", "height": "400px", "left": "50%", "top": "350px", "options": ""},
 	"discordwarn": {"name":"Warning", "width": "500px", "height": "240px", "left": "50%", "top": "50%", "options": "noanim transparent"},
 	"pokesource": {"name":"Pokemon: Source", "width": "400px", "height": "400px", "left": "50%", "top": "350px", "options": ""},
