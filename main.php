@@ -49,7 +49,7 @@
 <br>
 <span class='desktop-item' style='font-size:0px;' onclick="windowCreate('downloads');">
     <img width='32' height='32' src="/resources/icons/drive-harddisk.svg"><br>
-    <img width='52' height='13' src="/images/font_downloads.svg">
+    <img width='52' height='13' src="/resources/images/font_downloads.svg">
 </span>
 <br>
 <span class='desktop-item' style='font-size:0px;' onclick="windowCreate('art');">
