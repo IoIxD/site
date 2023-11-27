@@ -9,7 +9,7 @@
     let res;
     if(a == d) {
       res = 0;
-    } else if (a-d) < 0 {
+    } else if((a-d) < 0) {
       res = 0;
     } else {
       res = +(((a/d)/5)+1);
