@@ -6,7 +6,7 @@
   function calculate(e) {
     let a = +(document.querySelector("#one").value);
     let d = +(document.querySelector("#two").value);
-    document.querySelector("#result").innerHTML = +(((a/d)/5)+1);
+    document.querySelector("#result").innerHTML = +(((a-d)/5)+1);
   }
     document.querySelector("#one").addEventListener("change", calculate);
   document.querySelector("#two").addEventListener("change", calculate);
