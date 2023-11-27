@@ -6,7 +6,14 @@
   function calculate(e) {
     let a = +(document.querySelector("#one").value);
     let d = +(document.querySelector("#two").value);
-    document.querySelector("#result").innerHTML = +(((a-d)/5)+1);
+    let res;
+    if(a == b) {
+      res = 0;
+    } else {
+      res = ((a/d)/5)+1;
+    }
+    
+    document.querySelector("#result").innerHTML = Math.round(res);
   }
     document.querySelector("#one").addEventListener("change", calculate);
   document.querySelector("#two").addEventListener("change", calculate);
