@@ -11,9 +11,6 @@
       res = 0;
     } else {
       res = +(((a-d)/5)+1);
-      if(res < 0) {
-        res = 0;
-      }
     }
     
     document.querySelector("#result").innerHTML = Math.floor(res);
