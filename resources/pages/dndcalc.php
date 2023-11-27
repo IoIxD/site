@@ -7,7 +7,7 @@
     let a = +(document.querySelector("#one").value);
     let d = +(document.querySelector("#two").value);
     let res;
-    if(a == b) {
+    if(a == d) {
       res = 0;
     } else {
       res = +(((a/d)/5)+1);
