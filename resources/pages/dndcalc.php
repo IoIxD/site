@@ -13,7 +13,7 @@
       res = ((a/d)/5)+1;
     }
     
-    document.querySelector("#result").innerHTML = Math.round(res);
+    document.querySelector("#result").innerHTML = Math.floor(res);
   }
     document.querySelector("#one").addEventListener("change", calculate);
   document.querySelector("#two").addEventListener("change", calculate);
