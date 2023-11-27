@@ -10,7 +10,7 @@
     if(a == b) {
       res = 0;
     } else {
-      res = ((a/d)/5)+1;
+      res = +(((a/d)/5)+1);
     }
     
     document.querySelector("#result").innerHTML = Math.floor(res);
