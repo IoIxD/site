@@ -9,10 +9,11 @@
     let res;
     if(a == d) {
       res = 0;
-    } else if((a-d) < 0) {
-      res = 0;
     } else {
       res = +(((a-d)/5)+1);
+      if(res < 0) {
+        res = 0;
+      }
     }
     
     document.querySelector("#result").innerHTML = Math.floor(res);
