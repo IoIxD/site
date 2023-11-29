@@ -8,18 +8,47 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-class InvalidPageError {
-    constructor(page) {
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var InvalidPageError = /** @class */ (function () {
+    function InvalidPageError(page) {
         this.name = "InvalidPageError";
-        this.message = `Invalid page '${page}' given`;
+        this.message = "Invalid page '".concat(page, "' given");
     }
-}
-class WindowAlreadyRemovedError {
-    constructor(page) {
+    return InvalidPageError;
+}());
+var WindowAlreadyRemovedError = /** @class */ (function () {
+    function WindowAlreadyRemovedError(page) {
         this.name = "WindowAlreadyRemovedError";
-        this.message = `Tried to remove window '${page}' but it was already removed.`;
+        this.message = "Tried to remove window '".concat(page, "' but it was already removed.");
     }
-}
+    return WindowAlreadyRemovedError;
+}());
 // global variables
 var mx = 0;
 var my = 0;
@@ -43,8 +72,8 @@ document.addEventListener("mousedown", function (e) {
     if (hoveredWin) {
         mx_o = e.pageX;
         my_o = e.pageY;
-        let ex = hoveredWin.style.left;
-        let ey = hoveredWin.style.top;
+        var ex = hoveredWin.style.left;
+        var ey = hoveredWin.style.top;
         if (ex.includes("%")) {
             wx_o = +(window.innerWidth) * +("." + ex.replace('%', ''));
         }
@@ -63,7 +92,7 @@ document.addEventListener("mousedown", function (e) {
 document.addEventListener("mouseup", function () {
     mouseDown = 0;
     if (movingWindow) {
-        let el = hoveredWin;
+        var el = hoveredWin;
         if (el == null) {
             return;
         }
@@ -73,14 +102,16 @@ document.addEventListener("mouseup", function () {
 });
 var properties = getJSON(window.location.protocol + "//" + window.location.host + "/resources/pages/properties.json");
 var fake_windows = {};
-class FakeWindow {
-    constructor(page, exoptions = "", removePrevious = true) {
+var FakeWindow = /** @class */ (function () {
+    function FakeWindow(page, exoptions, removePrevious) {
+        if (exoptions === void 0) { exoptions = ""; }
+        if (removePrevious === void 0) { removePrevious = true; }
         this.options = [];
         if (properties[page] === undefined) {
-            let url = window.location.pathname.replace('.html', '');
+            var url = window.location.pathname.replace('.html', '');
             page = url.replace('/', '');
-            let pageRoot = url.split("/")[0] ? 0 : url.split("/")[1];
-            let pageToMatch = pageRoot;
+            var pageRoot = url.split("/")[0] ? 0 : url.split("/")[1];
+            var pageToMatch = pageRoot;
             if (page.match(/\.txt$/gm)) {
                 exoptions += "valload " + page;
                 pageToMatch = "generic_text";
@@ -93,20 +124,20 @@ class FakeWindow {
                 pageToMatch = pageRoot;
                 this.options.push("dirlist");
             }
-            this.width = properties[`${pageToMatch}`].width;
-            this.height = properties[`${pageToMatch}`].height;
-            this.left = properties[`${pageToMatch}`].left;
-            this.top = properties[`${pageToMatch}`].top;
-            this.options = properties[`${pageToMatch}`].options.split(" ");
-            this.title = properties[`${pageToMatch}`].name;
+            this.width = properties["".concat(pageToMatch)].width;
+            this.height = properties["".concat(pageToMatch)].height;
+            this.left = properties["".concat(pageToMatch)].left;
+            this.top = properties["".concat(pageToMatch)].top;
+            this.options = properties["".concat(pageToMatch)].options.split(" ");
+            this.title = properties["".concat(pageToMatch)].name;
         }
         else {
-            this.width = properties[`${page}`].width;
-            this.height = properties[`${page}`].height;
-            this.left = properties[`${page}`].left;
-            this.top = properties[`${page}`].top;
-            this.options = properties[`${page}`].options.split(" ");
-            this.title = properties[`${page}`].name;
+            this.width = properties["".concat(page)].width;
+            this.height = properties["".concat(page)].height;
+            this.left = properties["".concat(page)].left;
+            this.top = properties["".concat(page)].top;
+            this.options = properties["".concat(page)].options.split(" ");
+            this.title = properties["".concat(page)].name;
         }
         this.page = page;
         this.exoptions = exoptions;
@@ -116,11 +147,12 @@ class FakeWindow {
             throw new InvalidPageError(page);
         }
     }
-}
+    return FakeWindow;
+}());
 function addFakeWindowToDOM(win) {
     var _a, _b, _c;
-    for (let key in fake_windows) {
-        let value = fake_windows[key];
+    for (var key in fake_windows) {
+        var value = fake_windows[key];
         if (value == undefined) {
             continue;
         }
@@ -154,12 +186,12 @@ function addFakeWindowToDOM(win) {
     else {
         titlebar_additions = "";
     }
-    let pageUrl;
+    var pageUrl;
     if (win.options.includes("dirlist")) {
-        pageUrl = `/resources/pages/dirlist.php?dir=pages/${win.page}/`;
+        pageUrl = "/resources/pages/dirlist.php?dir=pages/".concat(win.page, "/");
     }
     else {
-        pageUrl = `/resources/pages/${win.page}.php`;
+        pageUrl = "/resources/pages/".concat(win.page, ".php");
     }
     if (win.exoptions.includes("valload")) {
         win.exoptions = win.exoptions.replace("valload ", "");
@@ -179,29 +211,21 @@ function addFakeWindowToDOM(win) {
     div.classList.add("window");
     if (win.options.length != 0) {
         for (var i in win.options) {
-            let option = win.options[i].replace(/\s/g, "");
+            var option = win.options[i].replace(/\s/g, "");
             if (option != "") {
                 div.classList.add(option);
             }
         }
     }
     // skip ahead a bit 
-    div.innerHTML += `
-  <span class="titlebar">
-      <span class='tl_lines'></span>
-      <span onclick="windowRemove('${win.page}');"class='tl_button close'></span>
-      <span class="title">` + win.title + `</span>
-      <span onclick="windowMaximizeToggle(this.parentElement.parentElement);" class='tl_button maxmin'></span>
-      <span onclick="windowShadeToggle(this.parentElement.parentElement);" class='tl_button shade'></span>
-    </span>
-    `;
+    div.innerHTML += "\n  <span class=\"titlebar\">\n      <span class='tl_lines'></span>\n      <span onclick=\"windowRemove('".concat(win.page, "');\"class='tl_button close'></span>\n      <span class=\"title\">") + win.title + "</span>\n      <span onclick=\"windowMaximizeToggle(this.parentElement.parentElement);\" class='tl_button maxmin'></span>\n      <span onclick=\"windowShadeToggle(this.parentElement.parentElement);\" class='tl_button shade'></span>\n    </span>\n    ";
     div.innerHTML += titlebar_additions;
     // create the contents div and properly add it to the div.
     var contents = document.createElement("span");
     contents.classList.add("content");
     if (win.options.length != 0) {
         for (var i in win.options) {
-            let option = win.options[i].replace(/\s/g, "");
+            var option = win.options[i].replace(/\s/g, "");
             if (option != "") {
                 div.classList.add(option);
             }
@@ -213,18 +237,18 @@ function addFakeWindowToDOM(win) {
     windowDrag.classList.add("window-drag");
     div.appendChild(windowDrag);
     document.body.appendChild(div);
-    (_b = div.querySelector(".titlebar")) === null || _b === void 0 ? void 0 : _b.addEventListener("mouseenter", (e) => {
-        let target = e.target;
+    (_b = div.querySelector(".titlebar")) === null || _b === void 0 ? void 0 : _b.addEventListener("mouseenter", function (e) {
+        var target = e.target;
         if (target == null) {
             return;
         }
-        let parentElement = target.parentElement;
+        var parentElement = target.parentElement;
         if (parentElement == null) {
             return;
         }
         movingWindowDetect(parentElement);
     });
-    (_c = div.querySelector(".titlebar")) === null || _c === void 0 ? void 0 : _c.addEventListener("mouseleave", (e) => {
+    (_c = div.querySelector(".titlebar")) === null || _c === void 0 ? void 0 : _c.addEventListener("mouseleave", function (e) {
         if (!movingWindow) {
             movingWindowReset();
         }
@@ -244,7 +268,7 @@ function movingWindowDetect(el) {
     }
     if (el.classList.contains("window")) {
         hoveredWin = el;
-        let windows = getWindows();
+        var windows = getWindows();
         // disallow every window from being selected while we're moving the current one.
         for (var i = 0; i < windows.length; i++) {
             if (windows[i] != hoveredWin) {
@@ -268,8 +292,8 @@ function movingWindowReset() {
 }
 // WINDOW SHADING
 function windowShadeToggle(el) {
-    let height = el.style.height;
-    let heightasInt = 0;
+    var height = el.style.height;
+    var heightasInt = 0;
     if (height.endsWith("%")) {
         // get the height in pixels
         heightasInt = +(height.replace("%", ""));
@@ -311,8 +335,8 @@ document.addEventListener("mousemove", function (e) {
         }
         // move whatever window we're hovering over.
         // first get what the position should be, in pixels.
-        let newTop = (+(e.pageY - my_o) + +wy_o);
-        let newLeft = (+(e.pageX - mx_o) + +wx_o);
+        var newTop = (+(e.pageY - my_o) + +wy_o);
+        var newLeft = (+(e.pageX - mx_o) + +wx_o);
         hoveredWin.style.top = newTop + "px";
         hoveredWin.style.left = newLeft + "px";
         hoveredWin.style.zIndex = "999";
@@ -330,8 +354,10 @@ document.addEventListener("mousemove", function (e) {
 /**
  * @deprecated This function still exists because some old html/php pages use it, but it shouldn't be used internally.
  */
-function windowCreate(name, exoptions = "", removePrevious = true) {
-    let window = new FakeWindow(name, exoptions, removePrevious);
+function windowCreate(name, exoptions, removePrevious) {
+    if (exoptions === void 0) { exoptions = ""; }
+    if (removePrevious === void 0) { removePrevious = true; }
+    var window = new FakeWindow(name, exoptions, removePrevious);
     fake_windows[name] = window;
     addFakeWindowToDOM(window);
 }
@@ -339,7 +365,7 @@ function windowCreate(name, exoptions = "", removePrevious = true) {
  * @deprecated This function still exists because some old html/php pages use it, but it shouldn't be used internally.
  */
 function windowRemove(name) {
-    let window = fake_windows[name];
+    var window = fake_windows[name];
     if (window == undefined) {
         throw new WindowAlreadyRemovedError(name);
     }
@@ -348,21 +374,21 @@ function windowRemove(name) {
 }
 // quick and dirty function to open the three windows from the first icon, one after the other.
 function OpenTheThree() {
-    let main_windows = [
+    var main_windows = [
         new FakeWindow("main", "", false),
         new FakeWindow("top-languages", "", false),
         new FakeWindow("github-stats", "", false),
         new FakeWindow("likes", "", false)
     ];
-    main_windows.forEach(win => {
+    main_windows.forEach(function (win) {
         fake_windows[win.page] = win;
         addFakeWindowToDOM(win);
     });
 }
 function setPageContents(elem, url) {
     return fetch(url)
-        .then((t) => t.text())
-        .then(t => {
+        .then(function (t) { return t.text(); })
+        .then(function (t) {
         elem.innerHTML = t;
     });
 }
@@ -385,56 +411,60 @@ function getJSON(url) {
     return JSON.parse(json);
 }
 function setBackground() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let url = window.location.protocol + "//" + window.location.hostname + port;
-        // acceptable folders to choose from
-        let folders = ["checkerland", "dimension_352", "mindisafuck", "troll_98", "weecee_wallpaper_1"];
-        let random = folders[Math.ceil(Math.random() * folders.length - 1)];
-        // We want to get all the files within this folder and pick the one
-        // that is closed to the user's screen resolution.
-        let file = "";
-        // we pass the size in kind of a weird way, but doing this allows us to just filter the filenames (which always have WIDTHxHEIGHT in
-        // the name) to numbers only and compare, which is faster.
-        let maxSize = +(screen.width + "" + screen.height);
-        yield fetch(url + "/resources/pages/art/" + random + "/")
-            .then(r => r.text())
-            .then(r => {
-            console.log(url + "/resources/pages/art/" + random + "/");
-            let page = document.createElement("html");
-            page.innerHTML = r;
-            let links = page.querySelectorAll(".a p");
-            for (let i in links) {
-                let link = links[i];
-                if (link.innerHTML === undefined) {
-                    continue;
-                }
-                console.log(link);
-                if (link.innerHTML.includes("png")) {
-                    let numbers = +(link.innerHTML.replace(/([^0-9])/g, ''));
-                    if (numbers <= maxSize) {
-                        file = "/resources/pages/art/" + random + "/" + link.innerHTML;
-                    }
-                }
+    return __awaiter(this, void 0, void 0, function () {
+        var url, folders, random, file, maxSize;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    url = window.location.protocol + "//" + window.location.hostname + port;
+                    folders = ["checkerland", "dimension_352", "mindisafuck", "troll_98", "weecee_wallpaper_1"];
+                    random = folders[Math.ceil(Math.random() * folders.length - 1)];
+                    file = "";
+                    maxSize = +(screen.width + "" + screen.height);
+                    return [4 /*yield*/, fetch(url + "/resources/pages/art/" + random + "/")
+                            .then(function (r) { return r.text(); })
+                            .then(function (r) {
+                            console.log(url + "/resources/pages/art/" + random + "/");
+                            var page = document.createElement("html");
+                            page.innerHTML = r;
+                            var links = page.querySelectorAll(".a p");
+                            for (var i in links) {
+                                var link = links[i];
+                                if (link.innerHTML === undefined) {
+                                    continue;
+                                }
+                                console.log(link);
+                                if (link.innerHTML.includes("png")) {
+                                    var numbers = +(link.innerHTML.replace(/([^0-9])/g, ''));
+                                    if (numbers <= maxSize) {
+                                        file = "/resources/pages/art/" + random + "/" + link.innerHTML;
+                                    }
+                                }
+                            }
+                        })];
+                case 1:
+                    _a.sent();
+                    console.log(file);
+                    // now we want to fetch the contents of that link and set the page's background to it
+                    document.body.style.backgroundImage = "url(\"" + file + "\")";
+                    return [2 /*return*/];
             }
         });
-        console.log(file);
-        // now we want to fetch the contents of that link and set the page's background to it
-        document.body.style.backgroundImage = "url(\"" + file + "\")";
     });
 }
 // XEYES
 function xeyesCheck(e) {
-    let xeyes = Array.from(document.querySelectorAll(".xeye"));
-    xeyes.forEach(eye => {
-        let top = +(eye.style.top.replace("px", ""));
-        let left = +(eye.style.left.replace("px", ""));
-        let parent = document.querySelector("#xeyes");
-        let y = (e.clientY - top) - +(parent.style.top.replace("px", ""));
-        let x = (e.clientX - left) - +(parent.style.left.replace("px", ""));
+    var xeyes = Array.from(document.querySelectorAll(".xeye"));
+    xeyes.forEach(function (eye) {
+        var top = +(eye.style.top.replace("px", ""));
+        var left = +(eye.style.left.replace("px", ""));
+        var parent = document.querySelector("#xeyes");
+        var y = (e.clientY - top) - +(parent.style.top.replace("px", ""));
+        var x = (e.clientX - left) - +(parent.style.left.replace("px", ""));
         console.log(parent.style.top.replace("px", ""));
-        let deg = (Math.atan2(y, x)) * 180 / Math.PI;
-        let inner = eye.querySelector(".inner");
-        inner.style.transform = `rotate(${deg}deg)`;
+        var deg = (Math.atan2(y, x)) * 180 / Math.PI;
+        var inner = eye.querySelector(".inner");
+        inner.style.transform = "rotate(".concat(deg, "deg)");
     });
 }
 function makeid(length) {
@@ -453,7 +483,7 @@ function main() {
     else {
         onPhone = false;
     }
-    let page = window.location.pathname.replace('.html', '').replace('/', '');
+    var page = window.location.pathname.replace('.html', '').replace('/', '');
     if (page != "" && page != "index.php" && page != "main.php") {
         windowCreate(page);
     }
