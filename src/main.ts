@@ -17,26 +17,26 @@ class WindowAlreadyRemovedError implements Error {
 }
 
 // global variables
-var mx: number = 0; 
-var my: number = 0; 
-var mx_o: number = 0; 
-var my_o: number = 0; 
-var wx_o: number = 0; 
-var wy_o: number = 0; 
-var hoveredWin: HTMLElement | null; 
-var mouseDown: number = 0; 
-var titlebar_additions: string = ""; 
+var mx: number = 0;
+var my: number = 0;
+var mx_o: number = 0;
+var my_o: number = 0;
+var wx_o: number = 0;
+var wy_o: number = 0;
+var hoveredWin: HTMLElement | null;
+var mouseDown: number = 0;
+var titlebar_additions: string = "";
 var options_iframe: string = "";
-var movingWindow: number= 0;
+var movingWindow: number = 0;
 var onPhone: boolean = false;
 var lastTop: number = 0;
 
-var port = window.location.port ? ":"+window.location.port : ""
+var port = window.location.port ? ":" + window.location.port : ""
 
 document.addEventListener("mousedown", function (e) {
   if (e.which != 1) { return; }
-  mouseDown = 1; 
-  if(hoveredWin) {
+  mouseDown = 1;
+  if (hoveredWin) {
     mx_o = e.pageX; my_o = e.pageY;
     let ex = hoveredWin.style.left;
     let ey = hoveredWin.style.top;
@@ -48,19 +48,19 @@ document.addEventListener("mousedown", function (e) {
     } else { wy_o = +(ey.replace('px', '')) }
   };
 })
-document.addEventListener("mouseup", function () { 
-  mouseDown = 0; 
-  if(movingWindow) {
+document.addEventListener("mouseup", function () {
+  mouseDown = 0;
+  if (movingWindow) {
     let el = hoveredWin;
-    if(el == null) {
-        return;
-    } 
+    if (el == null) {
+      return;
+    }
     movingWindowReset();
     movingWindowDetect(el);
   }
 })
 
-var properties = getJSON(window.location.protocol + "//" + window.location.host +  "/resources/pages/properties.json");
+var properties = getJSON(window.location.protocol + "//" + window.location.host + "/resources/pages/properties.json");
 
 
 var fake_windows: {
@@ -69,7 +69,7 @@ var fake_windows: {
 
 class FakeWindow {
   page: string;
-  width: string; 
+  width: string;
   height: string;
   left: string;
   top: string;
@@ -100,14 +100,14 @@ class FakeWindow {
       this.height = properties[`${pageToMatch}`].height;
       this.left = properties[`${pageToMatch}`].left;
       this.top = properties[`${pageToMatch}`].top;
-      this.options = properties[`${pageToMatch}`].options;
+      this.options = properties[`${pageToMatch}`].options.split(" ");
       this.title = properties[`${pageToMatch}`].name;
     } else {
       this.width = properties[`${page}`].width;
       this.height = properties[`${page}`].height;
       this.left = properties[`${page}`].left;
       this.top = properties[`${page}`].top;
-      this.options = properties[`${page}`].options;
+      this.options = properties[`${page}`].options.split(" ");
       this.title = properties[`${page}`].name;
     }
 
@@ -124,9 +124,9 @@ class FakeWindow {
 
 
 function addFakeWindowToDOM(win: FakeWindow) {
-  for(let key in fake_windows) {
+  for (let key in fake_windows) {
     let value = fake_windows[key];
-    if(value == undefined) {
+    if (value == undefined) {
       continue;
     }
     if (!value?.options.includes("noanim")) {
@@ -134,7 +134,7 @@ function addFakeWindowToDOM(win: FakeWindow) {
     }
     if (win.removePrevious && onPhone) {
       removeFakeWindowFromDOM(value);
-    } 
+    }
   }
   if (onPhone) {
     win.options.push("noanim")
@@ -158,7 +158,7 @@ function addFakeWindowToDOM(win: FakeWindow) {
     titlebar_additions = "";
   }
   let pageUrl: string;
-  if (win.options.includes("dirlist")) { 
+  if (win.options.includes("dirlist")) {
     pageUrl = `/resources/pages/dirlist.php?dir=pages/${win.page}/`;
   } else {
     pageUrl = `/resources/pages/${win.page}.php`;
@@ -183,10 +183,10 @@ function addFakeWindowToDOM(win: FakeWindow) {
 
   if (win.options.length != 0) {
     for (var i in win.options) {
-        let option = win.options[i].replace(/\s/g,"");
-        if(option != "") {
-            div.classList.add(option);
-        }
+      let option = win.options[i].replace(/\s/g, "");
+      if (option != "") {
+        div.classList.add(option);
+      }
     }
   }
 
@@ -207,10 +207,10 @@ function addFakeWindowToDOM(win: FakeWindow) {
   contents.classList.add("content");
   if (win.options.length != 0) {
     for (var i in win.options) {
-        let option = win.options[i].replace(/\s/g,"");
-        if(option != "") {
-            div.classList.add(option);
-        }
+      let option = win.options[i].replace(/\s/g, "");
+      if (option != "") {
+        div.classList.add(option);
+      }
     }
   }
   setPageContents(contents, pageUrl);
@@ -224,18 +224,18 @@ function addFakeWindowToDOM(win: FakeWindow) {
 
   div.querySelector(".titlebar")?.addEventListener("mouseenter", (e) => {
     let target: HTMLElement | null = e.target as HTMLElement;
-    if(target == null) {
-        return;
+    if (target == null) {
+      return;
     }
     let parentElement = target.parentElement;
-    if(parentElement == null) {
-        return;
+    if (parentElement == null) {
+      return;
     }
     movingWindowDetect(parentElement);
   });
 
   div.querySelector(".titlebar")?.addEventListener("mouseleave", (e) => {
-    if(!movingWindow) {
+    if (!movingWindow) {
       movingWindowReset();
     }
   })
@@ -246,14 +246,14 @@ function removeFakeWindowFromDOM(win: FakeWindow) {
 }
 
 function getWindows(): HTMLDivElement[] {
-    return Array.from(document.querySelectorAll(".window") as NodeListOf<HTMLDivElement>);
+  return Array.from(document.querySelectorAll(".window") as NodeListOf<HTMLDivElement>);
 }
 
 function movingWindowDetect(el: HTMLElement) {
-  if(el == null) {
+  if (el == null) {
     return;
   }
-  if(el.classList.contains("window")) {
+  if (el.classList.contains("window")) {
     hoveredWin = el;
     let windows = getWindows();
     // disallow every window from being selected while we're moving the current one.
@@ -268,8 +268,8 @@ function movingWindowDetect(el: HTMLElement) {
 }
 
 function movingWindowReset() {
-  movingWindow = 0; 
-  hoveredWin = null; 
+  movingWindow = 0;
+  hoveredWin = null;
   var windows = getWindows();
   for (var i = 0; i < windows.length; i++) {
     if (windows[i] != hoveredWin) {
@@ -284,27 +284,27 @@ function movingWindowReset() {
 function windowShadeToggle(el: HTMLElement) {
   let height = el.style.height;
   let heightasInt = 0;
-  
-  if(height.endsWith("%")) {
+
+  if (height.endsWith("%")) {
     // get the height in pixels
-    heightasInt = +(height.replace("%",""));
+    heightasInt = +(height.replace("%", ""));
     heightasInt = +(window.innerHeight * (heightasInt / 100));
   } else {
-    heightasInt = +(height.replace("px",""));
+    heightasInt = +(height.replace("px", ""));
   }
 
-  if(el.classList.contains("shaded")) {
+  if (el.classList.contains("shaded")) {
     el.classList.remove("shaded");
     el.style.marginTop = "0px";
   } else {
     el.classList.add("shaded");
-    el.style.marginTop = (-(heightasInt/2) + 9)+"px";
+    el.style.marginTop = (-(heightasInt / 2) + 9) + "px";
   }
 }
 
 // WINDOW MAXMIZING
 function windowMaximizeToggle(el: HTMLElement) {
-  if(el.classList.contains("maximized")) {
+  if (el.classList.contains("maximized")) {
     el.classList.remove("maximized");
   } else {
     el.classList.add("maximized");
@@ -313,12 +313,12 @@ function windowMaximizeToggle(el: HTMLElement) {
 
 // DRAGGING
 document.addEventListener("mousemove", function (e) {
-  mx = e.pageX; 
+  mx = e.pageX;
   my = e.pageY;
   // are we moving a window?
   if (movingWindow) {
-    if(!hoveredWin) {
-        return;
+    if (!hoveredWin) {
+      return;
     }
     // if the window we're supposed to be moving is maximized then no we aren't.
     if (hoveredWin.classList.contains("maximized")) {
@@ -359,7 +359,7 @@ function windowCreate(name: string, exoptions = "", removePrevious = true) {
  */
 function windowRemove(name: string) {
   let window = fake_windows[name];
-  if(window == undefined) {
+  if (window == undefined) {
     throw new WindowAlreadyRemovedError(name);
   }
   removeFakeWindowFromDOM(window);
@@ -369,10 +369,10 @@ function windowRemove(name: string) {
 // quick and dirty function to open the three windows from the first icon, one after the other.
 function OpenTheThree() {
   let main_windows = [
-    new FakeWindow("main","",false),
-    new FakeWindow("top-languages","",false),
-    new FakeWindow("github-stats","",false),
-    new FakeWindow("likes","",false)
+    new FakeWindow("main", "", false),
+    new FakeWindow("top-languages", "", false),
+    new FakeWindow("github-stats", "", false),
+    new FakeWindow("likes", "", false)
   ];
   main_windows.forEach(win => {
     fake_windows[win.page] = win;
@@ -381,10 +381,10 @@ function OpenTheThree() {
 }
 
 function setPageContents(elem: HTMLElement, url: string) {
-    return fetch(url)
-        .then((t) => t.text())
-        .then(t => {
-        elem.innerHTML = t;
+  return fetch(url)
+    .then((t) => t.text())
+    .then(t => {
+      elem.innerHTML = t;
     });
 }
 
@@ -400,11 +400,11 @@ function getPageContents(url: string): string | null {
   } else {
     return null;
   }
-  
+
 }
 
 function getJSON(url: string) {
-  var json = getPageContents(url)!; 
+  var json = getPageContents(url)!;
   return JSON.parse(json);
 }
 
@@ -421,7 +421,7 @@ async function setBackground() {
   let file = "";
   // we pass the size in kind of a weird way, but doing this allows us to just filter the filenames (which always have WIDTHxHEIGHT in
   // the name) to numbers only and compare, which is faster.
-  let maxSize = +(screen.width + "" + screen.height); 
+  let maxSize = +(screen.width + "" + screen.height);
 
   await fetch(url + "/resources/pages/art/" + random + "/")
     .then(r => r.text())
@@ -429,7 +429,7 @@ async function setBackground() {
       console.log(url + "/resources/pages/art/" + random + "/")
       let page = document.createElement("html");
       page.innerHTML = r;
-      
+
       let links = page.querySelectorAll(".a p");
       for (let i in links) {
         let link = links[i];

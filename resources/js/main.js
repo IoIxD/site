@@ -97,7 +97,7 @@ class FakeWindow {
             this.height = properties[`${pageToMatch}`].height;
             this.left = properties[`${pageToMatch}`].left;
             this.top = properties[`${pageToMatch}`].top;
-            this.options = properties[`${pageToMatch}`].options;
+            this.options = properties[`${pageToMatch}`].options.split(" ");
             this.title = properties[`${pageToMatch}`].name;
         }
         else {
@@ -105,7 +105,7 @@ class FakeWindow {
             this.height = properties[`${page}`].height;
             this.left = properties[`${page}`].left;
             this.top = properties[`${page}`].top;
-            this.options = properties[`${page}`].options;
+            this.options = properties[`${page}`].options.split(" ");
             this.title = properties[`${page}`].name;
         }
         this.page = page;
