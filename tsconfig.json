@@ -9,6 +9,7 @@
         "sourceMap": true,
         "strict": true,
         "ignoreDeprecations": "5.0",
+        "useUnknownInCatchVariables": false,
         "target": "es3",
     },
     "include": [

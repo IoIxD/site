@@ -49,6 +49,29 @@ var WindowAlreadyRemovedError = /** @class */ (function () {
     }
     return WindowAlreadyRemovedError;
 }());
+if (!Array.prototype.includes) {
+    //or use Object.defineProperty
+    Array.prototype.includes = function (search, fromIndex) {
+        var arr = this;
+        var res = false;
+        for (var a in arr) {
+            if (arr[a] === search) {
+                res = true;
+                break;
+            }
+        }
+        return res;
+    };
+}
+if (!String.prototype.includes) {
+    String.prototype.includes = function (search, start) {
+        'use strict';
+        if (start === undefined) {
+            start = 0;
+        }
+        return this.indexOf(search, start) !== -1;
+    };
+}
 // global variables
 var mx = 0;
 var my = 0;
@@ -64,42 +87,75 @@ var movingWindow = 0;
 var onPhone = false;
 var lastTop = 0;
 var port = window.location.port ? ":" + window.location.port : "";
-document.addEventListener("mousedown", function (e) {
-    if (e.which != 1) {
-        return;
-    }
-    mouseDown = 1;
-    if (hoveredWin) {
-        mx_o = e.pageX;
-        my_o = e.pageY;
-        var ex = hoveredWin.style.left;
-        var ey = hoveredWin.style.top;
-        if (ex.includes("%")) {
-            wx_o = +(window.innerWidth) * +("." + ex.replace('%', ''));
-        }
-        else {
-            wx_o = +(ex.replace('px', ''));
-        }
-        if (ey.includes("%")) {
-            wy_o = +(window.innerHeight) * +("." + ey.replace('%', ''));
-        }
-        else {
-            wy_o = +(ey.replace('px', ''));
-        }
-    }
-    ;
-});
-document.addEventListener("mouseup", function () {
-    mouseDown = 0;
-    if (movingWindow) {
-        var el = hoveredWin;
-        if (el == null) {
+function addEventListeners() {
+    document.addEventListener("mousedown", function (e) {
+        if (e.which != 1) {
             return;
         }
-        movingWindowReset();
-        movingWindowDetect(el);
-    }
-});
+        mouseDown = 1;
+        if (hoveredWin) {
+            mx_o = e.pageX;
+            my_o = e.pageY;
+            var ex = hoveredWin.style.left;
+            var ey = hoveredWin.style.top;
+            if (ex.includes("%")) {
+                wx_o = +(window.innerWidth) * +("." + ex.replace('%', ''));
+            }
+            else {
+                wx_o = +(ex.replace('px', ''));
+            }
+            if (ey.includes("%")) {
+                wy_o = +(window.innerHeight) * +("." + ey.replace('%', ''));
+            }
+            else {
+                wy_o = +(ey.replace('px', ''));
+            }
+        }
+        ;
+    }, false);
+    document.addEventListener("mouseup", function () {
+        mouseDown = 0;
+        if (movingWindow) {
+            var el = hoveredWin;
+            if (el == null) {
+                return;
+            }
+            movingWindowReset();
+            movingWindowDetect(el);
+        }
+    }, false);
+    // DRAGGING
+    document.addEventListener("mousemove", function (e) {
+        mx = e.pageX;
+        my = e.pageY;
+        // are we moving a window?
+        if (movingWindow) {
+            if (!hoveredWin) {
+                return;
+            }
+            // if the window we're supposed to be moving is maximized then no we aren't.
+            if (hoveredWin.classList.contains("maximized")) {
+                return;
+            }
+            // move whatever window we're hovering over.
+            // first get what the position should be, in pixels.
+            var newTop = (+(e.pageY - my_o) + +wy_o);
+            var newLeft = (+(e.pageX - mx_o) + +wx_o);
+            hoveredWin.style.top = newTop + "px";
+            hoveredWin.style.left = newLeft + "px";
+            hoveredWin.style.zIndex = "999";
+        }
+        else {
+            // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
+            if (mouseDown) {
+                if (hoveredWin) {
+                    movingWindow = 1;
+                }
+            }
+        }
+        xeyesCheck(e);
+    }, false);
+}
 var properties = getJSON(window.location.protocol + "//" + window.location.host + "/resources/pages/properties.json");
 var fake_windows = {};
 var FakeWindow = /** @class */ (function () {
@@ -167,12 +223,12 @@ function addFakeWindowToDOM(win) {
         win.options.push("noanim");
     }
     if (!win.options.includes("noanim")) {
-        document.documentElement.style.setProperty('--iw', win.width);
-        document.documentElement.style.setProperty('--ih', win.height);
-        document.documentElement.style.setProperty('--ix', win.left);
-        document.documentElement.style.setProperty('--iy', win.top);
-        document.documentElement.style.setProperty('--mpx', mx + "px");
-        document.documentElement.style.setProperty('--mpy', my + "px");
+        document.documentElement.style.setProperty('--iw', win.width, "");
+        document.documentElement.style.setProperty('--ih', win.height, "");
+        document.documentElement.style.setProperty('--ix', win.left, "");
+        document.documentElement.style.setProperty('--iy', win.top, "");
+        document.documentElement.style.setProperty('--mpx', mx + "px", "");
+        document.documentElement.style.setProperty('--mpy', my + "px", "");
     }
     if (win.options.includes("nooverflow")) {
         options_iframe = "scrolling='no'";
@@ -320,37 +376,6 @@ function windowMaximizeToggle(el) {
         el.classList.add("maximized");
     }
 }
-// DRAGGING
-document.addEventListener("mousemove", function (e) {
-    mx = e.pageX;
-    my = e.pageY;
-    // are we moving a window?
-    if (movingWindow) {
-        if (!hoveredWin) {
-            return;
-        }
-        // if the window we're supposed to be moving is maximized then no we aren't.
-        if (hoveredWin.classList.contains("maximized")) {
-            return;
-        }
-        // move whatever window we're hovering over.
-        // first get what the position should be, in pixels.
-        var newTop = (+(e.pageY - my_o) + +wy_o);
-        var newLeft = (+(e.pageX - mx_o) + +wx_o);
-        hoveredWin.style.top = newTop + "px";
-        hoveredWin.style.left = newLeft + "px";
-        hoveredWin.style.zIndex = "999";
-    }
-    else {
-        // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
-        if (mouseDown) {
-            if (hoveredWin) {
-                movingWindow = 1;
-            }
-        }
-    }
-    xeyesCheck(e);
-});
 /**
  * @deprecated This function still exists because some old html/php pages use it, but it shouldn't be used internally.
  */
@@ -424,7 +449,6 @@ function setBackground() {
                     return [4 /*yield*/, fetch(url + "/resources/pages/art/" + random + "/")
                             .then(function (r) { return r.text(); })
                             .then(function (r) {
-                            console.log(url + "/resources/pages/art/" + random + "/");
                             var page = document.createElement("html");
                             page.innerHTML = r;
                             var links = page.querySelectorAll(".a p");
@@ -433,7 +457,6 @@ function setBackground() {
                                 if (link.innerHTML === undefined) {
                                     continue;
                                 }
-                                console.log(link);
                                 if (link.innerHTML.includes("png")) {
                                     var numbers = +(link.innerHTML.replace(/([^0-9])/g, ''));
                                     if (numbers <= maxSize) {
@@ -444,7 +467,6 @@ function setBackground() {
                         })];
                 case 1:
                     _a.sent();
-                    console.log(file);
                     // now we want to fetch the contents of that link and set the page's background to it
                     document.body.style.backgroundImage = "url(\"" + file + "\")";
                     return [2 /*return*/];
@@ -461,7 +483,6 @@ function xeyesCheck(e) {
         var parent = document.querySelector("#xeyes");
         var y = (e.clientY - top) - +(parent.style.top.replace("px", ""));
         var x = (e.clientX - left) - +(parent.style.left.replace("px", ""));
-        console.log(parent.style.top.replace("px", ""));
         var deg = (Math.atan2(y, x)) * 180 / Math.PI;
         var inner = eye.querySelector(".inner");
         inner.style.transform = "rotate(".concat(deg, "deg)");
@@ -477,6 +498,7 @@ function makeid(length) {
     return result;
 }
 function main() {
+    addEventListeners();
     if (navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
         onPhone = true;
     }
@@ -502,5 +524,13 @@ function main() {
         html.classList.add.apply(html.classList, classNames);
     setBackground();
 }
-main();
+try {
+    main();
+}
+catch (_ex) {
+    var ex = _ex;
+    var msg = ex.name + "<br>" + ex.message + "<br>" + ex.stack || "";
+    document.body.innerHTML = msg.replace("\n", "<br>");
+    throw ex;
+}
 //# sourceMappingURL=main.js.map

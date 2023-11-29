@@ -21,6 +21,7 @@
 		<?php include('print.php'); ?>
 	</span>
 	<?php include('main.php'); ?>
+	<script type="text/javascript" src="/resources/js/json2.js"></script>
 	<script type="text/javascript" src="/resources/js/main.js"></script>
 </body>
 

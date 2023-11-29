@@ -16,6 +16,29 @@ class WindowAlreadyRemovedError implements Error {
   }
 }
 
+if (!Array.prototype.includes) {
+  //or use Object.defineProperty
+  Array.prototype.includes = function (search, fromIndex) {
+    let arr = this;
+    let res = false;
+    for (let a in arr) {
+      if (arr[a] === search) {
+        res = true;
+        break;
+      }
+    }
+    return res;
+  }
+}
+if (!String.prototype.includes) {
+  String.prototype.includes = function (search, start) {
+    'use strict';
+
+    if (start === undefined) { start = 0; }
+    return this.indexOf(search, start) !== -1;
+  };
+}
+
 // global variables
 var mx: number = 0;
 var my: number = 0;
@@ -33,32 +56,71 @@ var lastTop: number = 0;
 
 var port = window.location.port ? ":" + window.location.port : ""
 
-document.addEventListener("mousedown", function (e) {
-  if (e.which != 1) { return; }
-  mouseDown = 1;
-  if (hoveredWin) {
-    mx_o = e.pageX; my_o = e.pageY;
-    let ex = hoveredWin.style.left;
-    let ey = hoveredWin.style.top;
-    if (ex.includes("%")) {
-      wx_o = +(window.innerWidth) * +("." + ex.replace('%', ''));
-    } else { wx_o = +(ex.replace('px', '')) }
-    if (ey.includes("%")) {
-      wy_o = +(window.innerHeight) * +("." + ey.replace('%', ''));
-    } else { wy_o = +(ey.replace('px', '')) }
-  };
-})
-document.addEventListener("mouseup", function () {
-  mouseDown = 0;
-  if (movingWindow) {
-    let el = hoveredWin;
-    if (el == null) {
-      return;
+function addEventListeners() {
+  document.addEventListener("mousedown", function (e) {
+    if (e.which != 1) { return; }
+    mouseDown = 1;
+    if (hoveredWin) {
+      mx_o = e.pageX; my_o = e.pageY;
+      let ex = hoveredWin.style.left;
+      let ey = hoveredWin.style.top;
+      if (ex.includes("%")) {
+        wx_o = +(window.innerWidth) * +("." + ex.replace('%', ''));
+      } else { wx_o = +(ex.replace('px', '')) }
+      if (ey.includes("%")) {
+        wy_o = +(window.innerHeight) * +("." + ey.replace('%', ''));
+      } else { wy_o = +(ey.replace('px', '')) }
+    };
+  }, false)
+  document.addEventListener("mouseup", function () {
+    mouseDown = 0;
+    if (movingWindow) {
+      let el = hoveredWin;
+      if (el == null) {
+        return;
+      }
+      movingWindowReset();
+      movingWindowDetect(el);
     }
-    movingWindowReset();
-    movingWindowDetect(el);
-  }
-})
+  }, false)
+
+  // DRAGGING
+  document.addEventListener("mousemove", function (e) {
+    mx = e.pageX;
+    my = e.pageY;
+    // are we moving a window?
+    if (movingWindow) {
+      if (!hoveredWin) {
+        return;
+      }
+      // if the window we're supposed to be moving is maximized then no we aren't.
+      if (hoveredWin.classList.contains("maximized")) {
+        return;
+      }
+      // move whatever window we're hovering over.
+
+      // first get what the position should be, in pixels.
+      let newTop = (+(e.pageY - my_o) + +wy_o);
+      let newLeft = (+(e.pageX - mx_o) + +wx_o);
+
+      hoveredWin.style.top = newTop + "px";
+      hoveredWin.style.left = newLeft + "px";
+
+      hoveredWin.style.zIndex = "999";
+    } else {
+      // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
+      if (mouseDown) {
+        if (hoveredWin) {
+          movingWindow = 1;
+        }
+      }
+    }
+    xeyesCheck(e);
+  }, false)
+
+}
+
+
 
 var properties = getJSON(window.location.protocol + "//" + window.location.host + "/resources/pages/properties.json");
 
@@ -140,12 +202,12 @@ function addFakeWindowToDOM(win: FakeWindow) {
     win.options.push("noanim")
   }
   if (!win.options.includes("noanim")) {
-    document.documentElement.style.setProperty('--iw', win.width);
-    document.documentElement.style.setProperty('--ih', win.height);
-    document.documentElement.style.setProperty('--ix', win.left);
-    document.documentElement.style.setProperty('--iy', win.top);
-    document.documentElement.style.setProperty('--mpx', mx + "px");
-    document.documentElement.style.setProperty('--mpy', my + "px");
+    document.documentElement.style.setProperty('--iw', win.width, "");
+    document.documentElement.style.setProperty('--ih', win.height, "");
+    document.documentElement.style.setProperty('--ix', win.left, "");
+    document.documentElement.style.setProperty('--iy', win.top, "");
+    document.documentElement.style.setProperty('--mpx', mx + "px", "");
+    document.documentElement.style.setProperty('--mpy', my + "px", "");
   }
   if (win.options.includes("nooverflow")) {
     options_iframe = "scrolling='no'";
@@ -311,40 +373,6 @@ function windowMaximizeToggle(el: HTMLElement) {
   }
 }
 
-// DRAGGING
-document.addEventListener("mousemove", function (e) {
-  mx = e.pageX;
-  my = e.pageY;
-  // are we moving a window?
-  if (movingWindow) {
-    if (!hoveredWin) {
-      return;
-    }
-    // if the window we're supposed to be moving is maximized then no we aren't.
-    if (hoveredWin.classList.contains("maximized")) {
-      return;
-    }
-    // move whatever window we're hovering over.
-
-    // first get what the position should be, in pixels.
-    let newTop = (+(e.pageY - my_o) + +wy_o);
-    let newLeft = (+(e.pageX - mx_o) + +wx_o);
-
-    hoveredWin.style.top = newTop + "px";
-    hoveredWin.style.left = newLeft + "px";
-
-    hoveredWin.style.zIndex = "999";
-  } else {
-    // otherwise, check if we could be moving one, by checking if the mouse is down and we're over a window
-    if (mouseDown) {
-      if (hoveredWin) {
-        movingWindow = 1;
-      }
-    }
-  }
-  xeyesCheck(e);
-})
-
 /**
  * @deprecated This function still exists because some old html/php pages use it, but it shouldn't be used internally.
  */
@@ -426,7 +454,6 @@ async function setBackground() {
   await fetch(url + "/resources/pages/art/" + random + "/")
     .then(r => r.text())
     .then(r => {
-      console.log(url + "/resources/pages/art/" + random + "/")
       let page = document.createElement("html");
       page.innerHTML = r;
 
@@ -436,7 +463,6 @@ async function setBackground() {
         if (link.innerHTML === undefined) {
           continue;
         }
-        console.log(link);
         if (link.innerHTML.includes("png")) {
           let numbers = +(link.innerHTML.replace(/([^0-9])/g, ''));
           if (numbers <= maxSize) {
@@ -445,7 +471,6 @@ async function setBackground() {
         }
       }
     });
-  console.log(file);
   // now we want to fetch the contents of that link and set the page's background to it
   document.body.style.backgroundImage = "url(\"" + file + "\")";
 }
@@ -460,7 +485,6 @@ function xeyesCheck(e: MouseEvent) {
     let parent = document.querySelector("#xeyes")! as HTMLDivElement;
     let y = (e.clientY - top) - +(parent.style.top.replace("px", ""));
     let x = (e.clientX - left) - +(parent.style.left.replace("px", ""));
-    console.log(parent.style.top.replace("px", ""));
     let deg = (Math.atan2(y, x)) * 180 / Math.PI;
     let inner = eye.querySelector(".inner")! as HTMLDivElement;
     inner.style.transform = `rotate(${deg}deg)`;
@@ -479,6 +503,7 @@ function makeid(length: number) {
 
 
 function main() {
+  addEventListeners();
   if (navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {
     onPhone = true;
   } else { onPhone = false; }
@@ -500,4 +525,11 @@ function main() {
 
   setBackground();
 }
-main();
+try {
+  main();
+} catch (_ex) {
+  let ex: Error = _ex;
+  let msg = ex.name + "<br>" + ex.message + "<br>" + ex.stack || "";
+  document.body.innerHTML = msg.replace("\n", "<br>")
+  throw ex;
+}
