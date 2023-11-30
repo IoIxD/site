@@ -21,8 +21,12 @@
 		<?php include('print.php'); ?>
 	</span>
 	<?php include('main.php'); ?>
-	<script type="text/javascript" src="/resources/js/json2.js"></script>
-	<script type="text/javascript" src="/resources/js/main.js"></script>
+	
+	<script>var loaded = false;</script>
+	<script type="text/javascript" src="/resources/js/es2022/main.js"></script>
+	<script>
+		if(!loaded) document.write('<script src="/resources/js/es3/json2.js">\x3C/script><br><script src="/resources/js/es3/main.js">\x3C/script>')
+	</script>
 </body>
 
 </html>

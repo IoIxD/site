@@ -1,16 +1,16 @@
 {
     "compilerOptions": {
         "lib": [
-            "es2022",
+            "es2015",
             "dom"
         ],
         "module": "commonjs",
-        "outDir": "resources/js/es2022",
+        "outDir": "resources/js/es3",
         "sourceMap": true,
         "strict": true,
         "ignoreDeprecations": "5.0",
         "useUnknownInCatchVariables": false,
-        "target": "es2022",
+        "target": "es3",
     },
     "include": [
         "src"

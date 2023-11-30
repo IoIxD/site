@@ -1,3 +1,4 @@
+
 class InvalidPageError implements Error {
   name: string;
   message: string;
@@ -527,6 +528,7 @@ function main() {
 }
 try {
   main();
+  loaded = true;
 } catch (_ex) {
   let ex: Error = _ex;
   let msg = ex.name + "<br>" + ex.message + "<br>" + ex.stack || "";

@@ -524,8 +524,10 @@ function main() {
         html.classList.add.apply(html.classList, classNames);
     setBackground();
 }
+var loaded = false;
 try {
     main();
+    loaded = true;
 }
 catch (_ex) {
     var ex = _ex;
