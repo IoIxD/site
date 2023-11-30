@@ -25,7 +25,7 @@
 	<script>var loaded = false;</script>
 	<script type="text/javascript" src="/resources/js/es2022/main.js"></script>
 	<script>
-		if(!loaded) document.write('<script src="/resources/js/es3/json2.js">\x3C/script><br><script src="/resources/js/es3/main.js">\x3C/script>')
+		if(!loaded) document.write('<script src="/resources/js/es3/polyfills.js">\x3C/script><br><script src="/resources/js/es3/json2.js">\x3C/script><br><script src="/resources/js/es3/main.js">\x3C/script>')
 	</script>
 </body>
 

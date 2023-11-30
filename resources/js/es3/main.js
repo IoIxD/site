@@ -49,29 +49,6 @@ var WindowAlreadyRemovedError = /** @class */ (function () {
     }
     return WindowAlreadyRemovedError;
 }());
-if (!Array.prototype.includes) {
-    //or use Object.defineProperty
-    Array.prototype.includes = function (search, fromIndex) {
-        var arr = this;
-        var res = false;
-        for (var a in arr) {
-            if (arr[a] === search) {
-                res = true;
-                break;
-            }
-        }
-        return res;
-    };
-}
-if (!String.prototype.includes) {
-    String.prototype.includes = function (search, start) {
-        'use strict';
-        if (start === undefined) {
-            start = 0;
-        }
-        return this.indexOf(search, start) !== -1;
-    };
-}
 // global variables
 var mx = 0;
 var my = 0;
@@ -524,7 +501,6 @@ function main() {
         html.classList.add.apply(html.classList, classNames);
     setBackground();
 }
-var loaded = false;
 try {
     main();
     loaded = true;
