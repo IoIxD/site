@@ -16,20 +16,19 @@
   <noprint>
     <center>
       <b>hey check these sites out:</b><br>
-      <a target="_blank" href="https://modarchive.org/"><img alt="modarchive.org"
-          src="https://content.pouet.net/buttons/tma_c.gif" border="0"></a>
-      <a target="_blank" href="https://web.archive.org/web/19961229152939im_/http://www.windows95.com/"><img
-          src="https://web.archive.org/web/19961229152939im_/http://www2.windows95.com/gifs/w95com.gif" border="0"></a>
-      <a target="_blank" href="https://projectlounge.pw"><img src="https://essem.space/images/projectloungenow.gif"></a>
-      <a target="_blank" href="https://gba.ioi-xd.net"><img
-          src="https://media.discordapp.net/attachments/680549525902983194/963295134236180540/sherbetbutton.gif"></a>
-      <script>
-      document.write("<img src='images/js-free.png' alt='JAVASCRIPT FREE PAGE'>");
-      </script><img src="https://boxy.neocities.org/images/js-free.png" alt="JAVASCRIPT FREE PAGE">
-      <a href="https://epicblazed.com" target="_blank"><img src="https://boxy.neocities.org/images/EpicBlazedButton.png" alt="Epic Blazed"></a>
-
-      <a href="https://ioletsgo.gay" target="_blank"><img src="https://ioletsgo.gay/Assets/buttons/ivorybutton.gif"></a> <a href="https://squibbus.neocities.org/"><img src="https://ioletsgo.gayAssets/buttons/axelbutton.gif"></a> <a href="https://nicox.neocities.org/"><img src="https://ioletsgo.gay/Assets/buttons/nicox.png"></a> <a href="https://danielah05.github.io/"><img src="https://ioletsgo.gay/Assets/buttons/daniela.gif"></a> <a href="https://c7.pm/"><img src="https://ioletsgo.gay/Assets/buttons/c7-badge.png"></a> <a href="https://radixcomet.neocities.org/"><img src="https://ioletsgo.gay/Assets/buttons/radixbutton.png"></a> <a href="https://nixgoat.me/"><img src="https://ioletsgo.gay/Assets/buttons/nixgoatbutton.gif"></a> <a href="https://invoxiplaygames.uk/"><img src="https://ioletsgo.gay/Assets/buttons/ipg.png"></a> <a href="https://thxdee.neocities.org/"><img src="https://ioletsgo.gay/Assets/buttons/thxdee.gif"></a>
-
+	<a target="_blank" href="https://modarchive.org/"><img alt="modarchive.org" src="https://content.pouet.net/buttons/tma_c.gif" border="0"></a>
+	<a target="_blank" href="https://web.archive.org/web/19961229152939im_/http://www.windows95.com/"><img src="https://web.archive.org/web/19961229152939im_/http://www2.windows95.com/gifs/w95com.gif" border="0"></a>
+	<a target="_blank" href="https://projectlounge.pw"><img src="https://essem.space/images/projectloungenow.gif"></a>
+	<a href="https://epicblazed.com" target="_blank"><img src="https://boxy.neocities.org/images/EpicBlazedButton.png" alt="Epic Blazed"></a>
+	<a href="https://ioletsgo.gay" target="_blank"><img src="https://ioletsgo.gay/Assets/buttons/ivorybutton.gif"></a> 
+	<a href="https://squibbus.neocities.org/"><img src="https://ioletsgo.gay/Assets/buttons/axelbutton.gif"></a> 
+	<a href="https://nicox.neocities.org/"><img src="https://ioletsgo.gay/Assets/buttons/nicox.png"></a> 
+	<a href="https://danielah05.github.io/"><img src="https://ioletsgo.gay/Assets/buttons/daniela.gif"></a> 
+	<a href="https://c7.pm/"><img src="https://ioletsgo.gay/Assets/buttons/c7-badge.png"></a> 
+	<a href="https://radixcomet.neocities.org/"><img src="https://ioletsgo.gay/Assets/buttons/radixbutton.png"></a>
+	<a href="https://nixgoat.me/"><img src="https://ioletsgo.gay/Assets/buttons/nixgoatbutton.gif"></a>
+	<a href="https://invoxiplaygames.uk/"><img src="https://ioletsgo.gay/Assets/buttons/ipg.png"></a>
+	<a href="https://thxdee.neocities.org/"><img src="https://ioletsgo.gay/Assets/buttons/thxdee.gif"></a>
     </center>
   </noprint>
 </p>
