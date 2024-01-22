@@ -28,7 +28,7 @@
 				foreach ($scan as $value) {
 					if (
 						$value == "." ||
-						($value == ".." && realpath($dirfull . "/..") == $_SERVER['DOCUMENT_ROOT'] . "/pages") ||
+						($value == ".." && realpath($dirfull . "/..") == $_SERVER['DOCUMENT_ROOT'] . "/resources/pages") ||
 						$value == "index.php"
 					) {
 						continue;
@@ -69,7 +69,7 @@
 						case "dir":
 							$GLOBALS['lastfolder'] = $value;
 							echo "
-							<td class='hcolumn' onclick=\"parent.setPageContents(this.parentElement.parentElement.parentElement, '/pages/dirlist.php?dir=$dir/$value')\">
+							<td class='hcolumn' onclick=\"parent.setPageContents(this.parentElement.parentElement.parentElement, '/resources/pages/dirlist.php?dir=$dir/$value')\">
 								<img width='16' height='16' src='/icons/folder-documents-16x16.svg'>$value</td> 
 							<td>$date</td>
 							<td align='right'>-</td>
@@ -96,7 +96,7 @@
 			}
 			$dir = "";
 			if (!array_key_exists('dir', $_GET)) {
-				$dir = $_SERVER['DOCUMENT_ROOT'] . "pages/art";
+				$dir = $_SERVER['DOCUMENT_ROOT'] . "resources/pages/art";
 			} else {
 				$dir = $_GET['dir'];
 			}

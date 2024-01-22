@@ -1,7 +1,7 @@
 <p>
   <img title="Broken File" class="broken" src="../resources/images/broken.gif" width="20" height="22"> Hello!
 
-  I am Gavin "ioi_xd" Parker, a 20 year old programmer<noprint> (see the windows beside this for more info on that)
+  I am Gavin "ioi_xd" Parker, a 20-year-old programmer<noprint> (see the windows beside this for more info on that)
   </noprint>, artist, and aspiring filmmaker.
 </p>
 
