@@ -192,7 +192,7 @@ function addFakeWindowToDOM(win) {
     }
     let pageUrl;
     if (win.options.includes("dirlist")) {
-        pageUrl = `/resources/pages/dirlist.php?dir=pages/${win.page}/`;
+        pageUrl = `/resources/pages/dirlist.php?dir=resources/pages/${win.page}/`;
     }
     else {
         pageUrl = `/resources/pages/${win.page}.php`;

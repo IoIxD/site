@@ -221,7 +221,7 @@ function addFakeWindowToDOM(win) {
     }
     var pageUrl;
     if (win.options.includes("dirlist")) {
-        pageUrl = "/resources/pages/dirlist.php?dir=pages/".concat(win.page, "/");
+        pageUrl = "/resources/pages/dirlist.php?dir=resources/pages/".concat(win.page, "/");
     }
     else {
         pageUrl = "/resources/pages/".concat(win.page, ".php");
