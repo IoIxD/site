@@ -70,7 +70,7 @@
 							$GLOBALS['lastfolder'] = $value;
 							echo "
 							<td class='hcolumn' onclick=\"parent.setPageContents(this.parentElement.parentElement.parentElement, '/resources/pages/dirlist.php?dir=$dir/$value')\">
-								<img width='16' height='16' src='/icons/folder-documents-16x16.svg'>$value</td> 
+								<img width='16' height='16' src='/resources/icons/folder-documents-16x16.svg'>$value</td> 
 							<td>$date</td>
 							<td align='right'>-</td>
 							<td>$filetype</td>
@@ -79,7 +79,7 @@
 						case "file":
 							switch ($mime) {
 								case "image":
-									echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_image', 'valload " . str_replace("/", "%2F", $dir . "/" . $value) . "')\"><img width='16' height='16' src='/icons/photoshop.svg'><p>$value</p></td>";
+									echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_image', 'valload " . str_replace("/", "%2F", $dir . "/" . $value) . "')\"><img width='16' height='16' src='/resources/icons/photoshop.svg'><p>$value</p></td>";
 									break;
 								case "text":
 									echo "<td class='hcolumn' onclick=\"parent.windowCreate('generic_text', 'valload " . str_replace("/", "%2F", $dir . "/" . $value) . "')\"><img width='16' height='16' src='/icons/accessories-text-editor_16x16.svg'><p>$value</p></td>";
